@@ -1,0 +1,85 @@
+.event {
+  padding: 16px;
+  background: white;
+  border-radius: 6px;
+  margin: 16px;
+  max-width: 640px;
+  line-height: 1.7;
+
+  .event-title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.7;
+    margin-bottom: 24px;
+
+    @media screen and (min-width: 720px) {
+      line-height: 50px;
+      margin-bottom: 32px;
+      font-size: 40px;
+    }
+  }
+
+  img {
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    object-fit: cover;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+@keyframes fadeInModal {
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInBackdrop {
+  100% {
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: black;
+  opacity: 0;
+  animation: fadeInBackdrop 0.3s forwards;
+
+  & > * {
+    opacity: 0;
+    transform: translateY(200px);
+    animation: fadeInModal 0.25s forwards;
+    animation-delay: 0.2s;
+
+    &:not(.media) {
+      overflow-y: auto;
+      max-height: calc(100vh - 64px);
+    }
+  }
+}
+
+@media screen and (min-width: 720px) {
+  .event {
+    padding: 32px;
+
+    img {
+      width: calc(100% + 64px);
+      margin: 0 -32px;
+    }
+  }
+}
