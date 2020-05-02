@@ -1,6 +1,6 @@
 # Korona Krulów
 
-Satyryczna gra o koronawirusie, polskiej polityce i propagandzie #tvpis. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!
+Satyryczna gra o koronawirusie, polskiej polityce i propagandzie tvpis. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!
 
 Gra dostępna online na https://koronakrulow.pl/
 
