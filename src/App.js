@@ -774,6 +774,8 @@ const playState = (action) => async (state) => {
 
   let { day, log: sourceLog } = nextState;
 
+  const { reported, dead, recovered } = nextState;
+
   const date = addDays(day)(startDate);
 
   const log = [...sourceLog];
@@ -918,6 +920,10 @@ const playState = (action) => async (state) => {
       stopGameplayTimeTracking = true;
 
       analytics("lost");
+      analytics(`lost_day_${day}`);
+      analytics(`lost_reported_${reported}`);
+      analytics(`lost_dead_${dead}`);
+      analytics(`lost_recovered_${recovered}`);
     }
 
     const underControl =
@@ -942,6 +948,10 @@ const playState = (action) => async (state) => {
           set("finished")("true");
 
           analytics("won");
+          analytics(`won_day_${day}`);
+          analytics(`won_reported_${reported}`);
+          analytics(`won_dead_${dead}`);
+          analytics(`won_recovered_${recovered}`);
         }
       } else {
         nextState.daysToWin = 30;
