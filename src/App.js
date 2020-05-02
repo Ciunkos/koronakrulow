@@ -1957,7 +1957,7 @@ export default function App() {
                 width={1020}
               />
               {mediaCover && (
-                <div className="actions" onClick={skipMedia} title="Dalej">
+                <div className="actions" onClick={skipMedia}>
                   <button onClick={skipMedia}>Dalej</button>
                 </div>
               )}
