@@ -1644,7 +1644,13 @@ export default function App() {
           </>
         ) : (
           <>
-            <button onClick={() => setMenuActive(true)}>
+            <button
+              onClick={() => {
+                setFinished(get("finished") === "true");
+
+                setMenuActive(true);
+              }}
+            >
               Wróć do menu głównego
             </button>
             {win ? (
@@ -1970,8 +1976,6 @@ export default function App() {
         active={menuActive}
         resetState={resetState}
         setActive={(value) => {
-          setFinished(get("finished") === "true");
-
           setMenuActive(value);
 
           try {
