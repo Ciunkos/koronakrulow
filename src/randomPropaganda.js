@@ -414,7 +414,7 @@ export default [
   "Tusk przedarł się przez granicę",
   "Schowek na miotły bezpiecznym miejscem w czasie zarazy",
   "Morawiecki: Podatki na prywaciarzy",
-  "Janusz Korwin Mikke ponownie internowany",
+  "Janusz Korwin-Mikke ponownie internowany",
   "Polacy śmieją się ze wzrostu Prezesa",
   "Ksiądz Matusz umarł!",
   "Elon Musk wysyła satelity do Polski",
@@ -431,4 +431,8 @@ export default [
   "Czy Bill Gates i jego fundacja stoją za wybuchem pandemii Sars-Cov-2?",
   "Czy koty mogą się zakażać koronawirusem od ludzi?",
   "Ból jąder to objaw koronawirusa",
+  "Po konwencji Dudy zmarły kolejne osoby",
+  "Karty wyborcze trafiają do spamu",
+  "Demonstranci pokazują czerwoną kartkę rządowi",
+  "Czy Chiny ukrywają prawdę przed WHO?",
 ];
