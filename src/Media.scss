@@ -46,6 +46,7 @@
     animation-delay: 1.5s;
     transition: backdrop-filter 0.25s ease-in-out;
     will-change: opacity backdrop-filter;
+    cursor: pointer;
 
     & > :not(:last-child) {
       margin-bottom: 8px;
