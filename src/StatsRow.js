@@ -5,10 +5,20 @@ import React from "react";
 import TransitiveNumber from "./TransitiveNumber";
 import formatNumber from "./formatNumber";
 
-const StatsRow = ({ title, children: value }) => (
+const StatsRow = ({ diff, title, children: value }) => (
   <div className={classNames("stats-row", { empty: value === 0 })}>
     <div className="stats-row-header">
-      <div className="stats-row-label">{title}</div>
+      <div className="stats-row-label">
+        {title}
+        {diff ? (
+          <span
+            className={classNames("diff", { positive: diff > 0 })}
+            key={diff}
+          >
+            {diff < 0 ? diff : `+${diff}`}
+          </span>
+        ) : null}
+      </div>
       <div>
         <TransitiveNumber enableInitialAnimation={false}>
           {formatNumber(value)}
