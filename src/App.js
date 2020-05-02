@@ -1352,6 +1352,7 @@ export default function App() {
     gameOver,
     hospitalized,
     contactsPerDay,
+    day,
     budget,
     economy,
     social,
@@ -1808,22 +1809,22 @@ export default function App() {
           <h3>Status</h3>
         </div>
         <div className="stats">
-          <StatsRow title="Budżet" diff={budgetDiff}>
+          <StatsRow title="Budżet" diff={budgetDiff} day={day}>
             {budget}
           </StatsRow>
-          <StatsRow title="Gospodarka" diff={economyDiff}>
+          <StatsRow title="Gospodarka" diff={economyDiff} day={day}>
             {economy}
           </StatsRow>
-          <StatsRow title="Socjal" diff={socialDiff}>
+          <StatsRow title="Socjal" diff={socialDiff} day={day}>
             {social}
           </StatsRow>
-          <StatsRow title="Służba zdrowia" diff={healthcareDiff}>
+          <StatsRow title="Służba zdrowia" diff={healthcareDiff} day={day}>
             {healthcare}
           </StatsRow>
-          <StatsRow title="Społeczeństwo" diff={peopleDiff}>
+          <StatsRow title="Społeczeństwo" diff={peopleDiff} day={day}>
             {people}
           </StatsRow>
-          <StatsRow title="Poparcie partii" diff={politicsDiff}>
+          <StatsRow title="Poparcie partii" diff={politicsDiff} day={day}>
             {politics}
           </StatsRow>
         </div>

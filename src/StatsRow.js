@@ -5,7 +5,7 @@ import React from "react";
 import TransitiveNumber from "./TransitiveNumber";
 import formatNumber from "./formatNumber";
 
-const StatsRow = ({ diff, title, children: value }) => (
+const StatsRow = ({ day, diff, title, children: value }) => (
   <div className={classNames("stats-row", { empty: value === 0 })}>
     <div className="stats-row-header">
       <div className="stats-row-label">
@@ -13,7 +13,7 @@ const StatsRow = ({ diff, title, children: value }) => (
         {diff ? (
           <span
             className={classNames("diff", { positive: diff > 0 })}
-            key={diff}
+            key={`${day}-${diff}`}
           >
             {diff < 0 ? diff : `+${diff}`}
           </span>
