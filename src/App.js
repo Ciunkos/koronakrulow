@@ -1328,8 +1328,11 @@ export default function App() {
     name: formatDisplayDate(addDays(index)(startDate)),
   }));
 
-  const secondToLatestData = data[data.length - 2];
   const latestData = data[data.length - 1];
+  const secondToLatestData = data[data.length - 2] ?? latestData;
+  const thirdToLatestData =
+    data[data.length - 3] ?? secondToLatestData ?? latestData;
+
   const {
     agents,
     reported,
@@ -1351,6 +1354,22 @@ export default function App() {
     politics,
     log,
   } = event ? secondToLatestData : latestData;
+
+  const {
+    budget: previousBudget,
+    economy: previousEconomy,
+    social: previousSocial,
+    healthcare: previousHealthcare,
+    people: previousPeople,
+    politics: previousPolitics,
+  } = event ? thirdToLatestData : secondToLatestData;
+
+  const budgetDiff = budget - previousBudget;
+  const economyDiff = economy - previousEconomy;
+  const socialDiff = social - previousSocial;
+  const healthcareDiff = healthcare - previousHealthcare;
+  const peopleDiff = people - previousPeople;
+  const politicsDiff = politics - previousPolitics;
 
   const queuedStateSource = queuedState ?? state;
   //console.log({ queuedStateSource, queuedState, state });
@@ -1773,12 +1792,24 @@ export default function App() {
           <h3>Status</h3>
         </div>
         <div className="stats">
-          <StatsRow title="Budżet">{budget}</StatsRow>
-          <StatsRow title="Gospodarka">{economy}</StatsRow>
-          <StatsRow title="Socjal">{social}</StatsRow>
-          <StatsRow title="Służba zdrowia">{healthcare}</StatsRow>
-          <StatsRow title="Społeczeństwo">{people}</StatsRow>
-          <StatsRow title="Poparcie partii">{politics}</StatsRow>
+          <StatsRow title="Budżet" diff={budgetDiff}>
+            {budget}
+          </StatsRow>
+          <StatsRow title="Gospodarka" diff={economyDiff}>
+            {economy}
+          </StatsRow>
+          <StatsRow title="Socjal" diff={socialDiff}>
+            {social}
+          </StatsRow>
+          <StatsRow title="Służba zdrowia" diff={healthcareDiff}>
+            {healthcare}
+          </StatsRow>
+          <StatsRow title="Społeczeństwo" diff={peopleDiff}>
+            {people}
+          </StatsRow>
+          <StatsRow title="Poparcie partii" diff={politicsDiff}>
+            {politics}
+          </StatsRow>
         </div>
       </div>
       <div className="logo-box gameplay">
