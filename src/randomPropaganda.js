@@ -435,4 +435,11 @@ export default [
   "Karty wyborcze trafiają do spamu",
   "Demonstranci pokazują czerwoną kartkę rządowi",
   "Czy Chiny ukrywają prawdę przed WHO?",
+  "Liczbę zakażonych ustalają nauczelki z TVP",
+  "PiS to jedyna partia, która walczy o demokrację",
+  "Andrzej Duda przemawia bez promptera!",
+  "Platforma chce wywołać kryzys polityczny?",
+  "Większość Polaków pozytywnie ocenia działania rządu",
+  '"Polska, tu mi dobrze"',
+  "Polacy odmawiają Koronkę do Bożego Miłosierdzia",
 ];

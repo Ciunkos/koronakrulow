@@ -2283,3 +2283,15 @@ export const a201 = createAction(
   },
   { message: "Dziury w aplikacji mniejsze niż w budżecie" }
 );
+
+export const a202 = createAction(
+  "Zorganizuj koncert Kasi Kowalskiej",
+  "Po wcześniejszym apelu do młodych aby nie wychodzili w domu, dziś pojawiły się tłumy na koncercie w trakcie epidemii.",
+  (state) => {
+    state.budget -= 1;
+    state.people += 2;
+    state.contactsPerDay *= 1.1;
+    state.infectionProbability *= 1.1;
+  },
+  { message: "Muzyka łączy ludzi i wirusa" }
+);
