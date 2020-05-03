@@ -2307,7 +2307,7 @@ export const a203 = createAction(
 );
 
 export const a204 = createAction(
-  "Zamontuj skrzynkę na listy przy posiadłości Prezesa",
+  "Wyślij policję aby pilnowała skrzynkę na listy Prezesa",
   "Policja na służbie pilnuje najcenniejszej skrzynki na listy. Polski podatnik funduje prywatną ochronę willi prezesa PiS.",
   (state) => {
     state.people -= 1;
