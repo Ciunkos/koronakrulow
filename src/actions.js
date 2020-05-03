@@ -2295,3 +2295,27 @@ export const a202 = createAction(
   },
   { message: "Muzyka łączy ludzi i wirusa" }
 );
+
+export const a203 = createAction(
+  "Zamontuj skrzynkę na listy przy posiadłości Prezesa",
+  "Po szumie w sieci, przy domu Jarosława Kaczyńskiego pojawiła się skrzynka pocztowa. Za jej brak grozi wysoka kara. Zarzuty postawione demaskatorom.",
+  (state) => {
+    state.budget -= 2;
+    state.people += 1;
+  },
+  { message: "Opozycja ukradła skrzynkę prezesowi Kaczyńskiemu" }
+);
+
+export const a204 = createAction(
+  "Zamontuj skrzynkę na listy przy posiadłości Prezesa",
+  "Policja na służbie pilnuje najcenniejszej skrzynki na listy. Polski podatnik funduje prywatną ochronę willi prezesa PiS.",
+  (state) => {
+    state.people -= 1;
+    state.politics += 1;
+    state.policeAuthority -= 2;
+  },
+  {
+    requires: a203,
+    message: "Zmiana warty przy skrzynce u Prezesa co 15 minut",
+  }
+);
