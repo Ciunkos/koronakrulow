@@ -2319,3 +2319,17 @@ export const a204 = createAction(
     message: "Zmiana warty przy skrzynce u Prezesa co 15 minut",
   }
 );
+
+export const a205 = createAction(
+  "Obniż pensje w polityków",
+  "Rząd wyraża solidarność z narodem obniżając politykom wynagrodzenia. Koniec niejasnych premii.",
+  (state) => {
+    state.people += 4;
+    state.politics -= 5;
+    state.economy += 1;
+    state.budget += 3;
+  },
+  {
+    message: "Komu przeszkadzają bogaci politycy?",
+  }
+);
