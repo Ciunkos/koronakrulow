@@ -480,4 +480,5 @@ export default [
   'Nowy serial "Zaczarowany Ołówek" na antenie TVP',
   "Testy w pierwszej kolejności dla posiadaczy paszportu Polsatu",
   "Reporterzy TVN-u ganiają rowerzystów",
+  "Polacy odpoczywają, gospodarka zyskuje!",
 ];
