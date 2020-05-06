@@ -2355,7 +2355,7 @@ export const a207 = createAction(
     state.economy -= 2;
   },
   {
-    message: "Muzyka dobrem kultury - od teraz dostępna dla Polaków",
+    message: "Muzyka dobrem kultury dostępna dla Polaków",
   }
 );
 
