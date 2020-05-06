@@ -909,6 +909,8 @@ const playState = (action) => async (state) => {
     if (!nextState.gameOver && deathrattle >= DEATHRATTLE_LIMIT) {
       nextState.events = [...(nextState.events || []), events.e8];
       nextState.events = [...(nextState.events || []), events.e14];
+      nextState.events = [...(nextState.events || []), events.e18];
+
       nextState.gameOver = true;
       nextState.win = false;
       stopGameplayTimeTracking = true;
@@ -935,6 +937,8 @@ const playState = (action) => async (state) => {
         if (nextState.daysToWin <= 0) {
           nextState.events = [...(nextState.events || []), events.e9];
           nextState.events = [...(nextState.events || []), events.e14];
+          nextState.events = [...(nextState.events || []), events.e18];
+
           nextState.gameOver = true;
           nextState.win = true;
           stopGameplayTimeTracking = true;
@@ -1877,8 +1881,15 @@ export default function App() {
         <div className="modal-container" key={event.title}>
           <div className="event">
             <div className="event-title">{event.title}</div>
-            {event.image && <img src={event.image} width={1280} height={720} />}
+            {event.image && (
+              <img
+                src={event.image}
+                width={event.imageWidth ?? 1280}
+                height={event.imageHeight ?? 1280}
+              />
+            )}
             <p>{event.logEntry}</p>
+            {event.content}
             <button onClick={skipEvent}>Dalej</button>
           </div>
         </div>

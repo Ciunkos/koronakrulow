@@ -1,4 +1,5 @@
-button {
+button,
+a.button {
   min-height: 36px;
   min-width: 96px;
   border: 1px solid #0087e2;
@@ -569,5 +570,17 @@ body {
       fill: white;
       stroke: transparent;
     }
+  }
+}
+
+.extra-actions {
+  margin-bottom: 16px;
+
+  .button {
+    display: flex;
+  }
+
+  & > :not(.last-child) {
+    margin-bottom: 8px;
   }
 }

@@ -1,3 +1,5 @@
+import React from "react";
+
 import e0Image from "./events/e0.jpg";
 import e1Image from "./events/e1.jpg";
 import e2Image from "./events/e2.jpg";
@@ -16,6 +18,7 @@ import e14Image from "./events/e14.jpg";
 import e15Image from "./events/e15.jpg";
 import e16Image from "./events/e16.jpg";
 import e17Image from "./events/e17.jpg";
+import e18Image from "./events/e18.jpg";
 
 const createEvent = (title, logEntry, effect, options) => ({
   title,
@@ -148,4 +151,41 @@ export const e17 = createEvent(
   "Naczelny Wódz przejmuje władzę. Protesty krwawo tłumione.",
   (state) => {},
   { image: e17Image }
+);
+
+const url = "https://koronakrulow.pl";
+const encodedUrl = encodeURIComponent(url);
+const text =
+  "Satyryczna gra o koronawirusie, polskiej polityce i propagandzie #TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!";
+const encodedText = encodeURIComponent(text);
+
+export const e18 = createEvent(
+  "Podziel się Koroną!",
+  "Twoje wsparcie pozwoli otworzyć oczy Twoim znajomym i rodzinie na otaczającą Nas propagandę.",
+  (state) => {},
+  {
+    image: e18Image,
+    imageWidth: 1280,
+    imageHeight: 540,
+    content: (
+      <div className="extra-actions">
+        <a
+          className="button"
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Udostępnij na Facebooku
+        </a>
+        <a
+          className="button"
+          href={`https://twitter.com/share?url=${encodedUrl}&text=${encodedText}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Podziel się na Twitterze
+        </a>
+      </div>
+    ),
+  }
 );
