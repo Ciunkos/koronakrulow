@@ -2333,3 +2333,67 @@ export const a205 = createAction(
     message: "Komu przeszkadzają bogaci politycy?",
   }
 );
+
+export const a206 = createAction(
+  "Zabroń wypowiedzi publicznych lekarzom i listonoszom",
+  "Nieprzychylne wypowiedzi lekarzy i listonoszy skutecznie wycinane przez aparat cenzury rządu.",
+  (state) => {
+    state.people -= 2;
+    state.politics += 2;
+  },
+  {
+    message: "Lekarze i listonosze roznoszą hejt",
+  }
+);
+
+export const a207 = createAction(
+  "Zdelegalizuj ZAiKS i znacjonalizuj jego majątek",
+  "Polski Eric Clapton bez środków do życia, mimo iż od dawna niczego nie wydał.",
+  (state) => {
+    state.budget += 2;
+    state.people += 5;
+    state.economy -= 2;
+  },
+  {
+    message: "Muzyka dobrem kultury - od teraz dostępna dla Polaków",
+  }
+);
+
+export const a208 = createAction(
+  "Wprowadź nowoczesne systemy zliczania klientów w sklepach",
+  "Pracownicy ochrony od dziś zliczają klientów na liczydłach.",
+  (state) => {
+    state.people += 1;
+    state.infectionProbability *= 0.999;
+  },
+  {
+    message: "Szkoła z TVP uczy matematyki",
+  }
+);
+
+export const a209 = createAction(
+  "Obniż pensje pielęgniarkom",
+  "Kaganiec milczenia przerwany - pielęgniarki dzielą się informacjami na prywatnych grupach w sieci.",
+  (state) => {
+    state.people -= 1;
+    state.budget += 2;
+    state.healthcare -= 3;
+  },
+  {
+    message: "Pielęgniarki zamiast pracować żalą się w sieci",
+  }
+);
+
+export const a210 = createAction(
+  "Wprowadź podwyżki w ZUS",
+  "Dyrekcja ZUS rozesłała maile do swoich podopiecznych z zapowiedzią podwyżek i z prośbą o dyskrecję.",
+  (state) => {
+    state.people -= 1;
+    state.budget -= 2;
+    state.healthcare -= 2;
+    state.politics += 3;
+  },
+  {
+    message: "ZUS kochany przez Polaków",
+  }
+);
