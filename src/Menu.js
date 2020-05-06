@@ -120,6 +120,25 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
                 na indywidualnej licencji od autora.
               </p>
               <p>
+                Muzyka{" "}
+                <a
+                  href="https://incompetech.filmmusic.io/song/4490-the-descent"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  The Descent by Kevin MacLeod
+                </a>{" "}
+                na licencji{" "}
+                <a
+                  href="http://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  CC BY 4.0
+                </a>
+                .
+              </p>
+              <p>
                 Ikony stworzone przez{" "}
                 <a
                   href="https://www.flaticon.com/authors/freepik"
@@ -192,7 +211,7 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
                 </li>
               </ul>
               <p>
-                Ikony alertów przez{" "}
+                Ikony alertów i kontrolek przez{" "}
                 <a
                   href="https://github.com/tabler/tabler-icons"
                   target="_blank"

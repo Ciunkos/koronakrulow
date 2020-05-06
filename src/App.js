@@ -79,8 +79,8 @@ const trackGameplayTime = async () => {
 
 const CloseIcon = (props) => (
   <svg
-    width="24"
-    height="24"
+    width={24}
+    height={24}
     viewBox="0 0 24 24"
     strokeWidth="2"
     stroke="currentColor"
@@ -102,12 +102,6 @@ const debug = false;
 const daysToSickFunction = () => Math.round(5 + Math.random() * 8);
 
 const startDate = new Date("2020-02-27T00:00:00.000");
-
-// var CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-// 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-// 	subdomains: 'abcd',
-// 	maxZoom: 19
-// });
 
 function mapTilerProvider(x, y, z, dpr) {
   const s = String.fromCharCode(97 + ((x + y + z) % 3));
@@ -1564,8 +1558,8 @@ export default function App() {
               >
                 {busy ? (
                   <svg
-                    width="24"
-                    height="24"
+                    width={24}
+                    height={24}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -1578,8 +1572,8 @@ export default function App() {
                   </svg>
                 ) : (
                   <svg
-                    width="24"
-                    height="24"
+                    width={24}
+                    height={24}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -1598,8 +1592,8 @@ export default function App() {
               <div className="alert positive">
                 <svg
                   className="icon icon-tabler icon-tabler-alert-triangle"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   stroke="currentColor"
@@ -1621,8 +1615,8 @@ export default function App() {
               <div className="alert">
                 <svg
                   className="icon icon-tabler icon-tabler-alert-triangle"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   stroke="currentColor"
@@ -1658,8 +1652,8 @@ export default function App() {
               <div className="alert positive">
                 <svg
                   className="icon icon-tabler icon-tabler-alert-triangle"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   stroke="currentColor"
@@ -1677,8 +1671,8 @@ export default function App() {
               <div className="alert">
                 <svg
                   className="icon icon-tabler icon-tabler-alert-triangle"
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   stroke="currentColor"
@@ -1832,36 +1826,40 @@ export default function App() {
       <div className="logo-box gameplay">
         <Logo />
       </div>
-      <div className="attribution">
-        <span
-          className="music-toggle"
-          onClick={toggleMusic}
-          title="Włącz/wyłącz muzykę"
-        >
-          🎶
-        </span>{" "}
-        <a
-          href="https://incompetech.filmmusic.io/song/4490-the-descent"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          The Descent by Kevin MacLeod
-        </a>{" "}
-        Licencja:{" "}
-        <a
-          href="http://creativecommons.org/licenses/by/4.0/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          CC BY 4.0
-        </a>
-      </div>
       <div className="controls">
         <a href="#" onClick={toggleTvpis}>
-          {tvpis ? "Wyłącz" : "Włącz"} TVPIS
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={24}
+            height={24}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+            <polyline points="17 2 12 7 7 2"></polyline>
+          </svg>{" "}
+          {tvpis ? "Wyłącz" : "Włącz"} TVPiS
         </a>{" "}
         •{" "}
         <a href="#" onClick={toggleMusic}>
+          <svg
+            width={24}
+            height={24}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+          </svg>{" "}
           {audio ? "Wyłącz" : "Włącz"} muzykę
         </a>
       </div>
