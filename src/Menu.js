@@ -269,6 +269,25 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
               koronakrulow@ciunkos.com
             </a>
           </p>
+          <p className="contact">
+            Śledz Koronę Krulów na{" "}
+            <a
+              href="https://www.facebook.com/koronakrulow"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Facebooku
+            </a>{" "}
+            i{" "}
+            <a
+              href="https://twitter.com/koronakrulow"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitterze
+            </a>
+            !
+          </p>
         </div>
       </div>
     </div>
