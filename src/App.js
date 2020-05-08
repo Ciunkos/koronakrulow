@@ -724,7 +724,7 @@ const DEATHRATTLE_LIMIT = 15;
 //   },
 // ];
 
-const playState = (action) => async (state, updateProgress) => {
+const playState = (action) => async (state, updateProgress, userIntent) => {
   await delay(TURN_DELAY);
 
   const latestState = state[state.length - 1];
@@ -1078,7 +1078,22 @@ const playState = (action) => async (state, updateProgress) => {
       ? maybeActionKeyValue[0]
       : Object.keys(randomStripes)[randomStripeIndex];
 
-    if (action && day > 6) {
+    if (userIntent) {
+      if (action) {
+        const actionKey = maybeActionKeyValue[0];
+
+        updateProgress(({ unlockedActions = [], ...rest }) => {
+          const nextUnlockedActions = [
+            ...new Set([...unlockedActions, actionKey]),
+          ];
+
+          return {
+            ...rest,
+            unlockedActions: nextUnlockedActions,
+          };
+        });
+      }
+
       updateProgress(({ unlockedStripes = [], ...rest }) => ({
         ...rest,
         unlockedStripes: [...new Set([...unlockedStripes, stripeKey])],
@@ -1116,7 +1131,7 @@ const reset = async (updateProgress) => {
   let steps = 6; //60 - 13;
 
   while (steps-- > 0) {
-    startState = await playState()(startState, updateProgress);
+    startState = await playState()(startState, updateProgress, false);
   }
 
   return startState;
@@ -1149,9 +1164,15 @@ export default function App() {
     return loaded ? JSON.parse(loaded) : {};
   });
 
+  let progressCache = progress;
+
   const updateProgress = (f) => {
-    const next = f(progress);
+    const next = f(progressCache);
+
+    progressCache = next;
+
     setProgress(next);
+
     set("progress")(JSON.stringify(next));
   };
 
@@ -1205,7 +1226,6 @@ export default function App() {
       playWeek();
     }
   };
-  //console.log({ latestState });
 
   const skipEvent = async () => {
     const eventsSource = latestState.events || [];
@@ -1293,11 +1313,6 @@ export default function App() {
         const actionKey = maybeActionKeyValue[0];
 
         analytics(`action-${actionKey}`);
-
-        updateProgress(({ unlockedActions = [], ...rest }) => ({
-          ...rest,
-          unlockedActions: [...new Set([...unlockedActions, actionKey])],
-        }));
       }
     }
 
@@ -1321,7 +1336,7 @@ export default function App() {
   const playDelayed = async (action) => {
     setBusy(true);
     await delay(100);
-    const nextState = await playState(action)(state, updateProgress);
+    const nextState = await playState(action)(state, updateProgress, true);
     await delay(100);
     setBusy(false);
 
@@ -1340,7 +1355,7 @@ export default function App() {
 
     while (days-- > 0) {
       await delay(100);
-      const nextState = await playState()(currentState, updateProgress);
+      const nextState = await playState()(currentState, updateProgress, false);
       currentState = nextState;
       await delay(100);
       setState(currentState);
