@@ -270,7 +270,7 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
             </a>
           </p>
           <p className="contact">
-            Śledz Koronę Krulów na{" "}
+            Śledź Koronę Krulów na{" "}
             <a
               href="https://www.facebook.com/koronakrulow"
               target="_blank"
