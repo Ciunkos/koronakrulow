@@ -27,13 +27,15 @@
   }
 
   .options {
-    margin-top: 16px;
+    margin-top: 32px;
+    margin-bottom: 32px;
 
     & > * {
       &:not(:last-child) {
         margin-bottom: 32px;
 
         @media screen and (min-width: 720px) {
+          margin-top: 48px;
           margin-bottom: 48px;
         }
       }
@@ -74,6 +76,69 @@
         text-align: left;
       }
     }
+  }
+
+  .status-bar {
+    justify-content: flex-start;
+    padding: 0;
+    padding-top: 8px;
+  }
+
+  .leaderboards {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+    .entry-name {
+      font-weight: bold;
+    }
+
+    & > :not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .leaderboard-entries {
+    & > :not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .progress-list {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+
+    .progress-box {
+      .progress-title {
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .progress-value {
+        font-size: 150%;
+        font-weight: bold;
+      }
+    }
+  }
+
+  section + section {
+    margin-top: 32px;
+  }
+
+  h4 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .legal {
+    margin-top: 32px;
+  }
+
+  .tabs {
+    margin-bottom: 0;
   }
 }
 

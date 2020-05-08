@@ -1,9 +1,13 @@
+import { range } from "@sandstreamdev/std/array";
+import { classNames } from "@sandstreamdev/std/web";
 import React, { useState } from "react";
 import Map from "pigeon-maps";
 
 import useWindowSize from "./useWindowSize";
 import Logo from "./Logo";
 import analytics from "./analytics";
+import StatusBar from "./StatusBar";
+import formatLongDisplayDateWithOffsetWithOffset from "./formatLongDisplayDateWithOffset";
 
 import "./Menu.scss";
 
@@ -14,9 +18,12 @@ function mapTilerProvider(x, y, z, dpr) {
   }.png`;
 }
 
+const LEADERBOARD_RANGE = 5;
+
 const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
+  const [daily, setDaily] = useState(true);
 
   const toggleDetails = (event) => {
     showDetails(!details);
@@ -36,6 +43,35 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
     await resetState();
     setActive(false);
   };
+
+  const leaderboards = {
+    daily: {
+      won: [
+        { name: "Ciunkos", reported: 1234, dead: 246, recovered: 123, day: 10 },
+        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
+        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
+      ],
+      lost: [
+        { name: "Ciunkos", reported: 1234, dead: 246, recovered: 123, day: 10 },
+        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
+      ],
+    },
+    allTime: {
+      won: [
+        { name: "wykop", reported: 1234, dead: 246, recovered: 123, day: 10 },
+        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
+        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
+        { name: "Anonim", reported: 54, dead: 21, recovered: 65, day: 231 },
+        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
+      ],
+      lost: [
+        { name: "lol", reported: 1234, dead: 246, recovered: 123, day: 10 },
+        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
+      ],
+    },
+  };
+
+  const rankingSource = daily ? leaderboards.daily : leaderboards.allTime;
 
   return (
     <div className={active ? "backdrop active" : "backdrop"}>
@@ -80,6 +116,122 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
             )}
           </div>
         </div>
+        <section>
+          <h3>Twój postęp</h3>
+          <div className="progress-list">
+            <div className="progress-box">
+              <div className="progress-title">Opanowane epidemie</div>
+              <div className="progress-value">3</div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Rozwiązanie rządy</div>
+              <div className="progress-value">10</div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Rozgrywki</div>
+              <div className="progress-value">20</div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Odblokowane paski</div>
+              <div className="progress-value">25/451</div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Opanowane akcje</div>
+              <div className="progress-value">50/251</div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Opanowane wydarzenia</div>
+              <div className="progress-value">3/16</div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <h3>Ranking</h3>
+          <div className="tabs">
+            <a
+              href="#"
+              className={classNames("tab", { active: daily })}
+              onClick={() => setDaily(true)}
+            >
+              Dzisiaj
+            </a>
+            <a
+              href="#"
+              className={classNames("tab", { active: !daily })}
+              onClick={() => setDaily(false)}
+            >
+              Łączny
+            </a>
+          </div>
+          <div className="leaderboards">
+            <div>
+              <h4>Najszybciej opanowana epidemia</h4>
+              <div className="leaderboard-entries">
+                {range(LEADERBOARD_RANGE).map((index) => {
+                  const entry = rankingSource.won[index];
+
+                  if (entry) {
+                    const { name, reported, recovered, dead, day } = entry;
+                    return (
+                      <div classNames="leaderboard-entry" key={index}>
+                        <div>
+                          <span className="entry-name">{name}</span>,{" "}
+                          <span>
+                            {formatLongDisplayDateWithOffsetWithOffset(day)}
+                          </span>
+                        </div>
+                        <StatusBar
+                          reported={reported}
+                          dead={dead}
+                          recovered={recovered}
+                        />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div classNames="leaderboard-entry empty" key={index}>
+                        <div>-</div>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+            <div>
+              <h4>Najszybciej rozwiązany rząd</h4>
+              <div className="leaderboard-entries">
+                {range(LEADERBOARD_RANGE).map((index) => {
+                  const entry = rankingSource.lost[index];
+
+                  if (entry) {
+                    const { name, reported, recovered, dead, day } = entry;
+                    return (
+                      <div classNames="leaderboard-entry" key={index}>
+                        <div>
+                          <span className="entry-name">{name}</span>,{" "}
+                          <span>
+                            {formatLongDisplayDateWithOffsetWithOffset(day)}
+                          </span>
+                        </div>
+                        <StatusBar
+                          reported={reported}
+                          dead={dead}
+                          recovered={recovered}
+                        />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div classNames="leaderboard-entry empty" key={index}>
+                        <div>-</div>
+                      </div>
+                    );
+                  }
+                })}{" "}
+              </div>
+            </div>
+          </div>
+        </section>
         <div className="legal">
           <p>
             Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na

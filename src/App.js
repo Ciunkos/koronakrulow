@@ -15,9 +15,6 @@ import {
 } from "recharts";
 import Map from "pigeon-maps";
 import TransitiveNumber from "./TransitiveNumber";
-import Infected from "./Infected";
-import Dead from "./Dead";
-import Recovered from "./Recovered";
 import Log from "./Log";
 import * as allActions from "./actions";
 import * as events from "./events";
@@ -35,7 +32,10 @@ import headlineVideo from "./headline.mp4";
 import music from "./the-descent-by-kevin-macleod-from-filmmusic-io.mp3";
 import StatsRow from "./StatsRow";
 import formatNumber from "./formatNumber";
+import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
 import analytics from "./analytics";
+import StatusBar from "./StatusBar";
+import offsetStartDate from "./offsetStartDate";
 
 import "./index.css";
 import "./App.scss";
@@ -100,8 +100,6 @@ const AGENT_LIMIT = 37734000;
 const debug = false;
 
 const daysToSickFunction = () => Math.round(5 + Math.random() * 8);
-
-const startDate = new Date("2020-02-27T00:00:00.000");
 
 function mapTilerProvider(x, y, z, dpr) {
   const s = String.fromCharCode(97 + ((x + y + z) % 3));
@@ -689,18 +687,7 @@ const transition = async (state) => {
   return nextState;
 };
 
-const addDays = (days) => (date) => {
-  const result = new Date(date);
-
-  result.setDate(result.getDate() + days);
-
-  return result;
-};
-
 const DEATHRATTLE_LIMIT = 15;
-
-const formatDisplayDate = (date) =>
-  new Intl.DateTimeFormat("pl-PL").format(date);
 
 ////console.log({ startState, initialAgentCount });
 
@@ -770,7 +757,7 @@ const playState = (action) => async (state) => {
 
   const { reported, dead, recovered } = nextState;
 
-  const date = addDays(day)(startDate);
+  const date = offsetStartDate(day);
 
   const log = [...sourceLog];
 
@@ -1278,7 +1265,7 @@ export default function App() {
     setAction(true);
   };
 
-  const today = addDays(state.length - 1)(startDate);
+  const today = offsetStartDate(state.length - 1);
 
   const playDelayed = async (action) => {
     setBusy(true);
@@ -1333,7 +1320,7 @@ export default function App() {
   const data = state.map((_, index) => ({
     ..._,
     day: index,
-    name: formatDisplayDate(addDays(index)(startDate)),
+    name: formatDisplayDateWithOffset(index),
   }));
 
   const latestData = data[data.length - 1];
@@ -1409,7 +1396,7 @@ export default function App() {
   const dailyData = state.map((_, index) => ({
     ..._,
     day: index,
-    name: formatDisplayDate(addDays(index)(startDate)),
+    name: formatDisplayDateWithOffset(index),
     reported: state[index].reported - state[Math.max(0, index - 1)].reported,
     recovered: state[index].recovered - state[Math.max(0, index - 1)].recovered,
     dead: state[index].dead - state[Math.max(0, index - 1)].dead,
@@ -1518,35 +1505,7 @@ export default function App() {
         />
       </div>
       <div className="status-header">
-        <div className="status-bar">
-          <div className="status-row infected">
-            <div className="status-row-label">Currently infected</div>
-            <div className="status-row-icon">
-              <Infected />
-            </div>
-            <div>
-              <TransitiveNumber>{formatNumber(reported)}</TransitiveNumber>
-            </div>
-          </div>
-          <div className="status-row dead">
-            <div className="status-row-label">Total deaths</div>
-            <div className="status-row-icon">
-              <Dead />
-            </div>
-            <div>
-              <TransitiveNumber>{formatNumber(dead)}</TransitiveNumber>
-            </div>
-          </div>
-          <div className="status-row recovered">
-            <div className="status-row-label">Total recovered</div>
-            <div className="status-row-icon">
-              <Recovered />
-            </div>
-            <div>
-              <TransitiveNumber>{formatNumber(recovered)}</TransitiveNumber>
-            </div>
-          </div>
-        </div>
+        <StatusBar reported={reported} dead={dead} recovered={recovered} />
         <div>{formatLongDisplayDate(today)}</div>
         {!gameOver ? (
           <>
