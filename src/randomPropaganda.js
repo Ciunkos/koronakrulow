@@ -499,4 +499,5 @@ export default [
   "Poparcie dla PiS 50 razy większe niż 100%",
   "Klęska opozycji, sukces demokracji",
   "Demokracja przeszkadza opozycji?",
+  "Dziś we Wrocławiu nie wykoleił się żaden tramwaj",
 ];
