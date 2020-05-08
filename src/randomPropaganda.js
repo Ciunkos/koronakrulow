@@ -497,4 +497,6 @@ export default [
   "Od dziś 300+ za każdego posiadanego kota",
   "Bezrobocie spada - głodni zjadają bezrobotnych",
   "Poparcie dla PiS 50 razy większe niż 100%",
+  "Klęska opozycji, sukces demokracji",
+  "Demokracja przeszkadza opozycji?",
 ];
