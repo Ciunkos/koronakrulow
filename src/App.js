@@ -724,7 +724,7 @@ const DEATHRATTLE_LIMIT = 15;
 //   },
 // ];
 
-const playState = (action) => async (state) => {
+const playState = (action) => async (state, updateProgress) => {
   await delay(TURN_DELAY);
 
   const latestState = state[state.length - 1];
@@ -907,6 +907,12 @@ const playState = (action) => async (state) => {
       analytics(`lost_reported_${reported}`);
       analytics(`lost_dead_${dead}`);
       analytics(`lost_recovered_${recovered}`);
+
+      updateProgress(({ lost = 0, games = 0, ...rest }) => ({
+        ...rest,
+        lost: lost + 1,
+        games: games + 1,
+      }));
     }
 
     const underControl =
@@ -937,6 +943,12 @@ const playState = (action) => async (state) => {
           analytics(`won_reported_${reported}`);
           analytics(`won_dead_${dead}`);
           analytics(`won_recovered_${recovered}`);
+
+          updateProgress(({ won = 0, games = 0, ...rest }) => ({
+            ...rest,
+            won: won + 1,
+            games: games + 1,
+          }));
         }
       } else {
         nextState.daysToWin = 30;
@@ -1051,12 +1063,27 @@ const playState = (action) => async (state) => {
       ([, value]) => value === action
     );
 
-    const propagandaImage =
-      maybeActionKeyValue && stripes[maybeActionKeyValue[0]]
-        ? stripes[maybeActionKeyValue[0]]
-        : Object.values(randomStripes)[
-            Math.floor(Math.random() * Object.keys(randomStripes).length)
-          ];
+    const desiredStripe =
+      maybeActionKeyValue && stripes[maybeActionKeyValue[0]];
+
+    const randomStripeIndex = Math.floor(
+      Math.random() * Object.keys(randomStripes).length
+    );
+
+    const propagandaImage = desiredStripe
+      ? desiredStripe
+      : Object.values(randomStripes)[randomStripeIndex];
+
+    const stripeKey = desiredStripe
+      ? maybeActionKeyValue[0]
+      : Object.keys(randomStripes)[randomStripeIndex];
+
+    if (action && day > 6) {
+      updateProgress(({ unlockedStripes = [], ...rest }) => ({
+        ...rest,
+        unlockedStripes: [...new Set([...unlockedStripes, stripeKey])],
+      }));
+    }
 
     nextState.propagandaImage = propagandaImage;
   }
@@ -1078,7 +1105,7 @@ const getStartState = () => [getInitialState()];
 
 let stopFlag = false;
 
-const reset = async () => {
+const reset = async (updateProgress) => {
   stopFlag = false;
   stopGameplayTimeTracking = false;
 
@@ -1089,7 +1116,7 @@ const reset = async () => {
   let steps = 6; //60 - 13;
 
   while (steps-- > 0) {
-    startState = await playState()(startState);
+    startState = await playState()(startState, updateProgress);
   }
 
   return startState;
@@ -1117,6 +1144,16 @@ export default function App() {
   const [audio, setAudio] = useState(true);
   const [daily, setDaily] = useState(false);
   const [stop, setStop] = useState(false);
+  const [progress, setProgress] = useState(() => {
+    const loaded = get("progress");
+    return loaded ? JSON.parse(loaded) : {};
+  });
+
+  const updateProgress = (f) => {
+    const next = f(progress);
+    setProgress(next);
+    set("progress")(JSON.stringify(next));
+  };
 
   const setEvent = (event) => {
     if (event) {
@@ -1125,7 +1162,14 @@ export default function App() {
       );
 
       if (maybeKeyValue) {
-        analytics(`event-${maybeKeyValue[0]}`);
+        const eventKey = maybeKeyValue[0];
+
+        analytics(`event-${eventKey}`);
+
+        updateProgress(({ unlockedEvents = [], ...rest }) => ({
+          ...rest,
+          unlockedEvents: [...new Set([...unlockedEvents, eventKey])],
+        }));
       }
     }
 
@@ -1143,7 +1187,7 @@ export default function App() {
   window.setState = () => {};
 
   const resetState = async () => {
-    const nextState = await reset();
+    const nextState = await reset(updateProgress);
 
     setState(nextState);
   };
@@ -1246,7 +1290,14 @@ export default function App() {
       );
 
       if (maybeActionKeyValue) {
-        analytics(`action-${maybeActionKeyValue[0]}`);
+        const actionKey = maybeActionKeyValue[0];
+
+        analytics(`action-${actionKey}`);
+
+        updateProgress(({ unlockedActions = [], ...rest }) => ({
+          ...rest,
+          unlockedActions: [...new Set([...unlockedActions, actionKey])],
+        }));
       }
     }
 
@@ -1270,7 +1321,7 @@ export default function App() {
   const playDelayed = async (action) => {
     setBusy(true);
     await delay(100);
-    const nextState = await playState(action)(state);
+    const nextState = await playState(action)(state, updateProgress);
     await delay(100);
     setBusy(false);
 
@@ -1289,7 +1340,7 @@ export default function App() {
 
     while (days-- > 0) {
       await delay(100);
-      const nextState = await playState()(currentState);
+      const nextState = await playState()(currentState, updateProgress);
       currentState = nextState;
       await delay(100);
       setState(currentState);
@@ -1844,7 +1895,7 @@ export default function App() {
               <img
                 src={event.image}
                 width={event.imageWidth ?? 1280}
-                height={event.imageHeight ?? 1280}
+                height={event.imageHeight ?? 720}
               />
             )}
             <p>{event.logEntry}</p>
@@ -1953,6 +2004,7 @@ export default function App() {
         }}
         setCustom={setCustom}
         custom={finished}
+        progress={progress}
       />
     </div>
   );

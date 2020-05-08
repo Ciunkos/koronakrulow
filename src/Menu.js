@@ -8,8 +8,13 @@ import Logo from "./Logo";
 import analytics from "./analytics";
 import StatusBar from "./StatusBar";
 import formatLongDisplayDateWithOffsetWithOffset from "./formatLongDisplayDateWithOffset";
+import * as randomPropaganda from "./random";
+import * as actions from "./actions";
+import * as events from "./events";
 
 import "./Menu.scss";
+
+const SHOW_LEADERBOARD = false;
 
 function mapTilerProvider(x, y, z, dpr) {
   const s = String.fromCharCode(97 + ((x + y + z) % 3));
@@ -20,7 +25,14 @@ function mapTilerProvider(x, y, z, dpr) {
 
 const LEADERBOARD_RANGE = 5;
 
-const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
+const Menu = ({
+  active,
+  setActive,
+  resetState,
+  setCustom,
+  custom,
+  progress,
+}) => {
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
   const [daily, setDaily] = useState(true);
@@ -73,6 +85,15 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
 
   const rankingSource = daily ? leaderboards.daily : leaderboards.allTime;
 
+  const {
+    won = 0,
+    lost = 0,
+    games = 0,
+    unlockedActions = [],
+    unlockedEvents = [],
+    unlockedStripes = [],
+  } = progress;
+
   return (
     <div className={active ? "backdrop active" : "backdrop"}>
       <div className="map">
@@ -121,117 +142,127 @@ const Menu = ({ active, setActive, resetState, setCustom, custom }) => {
           <div className="progress-list">
             <div className="progress-box">
               <div className="progress-title">Opanowane epidemie</div>
-              <div className="progress-value">3</div>
+              <div className="progress-value">{won}</div>
             </div>
             <div className="progress-box">
               <div className="progress-title">Rozwiązanie rządy</div>
-              <div className="progress-value">10</div>
+              <div className="progress-value">{lost}</div>
             </div>
             <div className="progress-box">
               <div className="progress-title">Rozgrywki</div>
-              <div className="progress-value">20</div>
+              <div className="progress-value">{games}</div>
             </div>
             <div className="progress-box">
               <div className="progress-title">Odblokowane paski</div>
-              <div className="progress-value">25/451</div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Opanowane akcje</div>
-              <div className="progress-value">50/251</div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Opanowane wydarzenia</div>
-              <div className="progress-value">3/16</div>
-            </div>
-          </div>
-        </section>
-        <section>
-          <h3>Ranking</h3>
-          <div className="tabs">
-            <a
-              href="#"
-              className={classNames("tab", { active: daily })}
-              onClick={() => setDaily(true)}
-            >
-              Dzisiaj
-            </a>
-            <a
-              href="#"
-              className={classNames("tab", { active: !daily })}
-              onClick={() => setDaily(false)}
-            >
-              Łączny
-            </a>
-          </div>
-          <div className="leaderboards">
-            <div>
-              <h4>Najszybciej opanowana epidemia</h4>
-              <div className="leaderboard-entries">
-                {range(LEADERBOARD_RANGE).map((index) => {
-                  const entry = rankingSource.won[index];
-
-                  if (entry) {
-                    const { name, reported, recovered, dead, day } = entry;
-                    return (
-                      <div classNames="leaderboard-entry" key={index}>
-                        <div>
-                          <span className="entry-name">{name}</span>,{" "}
-                          <span>
-                            {formatLongDisplayDateWithOffsetWithOffset(day)}
-                          </span>
-                        </div>
-                        <StatusBar
-                          reported={reported}
-                          dead={dead}
-                          recovered={recovered}
-                        />
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div classNames="leaderboard-entry empty" key={index}>
-                        <div>-</div>
-                      </div>
-                    );
-                  }
-                })}
+              <div className="progress-value">
+                {unlockedStripes.length}/
+                {Object.keys(randomPropaganda).length +
+                  Object.keys(actions).length}
               </div>
             </div>
-            <div>
-              <h4>Najszybciej rozwiązany rząd</h4>
-              <div className="leaderboard-entries">
-                {range(LEADERBOARD_RANGE).map((index) => {
-                  const entry = rankingSource.lost[index];
-
-                  if (entry) {
-                    const { name, reported, recovered, dead, day } = entry;
-                    return (
-                      <div classNames="leaderboard-entry" key={index}>
-                        <div>
-                          <span className="entry-name">{name}</span>,{" "}
-                          <span>
-                            {formatLongDisplayDateWithOffsetWithOffset(day)}
-                          </span>
-                        </div>
-                        <StatusBar
-                          reported={reported}
-                          dead={dead}
-                          recovered={recovered}
-                        />
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div classNames="leaderboard-entry empty" key={index}>
-                        <div>-</div>
-                      </div>
-                    );
-                  }
-                })}{" "}
+            <div className="progress-box">
+              <div className="progress-title">Odblokowane akcje</div>
+              <div className="progress-value">
+                {unlockedActions.length}/{Object.keys(actions).length}
+              </div>
+            </div>
+            <div className="progress-box">
+              <div className="progress-title">Odblokowane wydarzenia</div>
+              <div className="progress-value">
+                {unlockedEvents.length}/{Object.keys(events).length}
               </div>
             </div>
           </div>
         </section>
+        {SHOW_LEADERBOARD && (
+          <section>
+            <h3>Ranking</h3>
+            <div className="tabs">
+              <a
+                href="#"
+                className={classNames("tab", { active: daily })}
+                onClick={() => setDaily(true)}
+              >
+                Dzisiaj
+              </a>
+              <a
+                href="#"
+                className={classNames("tab", { active: !daily })}
+                onClick={() => setDaily(false)}
+              >
+                Łączny
+              </a>
+            </div>
+            <div className="leaderboards">
+              <div>
+                <h4>Najszybciej opanowana epidemia</h4>
+                <div className="leaderboard-entries">
+                  {range(LEADERBOARD_RANGE).map((index) => {
+                    const entry = rankingSource.won[index];
+
+                    if (entry) {
+                      const { name, reported, recovered, dead, day } = entry;
+                      return (
+                        <div classNames="leaderboard-entry" key={index}>
+                          <div>
+                            <span className="entry-name">{name}</span>,{" "}
+                            <span>
+                              {formatLongDisplayDateWithOffsetWithOffset(day)}
+                            </span>
+                          </div>
+                          <StatusBar
+                            reported={reported}
+                            dead={dead}
+                            recovered={recovered}
+                          />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div classNames="leaderboard-entry empty" key={index}>
+                          <div>-</div>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+              <div>
+                <h4>Najszybciej rozwiązany rząd</h4>
+                <div className="leaderboard-entries">
+                  {range(LEADERBOARD_RANGE).map((index) => {
+                    const entry = rankingSource.lost[index];
+
+                    if (entry) {
+                      const { name, reported, recovered, dead, day } = entry;
+                      return (
+                        <div classNames="leaderboard-entry" key={index}>
+                          <div>
+                            <span className="entry-name">{name}</span>,{" "}
+                            <span>
+                              {formatLongDisplayDateWithOffsetWithOffset(day)}
+                            </span>
+                          </div>
+                          <StatusBar
+                            reported={reported}
+                            dead={dead}
+                            recovered={recovered}
+                          />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div classNames="leaderboard-entry empty" key={index}>
+                          <div>-</div>
+                        </div>
+                      );
+                    }
+                  })}{" "}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
         <div className="legal">
           <p>
             Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na
