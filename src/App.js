@@ -724,6 +724,32 @@ const DEATHRATTLE_LIMIT = 15;
 //   },
 // ];
 
+const LEADERBOARDS_ENDPOINT = "https://koronakrulow.pl/leaderboards/";
+
+const submitLeaderboards = async ({
+  day,
+  dead,
+  name,
+  recovered,
+  reported,
+  won,
+}) => {
+  const entry = { day, dead, name, recovered, reported, won };
+  const body = JSON.stringify(entry);
+
+  try {
+    await fetch(LEADERBOARDS_ENDPOINT, {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const playState = (action) => async (state, updateProgress, userIntent) => {
   await delay(TURN_DELAY);
 
@@ -913,6 +939,15 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
         lost: lost + 1,
         games: games + 1,
       }));
+
+      submitLeaderboards({
+        day,
+        dead,
+        name: "Anonim",
+        recovered,
+        reported,
+        won: false,
+      });
     }
 
     const underControl =
@@ -949,6 +984,15 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
             won: won + 1,
             games: games + 1,
           }));
+
+          submitLeaderboards({
+            day,
+            dead,
+            name: "Anonim",
+            recovered,
+            reported,
+            won: true,
+          });
         }
       } else {
         nextState.daysToWin = 30;
