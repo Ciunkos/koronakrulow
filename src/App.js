@@ -63,14 +63,14 @@ const trackGameplayTime = async () => {
   while (true) {
     i++;
 
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 12; i++) {
       if (stopGameplayTimeTracking) {
         stopGameplayTimeTracking = false;
 
         return;
       }
 
-      await delay(1000);
+      await delay(5000);
     }
 
     analytics(`gameplay-${i}`);
