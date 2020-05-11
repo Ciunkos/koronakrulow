@@ -36,6 +36,7 @@ import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
 import analytics from "./analytics";
 import StatusBar from "./StatusBar";
 import offsetStartDate from "./offsetStartDate";
+import { submitLeaderboards } from "./leaderboards";
 
 import "./index.css";
 import "./App.scss";
@@ -723,32 +724,6 @@ const DEATHRATTLE_LIMIT = 15;
 //     title: "Wprowadzenie obowiązku zakrywania twarzy",
 //   },
 // ];
-
-const LEADERBOARDS_ENDPOINT = "https://koronakrulow.pl/leaderboards/";
-
-const submitLeaderboards = async ({
-  day,
-  dead,
-  name,
-  recovered,
-  reported,
-  won,
-}) => {
-  const entry = { day, dead, name, recovered, reported, won };
-  const body = JSON.stringify(entry);
-
-  try {
-    await fetch(LEADERBOARDS_ENDPOINT, {
-      method: "POST",
-      body,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const playState = (action) => async (state, updateProgress, userIntent) => {
   await delay(TURN_DELAY);

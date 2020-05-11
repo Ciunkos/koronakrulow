@@ -81,7 +81,8 @@
   .status-bar {
     justify-content: flex-start;
     padding: 0;
-    padding-top: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   .leaderboards {
@@ -99,6 +100,8 @@
   }
 
   .leaderboard-entries {
+    margin-bottom: 8px;
+
     & > :not(:last-child) {
       margin-bottom: 16px;
     }

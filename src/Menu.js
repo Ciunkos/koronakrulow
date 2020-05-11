@@ -1,6 +1,6 @@
-import { range } from "@sandstreamdev/std/array";
+import { take } from "@sandstreamdev/std/array";
 import { classNames } from "@sandstreamdev/std/web";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Map from "pigeon-maps";
 
 import useWindowSize from "./useWindowSize";
@@ -11,10 +11,12 @@ import formatLongDisplayDateWithOffsetWithOffset from "./formatLongDisplayDateWi
 import * as randomPropaganda from "./random";
 import * as actions from "./actions";
 import * as events from "./events";
+import useApi from "./useApi";
+import { LEADERBOARDS_ENDPOINT } from "./leaderboards";
 
 import "./Menu.scss";
 
-const SHOW_LEADERBOARD = false;
+const SHOW_LEADERBOARD = true;
 
 function mapTilerProvider(x, y, z, dpr) {
   const s = String.fromCharCode(97 + ((x + y + z) % 3));
@@ -24,6 +26,8 @@ function mapTilerProvider(x, y, z, dpr) {
 }
 
 const LEADERBOARD_RANGE = 5;
+
+const padded = [undefined, undefined, undefined, undefined, undefined];
 
 const Menu = ({
   active,
@@ -36,6 +40,8 @@ const Menu = ({
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
   const [daily, setDaily] = useState(true);
+  const [wonTake, setWonTake] = useState(LEADERBOARD_RANGE);
+  const [lostTake, setLostTake] = useState(LEADERBOARD_RANGE);
 
   const toggleDetails = (event) => {
     showDetails(!details);
@@ -56,34 +62,35 @@ const Menu = ({
     setActive(false);
   };
 
-  const leaderboards = {
-    daily: {
-      won: [
-        { name: "Ciunkos", reported: 1234, dead: 246, recovered: 123, day: 10 },
-        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
-        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
-      ],
-      lost: [
-        { name: "Ciunkos", reported: 1234, dead: 246, recovered: 123, day: 10 },
-        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
-      ],
-    },
-    allTime: {
-      won: [
-        { name: "wykop", reported: 1234, dead: 246, recovered: 123, day: 10 },
-        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
-        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
-        { name: "Anonim", reported: 54, dead: 21, recovered: 65, day: 231 },
-        { name: "Anonim", reported: 34, dead: 21, recovered: 65, day: 231 },
-      ],
-      lost: [
-        { name: "lol", reported: 1234, dead: 246, recovered: 123, day: 10 },
-        { name: "aladin", reported: 34, dead: 21, recovered: 65, day: 231 },
-      ],
-    },
+  const [leaderboardsSource, { busy, refetch }] = useApi(LEADERBOARDS_ENDPOINT);
+
+  useEffect(() => {
+    if (active && !busy) {
+      refetch();
+    }
+  }, [active]);
+
+  const leaderboards = leaderboardsSource ?? {
+    daily: { won: padded, lost: padded },
+    allTime: { won: padded, lost: padded },
   };
 
   const rankingSource = daily ? leaderboards.daily : leaderboards.allTime;
+
+  const hasMoreWon = rankingSource.won.length > wonTake;
+  const hasMoreLost = rankingSource.lost.length > lostTake;
+
+  const showMoreLost = (event) => {
+    event.preventDefault();
+
+    setLostTake(lostTake + 5 * LEADERBOARD_RANGE);
+  };
+
+  const showMoreWon = (event) => {
+    event.preventDefault();
+
+    setWonTake(wonTake + 5 * LEADERBOARD_RANGE);
+  };
 
   const {
     won = 0,
@@ -197,14 +204,13 @@ const Menu = ({
               <div>
                 <h4>Najszybciej opanowana epidemia</h4>
                 <div className="leaderboard-entries">
-                  {range(LEADERBOARD_RANGE).map((index) => {
-                    const entry = rankingSource.won[index];
-
+                  {take(wonTake)(rankingSource.won).map((entry, index) => {
                     if (entry) {
                       const { name, reported, recovered, dead, day } = entry;
                       return (
-                        <div classNames="leaderboard-entry" key={index}>
+                        <div className="leaderboard-entry" key={index}>
                           <div>
+                            {index + 1}.{" "}
                             <span className="entry-name">{name}</span>,{" "}
                             <span>
                               {formatLongDisplayDateWithOffsetWithOffset(day)}
@@ -219,25 +225,29 @@ const Menu = ({
                       );
                     } else {
                       return (
-                        <div classNames="leaderboard-entry empty" key={index}>
+                        <div className="leaderboard-entry empty" key={index}>
                           <div>-</div>
                         </div>
                       );
                     }
                   })}
                 </div>
+                {hasMoreWon && (
+                  <a href="#" onClick={showMoreWon}>
+                    Pokaż więcej
+                  </a>
+                )}
               </div>
               <div>
                 <h4>Najszybciej rozwiązany rząd</h4>
                 <div className="leaderboard-entries">
-                  {range(LEADERBOARD_RANGE).map((index) => {
-                    const entry = rankingSource.lost[index];
-
+                  {take(lostTake)(rankingSource.lost).map((entry, index) => {
                     if (entry) {
                       const { name, reported, recovered, dead, day } = entry;
                       return (
-                        <div classNames="leaderboard-entry" key={index}>
+                        <div className="leaderboard-entry" key={index}>
                           <div>
+                            {index + 1}.{" "}
                             <span className="entry-name">{name}</span>,{" "}
                             <span>
                               {formatLongDisplayDateWithOffsetWithOffset(day)}
@@ -252,13 +262,18 @@ const Menu = ({
                       );
                     } else {
                       return (
-                        <div classNames="leaderboard-entry empty" key={index}>
+                        <div className="leaderboard-entry empty" key={index}>
                           <div>-</div>
                         </div>
                       );
                     }
-                  })}{" "}
+                  })}
                 </div>
+                {hasMoreLost && (
+                  <a href="#" onClick={showMoreLost}>
+                    Pokaż więcej
+                  </a>
+                )}
               </div>
             </div>
           </section>
