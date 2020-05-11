@@ -3,11 +3,13 @@ import { promises } from "fs";
 import bodyParser from "body-parser";
 import cors from "cors";
 import partition from "@sandstreamdev/std/array/partition.js";
+import take from "@sandstreamdev/std/array/take.js";
 
 const { readFile, writeFile } = promises;
 
 const PORT = 8080;
 const SNAPSHOT_FILE_PATH = "snapshot.json";
+const LIMIT = 100;
 
 const app = express();
 app.disable("x-powered-by");
@@ -40,6 +42,9 @@ app.use(
 
 let store = [];
 
+const byWon = ({ won }) => won;
+const partitionByWon = partition(byWon);
+
 app.get("/", (_, res) => {
   const now = new Date();
   now.setHours(now.getHours() - now.getTimezoneOffset() / 60);
@@ -56,15 +61,14 @@ app.get("/", (_, res) => {
     return date >= rangeLow && date < rangeHigh;
   });
 
-  const byWon = ({ won }) => won;
-  const partitionByWon = partition(byWon);
-
   const [allTimeLost, allTimeWon] = partitionByWon(allTime);
   const [dailyLost, dailyWon] = partitionByWon(daily);
 
+  const takeLimit = take(LIMIT);
+
   const result = {
-    allTime: { lost: allTimeLost, won: allTimeWon },
-    daily: { lost: dailyLost, won: dailyWon },
+    allTime: { lost: takeLimit(allTimeLost), won: takeLimit(allTimeWon) },
+    daily: { lost: takeLimit(dailyLost), won: takeLimit(dailyWon) },
   };
 
   res.status(200).send(result);
