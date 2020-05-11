@@ -1481,6 +1481,7 @@ export default function App() {
 
   const toggleMusic = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     if (musicPlayer.current.paused) {
       setAudio(true);
@@ -1497,6 +1498,7 @@ export default function App() {
 
   const toggleTvpis = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     const nextState = !tvpis;
 
@@ -1748,14 +1750,24 @@ export default function App() {
           <a
             href="#"
             className={classNames("tab", { active: !daily })}
-            onClick={() => setDaily(false)}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              setDaily(false);
+            }}
           >
             Łącznie
           </a>{" "}
           <a
             href="#"
             className={classNames("tab", { active: daily })}
-            onClick={() => setDaily(true)}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              setDaily(true);
+            }}
           >
             Dziennie
           </a>

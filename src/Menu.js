@@ -45,8 +45,10 @@ const Menu = ({
   const [lostTake, setLostTake] = useState(LEADERBOARD_RANGE);
 
   const toggleDetails = (event) => {
-    showDetails(!details);
     event.preventDefault();
+    event.stopPropagation();
+
+    showDetails(!details);
   };
 
   const onPlayClick = async () => {
@@ -83,12 +85,14 @@ const Menu = ({
 
   const showMoreLost = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     setLostTake(lostTake + 5 * LEADERBOARD_RANGE);
   };
 
   const showMoreWon = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     setWonTake(wonTake + 5 * LEADERBOARD_RANGE);
   };
@@ -203,14 +207,24 @@ const Menu = ({
               <a
                 href="#"
                 className={classNames("tab", { active: daily })}
-                onClick={() => setDaily(true)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  setDaily(true);
+                }}
               >
                 Dzisiaj
               </a>
               <a
                 href="#"
                 className={classNames("tab", { active: !daily })}
-                onClick={() => setDaily(false)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  setDaily(false);
+                }}
               >
                 Łączny
               </a>
