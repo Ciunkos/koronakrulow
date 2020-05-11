@@ -2397,3 +2397,71 @@ export const a210 = createAction(
     message: "ZUS kochany przez Polaków",
   }
 );
+
+export const a211 = createAction(
+  "Wprowadź monitoring kamerami termowizyjnymi",
+  "Kamery monitoringów miejskich wyposażane są w czujniki termowizyjne w celu wykrycia chorych osób w tłumie.",
+  (state) => {
+    state.people -= 2;
+    state.budget -= 4;
+    state.infectionProbability *= 0.95;
+    state.contactsPerDay *= 0.95;
+    state.detectionRate += 2;
+  },
+  {
+    message: "Mamy wszystko pod kontrolą",
+  }
+);
+
+export const a212 = createAction(
+  "Podnieś kwotę wolną od podatku",
+  "Kwota wolna od podatku zwiększona do 12-krotności miesięcznej płacy minimalnej. Konfederacja zaskoczona działaniem rządu!",
+  (state) => {
+    state.people += 4;
+    state.budget -= 7;
+    state.economy += 5;
+    state.social -= 2;
+  },
+  {
+    message: "Rząd o krok do przodu przed opozycją",
+  }
+);
+
+export const a213 = createAction(
+  "Przekaż środki ochrony osobistej do Watykanu",
+  "W momencie gdy w polskich szpitalach brakuje sprzętu i środków ochrony osobistej, PKN Orlen przekazał środki ochronne do Watykanu w postaci ponad 705 tys. masek jednorazowych, 30 tys. masek polskiej firmy Brubeck, 3,6 tys. sztuk płynu do dezynfekcji rąk o pojemności 5 litrów, 3,2 tys. sztuk płynu do dezynfekcji powierzchni o pojemności 5 litrów oraz 10 tys. kombinezonów ochronnych.",
+  (state) => {
+    state.people -= 2;
+    state.budget -= 3;
+    state.healthcare -= 2;
+    state.politics += 5;
+  },
+  {
+    message: "Jak trwoga, to do Boga",
+  }
+);
+
+export const a214 = createAction(
+  "Nagraj #hot16challenge2 Andrzeja Dudy",
+  "Media komentują: Zamiast kompromitacji w sieci, należało by przekazać fundusze z TVP na służbę zdrowia.",
+  (state) => {
+    state.people -= 1;
+    state.politics += 1;
+  },
+  {
+    message: "Nie pytają o imię, walczą z ostrym cieniem mgły",
+  }
+);
+
+export const a215 = createAction(
+  "Powołaj zespół do walki z hejtem w policji",
+  "Policyjne psy będą od dziś tropić hejterów w sieci.",
+  (state) => {
+    state.people -= 2;
+    state.politics += 2;
+    state.policeAuthority -= 2;
+  },
+  {
+    message: "Prawda jest nową mową nienawiści",
+  }
+);
