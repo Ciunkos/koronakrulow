@@ -1,7 +1,7 @@
 import express from "express";
 import { promises } from "fs";
 import bodyParser from "body-parser";
-import { partition } from "@sandstreamdev/std/array";
+import partition from "@sandstreamdev/std/array/partition.js";
 
 const { readFile, writeFile } = promises;
 
