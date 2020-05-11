@@ -13,18 +13,13 @@ app.use(bodyParser.json());
 
 let store = [];
 
-const TIMEZONE_OFFSET = 2;
-
 app.get("/", (_, res) => {
   const now = new Date();
-  now.setHours(now.getHours() - now.getTimezoneOffset() / 60 - TIMEZONE_OFFSET);
+  now.setHours(now.getHours() - now.getTimezoneOffset() / 60);
   const [date] = now.toISOString().split("T");
 
-  const rangeLow = new Date(`${date}T00:00:00.000Z`);
-  rangeLow.setHours(rangeLow.getHours() - TIMEZONE_OFFSET);
-
-  const rangeHigh = new Date(`${date}T24:00:00.000Z`);
-  rangeHigh.setHours(rangeHigh.getHours() - TIMEZONE_OFFSET);
+  const rangeLow = new Date(`${date}T00:00:00.000`);
+  const rangeHigh = new Date(`${date}T24:00:00.000`);
 
   const allTime = [...store].sort((a, b) => a.day - b.day);
   const daily = allTime.filter((x) => {
