@@ -25,7 +25,11 @@ const crossOriginMessage = (origin) =>
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || !allowedOrigins.includes(origin)) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (!allowedOrigins.includes(origin)) {
         return callback(new Error(crossOriginMessage(origin)), false);
       }
 
