@@ -19,14 +19,14 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-const crossOriginMessage =
-  "The CORS policy for this site does not allow access from the specified Origin.";
+const crossOriginMessage = (origin) =>
+  `The CORS policy for this site does not allow access from the specified origin (${origin}).`;
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin || !allowedOrigins.includes(origin)) {
-        return callback(new Error(crossOriginMessage), false);
+        return callback(new Error(crossOriginMessage(origin)), false);
       }
 
       return callback(null, true);
@@ -128,6 +128,8 @@ app.post("/", async (req, res) => {
 });
 
 app.use((error, _req, res, _next) => {
+  console.error(error);
+
   if (error instanceof SyntaxError) {
     res.status(400).send("Bad request");
   } else {
