@@ -1,6 +1,7 @@
 import express from "express";
 import { promises } from "fs";
 import bodyParser from "body-parser";
+import cors from "cors";
 import partition from "@sandstreamdev/std/array/partition.js";
 
 const { readFile, writeFile } = promises;
@@ -11,6 +12,27 @@ const SNAPSHOT_FILE_PATH = "snapshot.json";
 const app = express();
 app.disable("x-powered-by");
 app.use(bodyParser.json());
+
+const allowedOrigins = [
+  "https://koronakrulow.pl",
+  "https://ciunkos.github.io",
+  "http://localhost:3000",
+];
+
+const crossOriginMessage =
+  "The CORS policy for this site does not allow access from the specified Origin.";
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || !allowedOrigins.includes(origin)) {
+        return callback(new Error(crossOriginMessage), false);
+      }
+
+      return callback(null, true);
+    },
+  })
+);
 
 let store = [];
 
