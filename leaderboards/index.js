@@ -1,6 +1,7 @@
 import express from "express";
 import { promises } from "fs";
 import bodyParser from "body-parser";
+import { partition } from "@sandstreamdev/std/array";
 
 const { readFile, writeFile } = promises;
 
@@ -22,13 +23,25 @@ app.get("/", (_, res) => {
   const rangeHigh = new Date(`${date}T24:00:00.000`);
 
   const allTime = [...store].sort((a, b) => a.day - b.day);
+
   const daily = allTime.filter((x) => {
     const date = new Date(x.date);
 
     return date >= rangeLow && date < rangeHigh;
   });
 
-  res.status(200).send({ allTime, daily });
+  const byWon = ({ won }) => won;
+  const partitionByWon = partition(byWon);
+
+  const [allTimeLost, allTimeWon] = partitionByWon(allTime);
+  const [dailyLost, dailyWon] = partitionByWon(daily);
+
+  const result = {
+    allTime: { lost: allTimeLost, won: allTimeWon },
+    daily: { lost: dailyLost, won: dailyWon },
+  };
+
+  res.status(200).send(result);
 });
 
 app.post("/", async (req, res) => {
