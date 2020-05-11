@@ -1,4 +1,5 @@
-import { take } from "@sandstreamdev/std/array";
+import { exact } from "@sandstreamdev/std/array";
+import { clamp } from "@sandstreamdev/std/math";
 import { classNames } from "@sandstreamdev/std/web";
 import React, { useState, useEffect } from "react";
 import Map from "pigeon-maps";
@@ -100,6 +101,20 @@ const Menu = ({
     unlockedEvents = [],
     unlockedStripes = [],
   } = progress;
+
+  const leaderboardsWonSource = exact(
+    clamp(
+      LEADERBOARD_RANGE,
+      Math.max(LEADERBOARD_RANGE, rankingSource.won.length)
+    )(wonTake)
+  )(rankingSource.won);
+
+  const leaderboardsLostSource = exact(
+    clamp(
+      LEADERBOARD_RANGE,
+      Math.max(LEADERBOARD_RANGE, rankingSource.lost.length)
+    )(lostTake)
+  )(rankingSource.lost);
 
   return (
     <div className={active ? "backdrop active" : "backdrop"}>
@@ -204,7 +219,7 @@ const Menu = ({
               <div>
                 <h4>Najszybciej opanowana epidemia</h4>
                 <div className="leaderboard-entries">
-                  {take(wonTake)(rankingSource.won).map((entry, index) => {
+                  {leaderboardsWonSource.map((entry, index) => {
                     if (entry) {
                       const { name, reported, recovered, dead, day } = entry;
                       return (
@@ -241,7 +256,7 @@ const Menu = ({
               <div>
                 <h4>Najszybciej rozwiązany rząd</h4>
                 <div className="leaderboard-entries">
-                  {take(lostTake)(rankingSource.lost).map((entry, index) => {
+                  {leaderboardsLostSource.map((entry, index) => {
                     if (entry) {
                       const { name, reported, recovered, dead, day } = entry;
                       return (

@@ -584,3 +584,15 @@ body {
     margin-bottom: 8px;
   }
 }
+
+#leaderboards-name {
+  display: flex;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  margin-top: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}

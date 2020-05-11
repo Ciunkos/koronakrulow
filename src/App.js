@@ -36,7 +36,6 @@ import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
 import analytics from "./analytics";
 import StatusBar from "./StatusBar";
 import offsetStartDate from "./offsetStartDate";
-import { submitLeaderboards } from "./leaderboards";
 
 import "./index.css";
 import "./App.scss";
@@ -898,6 +897,7 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
       nextState.events = [...(nextState.events || []), events.e8];
       nextState.events = [...(nextState.events || []), events.e14];
       nextState.events = [...(nextState.events || []), events.e18];
+      nextState.events = [...(nextState.events || []), events.e19];
 
       nextState.gameOver = true;
       nextState.win = false;
@@ -914,15 +914,6 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
         lost: lost + 1,
         games: games + 1,
       }));
-
-      submitLeaderboards({
-        day,
-        dead,
-        name: "Anonim",
-        recovered,
-        reported,
-        won: false,
-      });
     }
 
     const underControl =
@@ -941,6 +932,7 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
           nextState.events = [...(nextState.events || []), events.e9];
           nextState.events = [...(nextState.events || []), events.e14];
           nextState.events = [...(nextState.events || []), events.e18];
+          nextState.events = [...(nextState.events || []), events.e19];
 
           nextState.gameOver = true;
           nextState.win = true;
@@ -959,15 +951,6 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
             won: won + 1,
             games: games + 1,
           }));
-
-          submitLeaderboards({
-            day,
-            dead,
-            name: "Anonim",
-            recovered,
-            reported,
-            won: true,
-          });
         }
       } else {
         nextState.daysToWin = 30;
@@ -1247,6 +1230,10 @@ export default function App() {
   };
 
   const skipEvent = async () => {
+    if (event && event.postAction) {
+      event.postAction(latestState);
+    }
+
     const eventsSource = latestState.events || [];
     const index = eventsSource.findIndex((x) => x === event);
 

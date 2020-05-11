@@ -19,6 +19,8 @@ import e15Image from "./events/e15.jpg";
 import e16Image from "./events/e16.jpg";
 import e17Image from "./events/e17.jpg";
 import e18Image from "./events/e18.jpg";
+import e19Image from "./events/e19.jpg";
+import { submitLeaderboards } from "./leaderboards";
 
 const createEvent = (title, logEntry, effect, options) => ({
   title,
@@ -185,6 +187,61 @@ export const e18 = createEvent(
         >
           Podziel się na Twitterze
         </a>
+      </div>
+    ),
+  }
+);
+
+const onInputFocus = (event) => {
+  try {
+    event.target.select();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const e19 = createEvent(
+  "Dopisz się do rankingu",
+  "To łatwiejsze niż dopisanie się do spisu wyborców!",
+  (state) => {},
+  {
+    image: e19Image,
+    postAction: async ({ day, dead, recovered, reported, win: won }) => {
+      let name = "Anonim";
+      try {
+        const nameElement = document.getElementById("leaderboards-name");
+
+        name = nameElement.value;
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+        submitLeaderboards({
+          day,
+          dead,
+          name,
+          recovered,
+          reported,
+          won,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    content: (
+      <div className="extra-actions">
+        <label>
+          Wpisz imię lub ksywkę:
+          <input
+            autoFocus
+            defaultValue="Anonim"
+            id="leaderboards-name"
+            maxLength={18}
+            onFocus={onInputFocus}
+            type="text"
+          />
+        </label>
       </div>
     ),
   }
