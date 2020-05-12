@@ -2465,3 +2465,16 @@ export const a215 = createAction(
     message: "Prawda jest nową mową nienawiści",
   }
 );
+
+export const a216 = createAction(
+  "Zaopatrz uczniów w sprzęt do zdalnej nauki",
+  "Rząd finansuje sprzęt komputerowy dla uczniów. Zgodnie z umową z Microsoftem, Minecraft będzie preinstalowany.",
+  (state) => {
+    state.people += 1;
+    state.social += 1;
+    state.budget -= 2;
+  },
+  {
+    message: "Program zdalna szkoła+ na plus",
+  }
+);
