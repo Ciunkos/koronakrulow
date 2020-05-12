@@ -1142,7 +1142,7 @@ const reset = async (updateProgress, custom = false) => {
 
 export default function App() {
   const [finished, setFinished] = useState(() => get("finished") === "true");
-  const [tvpis, setTvpis] = useState(true);
+  const [tvpis, internalSetTvpis] = useState(() => get("tvpis") !== "off");
   const [menuActive, setMenuActive] = useState(true);
   const [busy, setBusy] = useState(false);
   const [action, setAction] = useState(false);
@@ -1158,13 +1158,25 @@ export default function App() {
   const [showStats, setShowStats] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [queuedState, queueState] = useState(undefined);
-  const [audio, setAudio] = useState(true);
+  const [audio, internalSetAudio] = useState(() => get("music") !== "off");
   const [daily, setDaily] = useState(false);
   const [stop, setStop] = useState(false);
   const [progress, setProgress] = useState(() => {
     const loaded = get("progress");
     return loaded ? JSON.parse(loaded) : {};
   });
+
+  const setAudio = (value) => {
+    internalSetAudio(value);
+
+    set("music")(value ? "on" : "off");
+  };
+
+  const setTvpis = (value) => {
+    internalSetTvpis(value);
+
+    set("tvpis")(value ? "on" : "off");
+  };
 
   let progressCache = progress;
 
@@ -2021,7 +2033,7 @@ export default function App() {
         </div>
       )}
       <audio
-        autoPlay
+        autoPlay={audio}
         loop
         ref={musicPlayer}
         src={music}
@@ -2033,9 +2045,11 @@ export default function App() {
         setActive={(value) => {
           setMenuActive(value);
 
-          try {
-            musicPlayer.current.play();
-          } catch {}
+          if (audio) {
+            try {
+              musicPlayer.current.play();
+            } catch {}
+          }
         }}
         custom={finished}
         progress={progress}
