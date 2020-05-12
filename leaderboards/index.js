@@ -77,10 +77,11 @@ app.get("/", (_, res) => {
 app.post("/", async (req, res) => {
   try {
     const {
-      body: { day, dead, name, recovered, reported, won },
+      body: { custom = false, day, dead, name, recovered, reported, won },
     } = req;
 
     if (
+      typeof custom !== "boolean" ||
       typeof won !== "boolean" ||
       typeof reported !== "number" ||
       typeof dead !== "number" ||
@@ -110,6 +111,7 @@ app.post("/", async (req, res) => {
     }
 
     const entry = {
+      custom,
       date: new Date(),
       day,
       dead,

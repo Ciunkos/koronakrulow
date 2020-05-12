@@ -30,14 +30,7 @@ const LEADERBOARD_RANGE = 5;
 
 const padded = [undefined, undefined, undefined, undefined, undefined];
 
-const Menu = ({
-  active,
-  setActive,
-  resetState,
-  setCustom,
-  custom,
-  progress,
-}) => {
+const Menu = ({ active, setActive, resetState, custom, progress }) => {
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
   const [daily, setDaily] = useState(true);
@@ -53,15 +46,13 @@ const Menu = ({
 
   const onPlayClick = async () => {
     analytics("play");
-    setCustom(false);
-    await resetState();
+    await resetState(false);
     setActive(false);
   };
 
   const onCustomPlayClick = async () => {
     analytics("play_custom");
-    setCustom(true);
-    await resetState();
+    await resetState(true);
     setActive(false);
   };
 

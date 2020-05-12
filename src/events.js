@@ -206,8 +206,16 @@ export const e19 = createEvent(
   (state) => {},
   {
     image: e19Image,
-    postAction: async ({ day, dead, recovered, reported, win: won }) => {
+    postAction: async ({
+      custom,
+      day,
+      dead,
+      recovered,
+      reported,
+      win: won,
+    }) => {
       let name = "Anonim";
+
       try {
         const nameElement = document.getElementById("leaderboards-name");
 
@@ -218,6 +226,7 @@ export const e19 = createEvent(
 
       try {
         submitLeaderboards({
+          custom,
           day,
           dead,
           name,

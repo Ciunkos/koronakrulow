@@ -224,7 +224,7 @@ const DEAD = 1 << 7;
 
 const DIFFICULTY = 0.9;
 
-const getInitialState = () => {
+const getInitialState = (custom = false) => {
   const initialAgentCount = Math.round(20 + Math.random() * 50 * DIFFICULTY);
 
   // const patient0 = new Agent();
@@ -249,6 +249,7 @@ const getInitialState = () => {
   sickDelays[0] = 5;
 
   const initialState = {
+    custom,
     day: 0,
     infectionProbability: 0.02 * DIFFICULTY,
     quarantineBreakProbability: 0.01 * DIFFICULTY,
@@ -1118,17 +1119,17 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
 
 let mediaTimeout;
 
-const getStartState = () => [getInitialState()];
+const getStartState = () => [getInitialState(false)];
 
 let stopFlag = false;
 
-const reset = async (updateProgress) => {
+const reset = async (updateProgress, custom = false) => {
   stopFlag = false;
   stopGameplayTimeTracking = false;
 
   trackGameplayTime();
 
-  let startState = [getInitialState()];
+  let startState = [getInitialState(custom)];
 
   let steps = 6; //60 - 13;
 
@@ -1141,7 +1142,6 @@ const reset = async (updateProgress) => {
 
 export default function App() {
   const [finished, setFinished] = useState(() => get("finished") === "true");
-  const [custom, setCustom] = useState(false);
   const [tvpis, setTvpis] = useState(true);
   const [menuActive, setMenuActive] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -1209,8 +1209,8 @@ export default function App() {
 
   window.setState = () => {};
 
-  const resetState = async () => {
-    const nextState = await reset(updateProgress);
+  const resetState = async (custom = false) => {
+    const nextState = await reset(updateProgress, custom);
 
     setState(nextState);
   };
@@ -1445,6 +1445,8 @@ export default function App() {
   const newCases = latestQueuedState.reported - latestState.reported;
   const newRecovered = latestQueuedState.recovered - latestState.recovered;
   const newDeaths = latestQueuedState.dead - latestState.dead;
+
+  const { custom } = latestState;
 
   useEffect(() => {
     const eventsSource = latestState.events || [];
@@ -2035,7 +2037,6 @@ export default function App() {
             musicPlayer.current.play();
           } catch {}
         }}
-        setCustom={setCustom}
         custom={finished}
         progress={progress}
       />

@@ -714,7 +714,7 @@ export const a61 = createAction(
 
 export const a62 = createAction(
   "Wesprzyj Patryka Vegę w produkcji kolejnego hitu",
-  'Reżyser planuje film "Informatycy w Breslau" pokazujący mafię klubów nocnych',
+  'Reżyser planuje film "Informatycy w Breslau" pokazujący mafię klubów nocnych.',
   (state) => {
     state.budget -= 1;
   },

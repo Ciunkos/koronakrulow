@@ -1,6 +1,7 @@
 export const LEADERBOARDS_ENDPOINT = "https://koronakrulow.pl/leaderboards/";
 
 export const submitLeaderboards = async ({
+  custom,
   day,
   dead,
   name,
@@ -8,7 +9,7 @@ export const submitLeaderboards = async ({
   reported,
   won,
 }) => {
-  const entry = { day, dead, name, recovered, reported, won };
+  const entry = { custom, day, dead, name, recovered, reported, won };
   const body = JSON.stringify(entry);
 
   try {
