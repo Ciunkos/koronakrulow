@@ -49,7 +49,8 @@ const filterName = ({ name, ...rest }) => ({
   name: name
     .replace(/(j)(eb[ai])([cćlł])/gi, "$1***$3")
     .replace(/(k)(urw)([aąeęyoi])/gi, "$1***$3")
-    .replace(/([śs])(mie)([cć])/gi, "$1***$3"),
+    .replace(/([śs])(mie)([cć])/gi, "$1***$3")
+    .replace(/([c]?)(h[uoó])(j)/gi, "$1**$3"),
   ...rest,
 });
 
