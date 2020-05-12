@@ -49,6 +49,10 @@ a.button {
   }
 }
 
+.pigeon-attribution {
+  display: none !important;
+}
+
 .status-bar {
   display: flex;
   padding: 16px;
@@ -306,7 +310,7 @@ a.button {
   @media screen and (min-width: 720px) {
     bottom: 12px;
     left: auto;
-    right: 216px;
+    right: 8px;
     text-align: right;
   }
 

@@ -357,6 +357,25 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
                 .
               </p>
               <p>
+                Mapy{" "}
+                <a
+                  href="https://pigeon-maps.js.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Pigeon
+                </a>{" "}
+                na licencji © autorzy{" "}
+                <a
+                  href="https://www.openstreetmap.org/copyright"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  OpenStreetMap
+                </a>
+                .
+              </p>
+              <p>
                 Ikony stworzone przez{" "}
                 <a
                   href="https://www.flaticon.com/authors/freepik"
