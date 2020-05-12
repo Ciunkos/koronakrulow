@@ -1,10 +1,10 @@
 # Korona Krulów
 
-Satyryczna gra o koronawirusie, polskiej polityce i propagandzie tvpis. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!
+Satyryczna gra o koronawirusie, polskiej polityce i propagandzie TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!
 
 Gra dostępna online na https://koronakrulow.pl/
 
-Od gracza zależy decyzja czy będzie walczył z epidemią, skupi się na aborcji czy nasyłaniem policji na ludzi. W każdej turze w grze wyświetlane są paski grozy - nie musiałem wymyślać wielu nowych, ponieważ aktualnie samo TVPis generuje tyle tragikomicznych wiadomości, że ciężko odróżnić prawdę od fałszu. Wątek wyborów przewija się przez całą grę - od gracza zależy przebieg kampanii Dudy.
+Od gracza zależy decyzja czy będzie walczył z epidemią, skupi się na aborcji czy nasyłaniem policji na ludzi. W każdej turze w grze wyświetlane są paski grozy - nie musiałem wymyślać wielu nowych, ponieważ aktualnie samo TVPiS generuje tyle tragikomicznych wiadomości, że ciężko odróżnić prawdę od fałszu. Wątek wyborów przewija się przez całą grę - od gracza zależy przebieg kampanii Dudy.
 
 Wygrasz wybory? Ocalisz ludzi? Opracujesz szczepionkę? - Sprawdź grając w Koronę Krulów!
 
@@ -29,7 +29,7 @@ npm start
 Gra posiada kilka skryptów ściągających paski na podstawie tekstów w akcjach. Aby zbudować pełną paczkę należy uruchomić:
 
 ```
-npm run download && npm run random && npm run build
+npm run package
 ```
 
 Po ukończreniu katolog `build` nadaje się do statycznego serwowania przez serwer HTTP lub ręcznego odpalenia.
