@@ -91,9 +91,13 @@ app.get("/", (_, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const {
+    let {
       body: { custom = false, day, dead, name, recovered, reported, won },
     } = req;
+
+    if (!name) {
+      name = "Anonim";
+    }
 
     if (
       typeof custom !== "boolean" ||
