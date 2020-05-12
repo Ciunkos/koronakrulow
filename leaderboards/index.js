@@ -47,8 +47,9 @@ const partitionByWon = partition(byWon);
 
 const filterName = ({ name, ...rest }) => ({
   name: name
-    .replace(/(j)(eba)([cćlł])/gi, "$1***$3")
-    .replace(/(k)(urw)([eęyo])/gi, "$1***$3"),
+    .replace(/(j)(eb[ai])([cćlł])/gi, "$1***$3")
+    .replace(/(k)(urw)([aąeęyoi])/gi, "$1***$3")
+    .replace(/([śs])(mie)([cć])/gi, "$1***$3"),
   ...rest,
 });
 
