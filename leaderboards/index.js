@@ -45,6 +45,13 @@ let store = [];
 const byWon = ({ won }) => won;
 const partitionByWon = partition(byWon);
 
+const filterName = ({ name, ...rest }) => ({
+  name: name
+    .replace(/(j)(eba)([cćlł])/gi, "$1***$3")
+    .replace(/(k)(urw)([eęyo])/gi, "$1***$3"),
+  ...rest,
+});
+
 app.get("/", (_, res) => {
   const now = new Date();
   now.setHours(now.getHours() - now.getTimezoneOffset() / 60);
@@ -67,8 +74,14 @@ app.get("/", (_, res) => {
   const takeLimit = take(LIMIT);
 
   const result = {
-    allTime: { lost: takeLimit(allTimeLost), won: takeLimit(allTimeWon) },
-    daily: { lost: takeLimit(dailyLost), won: takeLimit(dailyWon) },
+    allTime: {
+      lost: takeLimit(allTimeLost).map(filterName),
+      won: takeLimit(allTimeWon).map(filterName),
+    },
+    daily: {
+      lost: takeLimit(dailyLost).map(filterName),
+      won: takeLimit(dailyWon).map(filterName),
+    },
   };
 
   res.status(200).send(result);
