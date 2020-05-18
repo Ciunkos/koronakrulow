@@ -514,5 +514,5 @@ export default [
   "Coraz więcej Polaków stać na chleb",
   "Prezes Kaczyński był na otwarciu. Czego?",
   "Trwa walka z ostrym cieniem mgły",
-  "Kaczyński sam wyzwolił Polską od komuny",
+  "Kaczyński sam wyzwolił Polskę od komuny",
 ];
