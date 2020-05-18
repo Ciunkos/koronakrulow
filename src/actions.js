@@ -2321,7 +2321,7 @@ export const a204 = createAction(
 );
 
 export const a205 = createAction(
-  "Obniż pensje w polityków",
+  "Obniż pensje polityków",
   "Rząd wyraża solidarność z narodem obniżając politykom wynagrodzenia. Koniec niejasnych premii.",
   (state) => {
     state.people += 4;
