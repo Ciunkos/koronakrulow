@@ -510,4 +510,9 @@ export default [
   "Duda uzbierał 1,5 mln zł na zbiórce hip-hopowej",
   "Słynne paski nazywane paskami grozy w TVN-ie",
   "Poparcie PiS widać z Księżyca",
+  "Komu przeszkadza dyktatura?",
+  "Coraz więcej Polaków stać na chleb",
+  "Prezes Kaczyński był na otwarciu. Czego?",
+  "Trwa walka z ostrym cieniem mgły",
+  "Kaczyński sam wyzwolił Polską od komuny",
 ];
