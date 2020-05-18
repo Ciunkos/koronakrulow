@@ -2,6 +2,7 @@ import express from "express";
 import { promises } from "fs";
 import bodyParser from "body-parser";
 import cors from "cors";
+import crypto from "crypto";
 import partition from "@sandstreamdev/std/array/partition.js";
 import take from "@sandstreamdev/std/array/take.js";
 
@@ -45,7 +46,7 @@ let store = [];
 const byWon = ({ won }) => won;
 const partitionByWon = partition(byWon);
 
-const filterName = ({ name, ...rest }) => ({
+const filterName = ({ name, nonce, ...rest }) => ({
   name: name
     .replace(/(j)(eb[ai])([cćlł])/gi, "$1***$3")
     .replace(/(k)(urw)([aąeęyoi])/gi, "$1***$3")
@@ -89,10 +90,28 @@ app.get("/", (_, res) => {
   res.status(200).send(result);
 });
 
+const KEY = "8955de21141f62d71ec533f864f23262192fb277bdf21e1d928bd519d79f5b05";
+
+const SIGNATURE_ALGORITHM = "sha256";
+
+const signatureHex = (text) =>
+  crypto.createHash(SIGNATURE_ALGORITHM).update(text).digest("hex");
+
 app.post("/", async (req, res) => {
   try {
     let {
-      body: { custom = false, day, dead, name, recovered, reported, won },
+      body: {
+        custom = false,
+        day,
+        dead,
+        key,
+        name,
+        nonce,
+        recovered,
+        reported,
+        signature,
+        won,
+      },
     } = req;
 
     if (!name) {
@@ -106,9 +125,11 @@ app.post("/", async (req, res) => {
       typeof dead !== "number" ||
       typeof recovered !== "number" ||
       typeof day !== "number" ||
-      typeof name !== "string"
+      typeof name !== "string" ||
+      typeof nonce !== "string" ||
+      typeof signature !== "string" ||
+      typeof key !== "string"
     ) {
-      console.error({ day, dead, name, recovered, reported, won });
       throw new TypeError("Some field is of a wrong type.");
     }
 
@@ -129,12 +150,39 @@ app.post("/", async (req, res) => {
       throw new TypeError("Name is empty or too long.");
     }
 
+    if (key !== KEY) {
+      throw new Error("Key mismatch.");
+    }
+
+    const sourceEntry = {
+      custom,
+      day,
+      dead,
+      key,
+      name,
+      nonce,
+      recovered,
+      reported,
+      won,
+    };
+    const sourceBody = JSON.stringify(sourceEntry);
+    const sourceSignature = signatureHex(sourceBody);
+
+    if (signature !== sourceSignature) {
+      throw new Error("Signature mismatch.");
+    }
+
+    if (store.some((x) => x.nonce === nonce)) {
+      throw new Error("Nonce already used.");
+    }
+
     const entry = {
       custom,
       date: new Date(),
       day,
       dead,
       name,
+      nonce,
       recovered,
       reported,
       won,
