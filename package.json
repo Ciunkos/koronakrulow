@@ -52,6 +52,6 @@
     "imagemin-optipng": "7.1.0",
     "imagemin-pngquant": "8.0.0",
     "jimp": "0.10.3",
-    "node-fetch": "2.6.0"
+    "node-fetch": "2.6.1"
   }
 }
