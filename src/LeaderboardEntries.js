@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import LeaderboardEntry from "./LeaderboardEntry";
 
 const LeaderboardEntries = ({ children }) => (
-  <div className="leaderboard-entries">
+  <div className="leaderboard-entries layer">
     {children.map((entry, index) => {
       if (entry) {
         const { name, reported, recovered, dead, day } = entry;
