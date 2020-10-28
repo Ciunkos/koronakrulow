@@ -1,14 +1,15 @@
 import { exact } from "@sandstreamdev/std/array";
 import { clamp } from "@sandstreamdev/std/math";
-import { classNames } from "@sandstreamdev/std/web";
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 import useWindowSize from "./useWindowSize";
-import Logo from "./Logo";
 import analytics from "./analytics";
-import StatusBar from "./StatusBar";
+import Leaderboard from "./Leaderboard";
+import Legal from "./Legal";
+import Logo from "./Logo";
 import MapView from "./MapView";
-import formatLongDisplayDateWithOffsetWithOffset from "./formatLongDisplayDateWithOffset";
+import MenuOptions from "./MenuOptions";
+import Progress from "./Progress";
 import * as randomPropaganda from "./random";
 import * as actions from "./actions";
 import * as events from "./events";
@@ -98,462 +99,97 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
     unlockedStripes = [],
   } = progress;
 
-  const leaderboardsWonSource = exact(
-    clamp(
-      LEADERBOARD_RANGE,
-      Math.max(LEADERBOARD_RANGE, rankingSource.won.length)
-    )(wonTake)
-  )(rankingSource.won);
+  const leaderboardsWonSource = useMemo(
+    () =>
+      exact(
+        clamp(
+          LEADERBOARD_RANGE,
+          Math.max(LEADERBOARD_RANGE, rankingSource.won.length)
+        )(wonTake)
+      )(rankingSource.won),
+    [rankingSource.won, wonTake]
+  );
 
-  const leaderboardsLostSource = exact(
-    clamp(
-      LEADERBOARD_RANGE,
-      Math.max(LEADERBOARD_RANGE, rankingSource.lost.length)
-    )(lostTake)
-  )(rankingSource.lost);
+  const leaderboardsLostSource = useMemo(
+    () =>
+      exact(
+        clamp(
+          LEADERBOARD_RANGE,
+          Math.max(LEADERBOARD_RANGE, rankingSource.lost.length)
+        )(lostTake)
+      )(rankingSource.lost),
+    [rankingSource.lost, lostTake]
+  );
+
+  const onFirstWaveClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setSecondWave(false);
+  };
+
+  const onSecondWaveClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setSecondWave(true);
+  };
+
+  const onDailyClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setDaily(true);
+  };
+
+  const onTotalClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setDaily(false);
+  };
 
   return (
     <div className={active ? "backdrop active" : "backdrop"}>
       <MapView height={height} width={width} />
       <div className="menu">
         <Logo />
-        <div className="options">
-          {secondWaveEnabled && (
-            <div>
-              <button onClick={onSecondWavePlayClick}>
-                Rozpocznij drugą falę
-              </button>
-              <div className="hint">
-                Na front walk z koronawirusem wkraczają zbuntowani obywatele.
-                Wojna polsko-polska!
-              </div>
-            </div>
-          )}
-          <div>
-            <button onClick={onPlayClick}>
-              {secondWaveEnabled ? "Rozegraj pierwszą falę" : "Graj"}
-            </button>
-            <div className="hint">
-              Rozpocznij walkę z koronawirusem i sprawdź się w zarządzaniu
-              państwem w czasie pandemii
-            </div>
-          </div>
-          <div>
-            <button disabled={!custom} onClick={onCustomPlayClick}>
-              Gra dowolna
-            </button>
-            <div className="hint">
-              Gra dowolna pozwala wybierać akcje z wszystkich dostępnych opcji
-            </div>
-            {!custom && (
-              <div className="requirement">
-                {secondWaveEnabled
-                  ? "Opanuj epidemię w trybie klasycznym lub w drugiej fali aby odblokować"
-                  : "Opanuj epidemię w trybie klasycznym aby odblokować"}
-              </div>
-            )}
-          </div>
-        </div>
-        <section>
-          <h3>Twój postęp</h3>
-          <div className="progress-list">
-            <div className="progress-box">
-              <div className="progress-title">Opanowane epidemie</div>
-              <div className="progress-value">{won}</div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Rozwiązanie rządy</div>
-              <div className="progress-value">{lost}</div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Rozgrywki</div>
-              <div className="progress-value">{games}</div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Odblokowane paski</div>
-              <div className="progress-value">
-                {unlockedStripes.length}/
-                {Object.keys(randomPropaganda).length +
-                  Object.keys(actions).length}
-              </div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Odblokowane akcje</div>
-              <div className="progress-value">
-                {unlockedActions.length}/{Object.keys(actions).length}
-              </div>
-            </div>
-            <div className="progress-box">
-              <div className="progress-title">Odblokowane wydarzenia</div>
-              <div className="progress-value">
-                {unlockedEvents.length}/{Object.keys(events).length}
-              </div>
-            </div>
-          </div>
-        </section>
+        <MenuOptions
+          custom={custom}
+          onCustomPlayClick={onCustomPlayClick}
+          onPlayClick={onPlayClick}
+          onSecondWavePlayClick={onSecondWavePlayClick}
+          secondWaveEnabled={secondWaveEnabled}
+        />
+        <Progress
+          actions={actions}
+          events={events}
+          games={games}
+          lost={lost}
+          randomPropaganda={randomPropaganda}
+          unlockedActions={unlockedActions}
+          unlockedEvents={unlockedEvents}
+          unlockedStripes={unlockedStripes}
+          won={won}
+        />
         {SHOW_LEADERBOARD && (
-          <section>
-            <h3>Ranking</h3>
-            {secondWaveEnabled && (
-              <div className="tabs">
-                <a
-                  href="#"
-                  className={classNames("tab", { active: secondWave })}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    setSecondWave(true);
-                  }}
-                >
-                  DRUGA FALA
-                </a>
-                <a
-                  href="#"
-                  className={classNames("tab", { active: !secondWave })}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    setSecondWave(false);
-                  }}
-                >
-                  PIERWSZA FALA
-                </a>
-              </div>
-            )}
-            <div className="tabs">
-              <a
-                href="#"
-                className={classNames("tab", { active: daily })}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-
-                  setDaily(true);
-                }}
-              >
-                Dzisiaj
-              </a>
-              <a
-                href="#"
-                className={classNames("tab", { active: !daily })}
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-
-                  setDaily(false);
-                }}
-              >
-                Łączny
-              </a>
-            </div>
-            <div className="leaderboards">
-              <div>
-                <h4>Najszybciej opanowana epidemia</h4>
-                <div className="leaderboard-entries">
-                  {leaderboardsWonSource.map((entry, index) => {
-                    if (entry) {
-                      const { name, reported, recovered, dead, day } = entry;
-                      return (
-                        <div className="leaderboard-entry" key={index}>
-                          <div>
-                            {index + 1}.{" "}
-                            <span className="entry-name">{name}</span>,{" "}
-                            <span>
-                              {formatLongDisplayDateWithOffsetWithOffset(day)}
-                            </span>
-                          </div>
-                          <StatusBar
-                            reported={reported}
-                            dead={dead}
-                            recovered={recovered}
-                          />
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className="leaderboard-entry empty" key={index}>
-                          <div>-</div>
-                        </div>
-                      );
-                    }
-                  })}
-                </div>
-                {hasMoreWon && (
-                  <a href="#" onClick={showMoreWon}>
-                    Pokaż więcej
-                  </a>
-                )}
-              </div>
-              <div>
-                <h4>Najszybciej rozwiązany rząd</h4>
-                <div className="leaderboard-entries">
-                  {leaderboardsLostSource.map((entry, index) => {
-                    if (entry) {
-                      const { name, reported, recovered, dead, day } = entry;
-                      return (
-                        <div className="leaderboard-entry" key={index}>
-                          <div>
-                            {index + 1}.{" "}
-                            <span className="entry-name">{name}</span>,{" "}
-                            <span>
-                              {formatLongDisplayDateWithOffsetWithOffset(day)}
-                            </span>
-                          </div>
-                          <StatusBar
-                            reported={reported}
-                            dead={dead}
-                            recovered={recovered}
-                          />
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className="leaderboard-entry empty" key={index}>
-                          <div>-</div>
-                        </div>
-                      );
-                    }
-                  })}
-                </div>
-                {hasMoreLost && (
-                  <a href="#" onClick={showMoreLost}>
-                    Pokaż więcej
-                  </a>
-                )}
-              </div>
-            </div>
-          </section>
+          <Leaderboard
+            daily={daily}
+            hasMoreLost={hasMoreLost}
+            hasMoreWon={hasMoreWon}
+            leaderboardsLostSource={leaderboardsLostSource}
+            leaderboardsWonSource={leaderboardsWonSource}
+            onDailyClick={onDailyClick}
+            onFirstWaveClick={onFirstWaveClick}
+            onSecondWaveClick={onSecondWaveClick}
+            onTotalClick={onTotalClick}
+            secondWave={secondWave}
+            secondWaveEnabled={secondWaveEnabled}
+            showMoreLost={showMoreLost}
+            showMoreWon={showMoreWon}
+          />
         )}
-        <div className="legal">
-          <p>
-            Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na
-            warunkach dozwolonego użytku publiczego w celu uświadomienia
-            społeczeństwa na zagrożenia propagandy uprawianej przez państwową
-            telewizję i rząd.
-          </p>
-          <p>
-            Strona nie ma związku z tvp, celem jest parodia, pastisz i
-            karykatura propagandy. Część wydarzeń w grze jest fikcją - wszelkie
-            podobieństwo do żyjących postaci jest przypadkowe.
-          </p>
-          <a href="#" onClick={toggleDetails}>
-            {!details
-              ? "Pokaż informacje o prywatności i licencjach"
-              : "Ukryj informacje o prywatności i licencjach"}
-          </a>
-          {details && (
-            <div className="legal-details">
-              <p>
-                Aplikacja rejestruje w pełni anonimowe statystyki o przebiegu
-                rozgrywki i źródła wejść na stronę - dowiedz się więcej na{" "}
-                <a href="https://docs.simpleanalytics.com/what-we-collect">
-                  stronie usługodawcy
-                </a>
-                .
-              </p>
-              <p>Część użytych obrazów znajduje się w domenie publicznej.</p>
-              <p>
-                Obraz{" "}
-                <a
-                  href="http://goorsky.pl/nowy-banknot-500/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  banknotu 500+
-                </a>{" "}
-                na indywidualnej licencji od autora.
-              </p>
-              <p>
-                Muzyka{" "}
-                <a
-                  href="https://incompetech.filmmusic.io/song/4490-the-descent"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  The Descent by Kevin MacLeod
-                </a>{" "}
-                na licencji{" "}
-                <a
-                  href="http://creativecommons.org/licenses/by/4.0/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CC BY 4.0
-                </a>
-                .
-              </p>
-              <p>
-                Mapy{" "}
-                <a
-                  href="https://pigeon-maps.js.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Pigeon
-                </a>{" "}
-                na licencji © autorzy{" "}
-                <a
-                  href="https://www.openstreetmap.org/copyright"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  OpenStreetMap
-                </a>
-                .
-              </p>
-              <p>
-                Ikony stworzone przez{" "}
-                <a
-                  href="https://www.flaticon.com/authors/freepik"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Freepik"
-                >
-                  Freepik
-                </a>{" "}
-                i{" "}
-                <a
-                  href="https://www.flaticon.com/authors/those-icons"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Those Icons"
-                >
-                  Those Icons
-                </a>{" "}
-                dla{" "}
-                <a
-                  href="https://www.flaticon.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Flaticon"
-                >
-                  www.flaticon.com
-                </a>{" "}
-                oraz przez{" "}
-                <a
-                  href="https://www.iconfinder.com/becris"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="becris"
-                >
-                  becris
-                </a>{" "}
-                na licencji{" "}
-                <a
-                  href="https://creativecommons.org/licenses/by-sa/3.0/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CC BY-SA 3.0
-                </a>
-                .
-              </p>
-              <p>Zasoby ze stocków:</p>
-              <ul>
-                <li>
-                  Obraz leku przez Belova59 na{" "}
-                  <a
-                    href="https://pixabay.com/pl/photos/laboratory-medical-medicine-r%C4%99ka-3827738/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    pixabay
-                  </a>
-                  .
-                </li>
-                <li>
-                  Obraz policjanta przez Robert_z_Ziemi na{" "}
-                  <a
-                    href="https://www.needpix.com/photo/1029329/police-surveillance-control-video-monitoring-officer-camera-equipment-cop"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Needpix
-                  </a>
-                  .
-                </li>
-              </ul>
-              <p>
-                Ikony alertów i kontrolek przez{" "}
-                <a
-                  href="https://github.com/tabler/tabler-icons"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  tabler-icons
-                </a>{" "}
-                na{" "}
-                <a
-                  href="https://github.com/tabler/tabler-icons/blob/master/LICENSE"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  licencji MIT.
-                </a>
-              </p>
-              <p>
-                Ikony przewiń i stop przez{" "}
-                <a
-                  href="https://github.com/feathericons/feather"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  feathericons
-                </a>{" "}
-                na{" "}
-                <a
-                  href="https://github.com/feathericons/feather/blob/master/LICENSE"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  licencji MIT.
-                </a>
-              </p>
-              <p>
-                Zdjęcia przez Daana Stevensa oraz Natanael Melchor na{" "}
-                <a
-                  href="https://unsplash.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Unsplashu
-                </a>
-                .
-              </p>
-              <p>
-                W przypadku jakichkolwiek zatrzeżeń, proszę o kontakt podany
-                poniżej.
-              </p>
-            </div>
-          )}
-          <p className="contact">
-            Kontakt:{" "}
-            <a href="mailto:koronakrulow@ciunkos.com">
-              koronakrulow@ciunkos.com
-            </a>
-          </p>
-          <p className="contact">
-            Śledź Koronę Krulów na{" "}
-            <a
-              href="https://www.facebook.com/koronakrulow"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Facebooku
-            </a>{" "}
-            i{" "}
-            <a
-              href="https://twitter.com/koronakrulow"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Twitterze
-            </a>
-            !
-          </p>
-        </div>
+        <Legal details={details} toggleDetails={toggleDetails} />
       </div>
     </div>
   );
