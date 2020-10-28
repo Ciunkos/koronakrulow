@@ -16,15 +16,15 @@ const getFileSizeInBytes = (fileName) => {
 
 const options = {
   optipng: {
-    optimizationLevel: 3,
+    optimizationLevel: 4,
   },
   pngquant: {
-    quality: [0.65, 0.9],
+    quality: [0.9, 0.95],
     speed: 4,
   },
   mozjpeg: {
     progressive: true,
-    quality: 85,
+    quality: 95,
   },
 };
 
