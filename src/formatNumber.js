@@ -1,3 +1,5 @@
-const formatNumber = (number) => new Intl.NumberFormat("pl-PL").format(number);
+const formatter = new Intl.NumberFormat("pl-PL");
+
+const formatNumber = (number) => formatter.format(number);
 
 export default formatNumber;

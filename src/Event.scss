@@ -20,9 +20,8 @@
   }
 
   img {
-    width: calc(100% + 32px);
-    margin: 0 -16px;
     object-fit: cover;
+    width: 100%;
   }
 
   button {
@@ -59,6 +58,7 @@
   color: black;
   opacity: 0;
   animation: fadeInBackdrop 0.3s forwards;
+  transform: translateZ(0);
 
   & > * {
     opacity: 0;
@@ -76,10 +76,5 @@
 @media screen and (min-width: 720px) {
   .event {
     padding: 32px;
-
-    img {
-      width: calc(100% + 64px);
-      margin: 0 -32px;
-    }
   }
 }

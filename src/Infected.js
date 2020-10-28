@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const Infected = () => (
   <svg viewBox="0 0 368.373 368.373" fill="currentColor">
@@ -7,4 +7,4 @@ const Infected = () => (
   </svg>
 );
 
-export default Infected;
+export default memo(Infected);

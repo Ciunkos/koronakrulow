@@ -1,6 +1,6 @@
 import { range } from "@sandstreamdev/std/array";
 import { classNames } from "@sandstreamdev/std/web";
-import React from "react";
+import React, { memo } from "react";
 
 import TransitiveNumber from "./TransitiveNumber";
 import formatNumber from "./formatNumber";
@@ -34,4 +34,4 @@ const StatsRow = ({ day, diff, title, children: value }) => (
   </div>
 );
 
-export default StatsRow;
+export default memo(StatsRow);

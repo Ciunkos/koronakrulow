@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const Recovered = () => (
   <svg viewBox="0 -28 512.001 512" fill="currentColor">
@@ -6,4 +6,4 @@ const Recovered = () => (
   </svg>
 );
 
-export default Recovered;
+export default memo(Recovered);

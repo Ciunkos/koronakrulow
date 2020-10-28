@@ -1073,7 +1073,7 @@ a94 = createAction(
     state.politics += 3;
     state.economy -= 2;
   },
-  { excludes: () => a93, message: "Chińskim tedchnologiom zakaz wstępu" }
+  { excludes: () => a93, message: "Chińskim technologiom zakaz wstępu" }
 );
 
 export { a93, a94 };

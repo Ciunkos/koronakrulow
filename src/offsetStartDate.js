@@ -8,6 +8,20 @@ const addDays = (days) => (date) => {
   return result;
 };
 
-const offsetStartDate = (offset) => addDays(offset)(startDate);
+let cache = {};
+
+const offsetStartDate = (offset) => {
+  const cached = cache[offset];
+
+  if (cached) {
+    return cached;
+  }
+
+  const result = addDays(offset)(startDate);
+
+  cache[offset] = result;
+
+  return result;
+};
 
 export default offsetStartDate;

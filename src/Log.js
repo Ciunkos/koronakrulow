@@ -1,12 +1,14 @@
 import { groupBy } from "@sandstreamdev/std/object";
-import React from "react";
+import React, { memo } from "react";
 
 import formatLongDisplayDate from "./formatLongDisplayDate";
 
 import "./Log.scss";
 
+const byDate = (x) => x.date;
+
 const Log = ({ children: log }) => {
-  const grouped = groupBy((x) => x.date)(log);
+  const grouped = groupBy(byDate)(log);
 
   return (
     <div className="log">
@@ -28,4 +30,4 @@ const Log = ({ children: log }) => {
   );
 };
 
-export default Log;
+export default memo(Log);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import TransitiveNumber from "./TransitiveNumber";
 import formatNumber from "./formatNumber";
@@ -38,4 +38,4 @@ const StatusBar = ({ reported, dead, recovered }) => (
   </div>
 );
 
-export default StatusBar;
+export default memo(StatusBar);

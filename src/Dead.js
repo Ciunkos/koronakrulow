@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const Dead = () => (
   <svg viewBox="0 0 512 512" fill="currentColor">
@@ -7,4 +7,4 @@ const Dead = () => (
   </svg>
 );
 
-export default Dead;
+export default memo(Dead);

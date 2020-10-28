@@ -1,30 +1,24 @@
 import { exact } from "@sandstreamdev/std/array";
 import { clamp } from "@sandstreamdev/std/math";
 import { classNames } from "@sandstreamdev/std/web";
-import React, { useState, useEffect } from "react";
-import Map from "pigeon-maps";
+import React, { memo, useState, useEffect } from "react";
 
 import useWindowSize from "./useWindowSize";
 import Logo from "./Logo";
 import analytics from "./analytics";
 import StatusBar from "./StatusBar";
+import MapView from "./MapView";
 import formatLongDisplayDateWithOffsetWithOffset from "./formatLongDisplayDateWithOffset";
 import * as randomPropaganda from "./random";
 import * as actions from "./actions";
 import * as events from "./events";
 import useApi from "./useApi";
 import { LEADERBOARDS_ENDPOINT } from "./leaderboards";
+import { enabled as secondWaveEnabled } from "./secondWave";
 
 import "./Menu.scss";
 
 const SHOW_LEADERBOARD = true;
-
-function mapTilerProvider(x, y, z, dpr) {
-  const s = String.fromCharCode(97 + ((x + y + z) % 3));
-  return `https://${s}.basemaps.cartocdn.com/dark_nolabels/${z}/${x}/${y}${
-    dpr >= 2 ? "@2x" : ""
-  }.png`;
-}
 
 const LEADERBOARD_RANGE = 5;
 
@@ -34,6 +28,7 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
   const [daily, setDaily] = useState(true);
+  const [secondWave, setSecondWave] = useState(secondWaveEnabled);
   const [wonTake, setWonTake] = useState(LEADERBOARD_RANGE);
   const [lostTake, setLostTake] = useState(LEADERBOARD_RANGE);
 
@@ -47,6 +42,12 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
   const onPlayClick = async () => {
     analytics("play");
     await resetState(false);
+    setActive(false);
+  };
+
+  const onSecondWavePlayClick = async () => {
+    analytics("play_second_wave");
+    await resetState(false, true);
     setActive(false);
   };
 
@@ -113,33 +114,30 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
 
   return (
     <div className={active ? "backdrop active" : "backdrop"}>
-      <div className="map">
-        <Map
-          provider={mapTilerProvider}
-          dprs={[1, 2]}
-          center={[52.06, 19.25]}
-          zoom={6.5}
-          width={width}
-          height={height}
-        />
-      </div>
+      <MapView height={height} width={width} />
       <div className="menu">
         <Logo />
         <div className="options">
+          {secondWaveEnabled && (
+            <div>
+              <button onClick={onSecondWavePlayClick}>
+                Rozpocznij drugą falę
+              </button>
+              <div className="hint">
+                Na front walk z koronawirusem wkraczają zbuntowani obywatele.
+                Wojna polsko-polska!
+              </div>
+            </div>
+          )}
           <div>
-            <button onClick={onPlayClick}>Graj</button>
+            <button onClick={onPlayClick}>
+              {secondWaveEnabled ? "Rozegraj pierwszą falę" : "Graj"}
+            </button>
             <div className="hint">
               Rozpocznij walkę z koronawirusem i sprawdź się w zarządzaniu
               państwem w czasie pandemii
             </div>
           </div>
-          {/* <div>
-            <button onClick={onQuickPlayClick}>Szybka gra</button>
-            <div className="hint">
-              Szybka gra rozpoczyna się od przybliżonego stanu na stan
-              dzisiejszy
-            </div>
-          </div> */}
           <div>
             <button disabled={!custom} onClick={onCustomPlayClick}>
               Gra dowolna
@@ -149,7 +147,9 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
             </div>
             {!custom && (
               <div className="requirement">
-                Opanuj epidemię w trybie klasycznym aby odblokować
+                {secondWaveEnabled
+                  ? "Opanuj epidemię w trybie klasycznym lub w drugiej fali aby odblokować"
+                  : "Opanuj epidemię w trybie klasycznym aby odblokować"}
               </div>
             )}
           </div>
@@ -194,6 +194,34 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
         {SHOW_LEADERBOARD && (
           <section>
             <h3>Ranking</h3>
+            {secondWaveEnabled && (
+              <div className="tabs">
+                <a
+                  href="#"
+                  className={classNames("tab", { active: secondWave })}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    setSecondWave(true);
+                  }}
+                >
+                  DRUGA FALA
+                </a>
+                <a
+                  href="#"
+                  className={classNames("tab", { active: !secondWave })}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    setSecondWave(false);
+                  }}
+                >
+                  PIERWSZA FALA
+                </a>
+              </div>
+            )}
             <div className="tabs">
               <a
                 href="#"
@@ -531,4 +559,4 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
   );
 };
 
-export default Menu;
+export default memo(Menu);

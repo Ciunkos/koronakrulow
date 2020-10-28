@@ -139,10 +139,6 @@
   .legal {
     margin-top: 32px;
   }
-
-  .tabs {
-    margin-bottom: 0;
-  }
 }
 
 .backdrop {
@@ -155,6 +151,7 @@
   opacity: 0;
   transition: opacity 1s ease-in-out;
   pointer-events: none;
+  transform: translateZ(0);
 
   &.active {
     pointer-events: initial;
@@ -165,6 +162,7 @@
 header {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 @keyframes spin {

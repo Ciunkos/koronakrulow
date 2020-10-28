@@ -1,41 +1,40 @@
 import { range, reverse, take, shuffle } from "@sandstreamdev/std/array";
-import { classNames } from "@sandstreamdev/std/web";
 import isFunction from "@sandstreamdev/std/is/function";
 import { delay } from "@sandstreamdev/std/async";
 import { clamp } from "@sandstreamdev/std/math";
-import React, { useRef, useState, useEffect } from "react";
-import {
-  LineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Line,
-  Tooltip,
-  Legend,
-} from "recharts";
-import Map from "pigeon-maps";
-import TransitiveNumber from "./TransitiveNumber";
-import Log from "./Log";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import * as allActions from "./actions";
 import * as events from "./events";
 import * as stripes from "./stripes";
 import * as randomStripes from "./random";
-import formatLongDisplayDate from "./formatLongDisplayDate";
 import actionLogo from "./actionLogo.png";
 import Menu from "./Menu";
 import Logo from "./Logo";
 import randomPropaganda from "./randomPropaganda";
 import useWindowSize from "./useWindowSize";
 import { get, set } from "./localStorage";
-import headlineImage from "./headline.jpg";
-import headlineVideo from "./headline.mp4";
 import music from "./the-descent-by-kevin-macleod-from-filmmusic-io.mp3";
-import StatsRow from "./StatsRow";
-import formatNumber from "./formatNumber";
 import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
 import analytics from "./analytics";
 import StatusBar from "./StatusBar";
+import MapView from "./MapView";
+import Event from "./Event";
+import Action from "./Action";
+import Media from "./Media";
+import Statistics from "./Statistics";
+import Logs from "./Logs";
+import Charts from "./Charts";
+import Controls from "./Controls";
+import AppBar from "./AppBar";
+import Today from "./Today";
+import GameControls from "./GameControls";
+import GameOverControls from "./GameOverControls";
 import offsetStartDate from "./offsetStartDate";
+import {
+  SECOND_WAVE_DAILY_DEATHS,
+  SECOND_WAVE_DAILY_RECOVERED,
+  SECOND_WAVE_DAILY_REPORTED,
+} from "./secondWave";
 
 import "./index.css";
 import "./App.scss";
@@ -77,141 +76,13 @@ const trackGameplayTime = async () => {
   }
 };
 
-const CloseIcon = (props) => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    strokeWidth="2"
-    stroke="currentColor"
-    fill="none"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path stroke="none" d="M0 0h24v24H0z" />
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
 const AGENT_LIMIT = 37734000;
 
 const debug = false;
 
 const daysToSickFunction = () => Math.round(5 + Math.random() * 8);
 
-function mapTilerProvider(x, y, z, dpr) {
-  const s = String.fromCharCode(97 + ((x + y + z) % 3));
-  return `https://${s}.basemaps.cartocdn.com/dark_nolabels/${z}/${x}/${y}${
-    dpr >= 2 ? "@2x" : ""
-  }.png`;
-}
-
 const clampStat = clamp(0, 10);
-
-class Agent {
-  day = 0;
-  infected = true;
-  sick = false;
-  reported = false;
-  quarantined = false;
-  hospitalized = false;
-  recovered = false;
-  vaccinated = false;
-
-  constructor() {
-    this.daysToSick = daysToSickFunction();
-  }
-
-  update(state) {
-    if (this.daysToSick > 0) {
-      this.daysToSick--;
-
-      if (this.daysToSick === 0) {
-        this.sick = true;
-      }
-
-      this.day++;
-      return;
-    }
-
-    if (this.infected && !this.reported) {
-      if (
-        Math.random() < 0.25 + (state.detectionRate / 5) * 0.24 ||
-        this.patient0
-      ) {
-        this.reported = true;
-      }
-    }
-
-    const healthcareFunctional = state.healthcare > 0;
-
-    if (this.reported && !this.quarantined) {
-      if (Math.random() < 0.5) {
-        this.quarantined = true;
-
-        this.day++;
-        return;
-      }
-    }
-
-    if (this.quarantined && !this.hospitalized) {
-      if (Math.random() < 0.1) {
-        this.hospitalized = true;
-
-        this.day++;
-        return;
-      }
-    }
-
-    const healthcareRatio = Math.min(10, state.healthcare) / 10;
-
-    if (this.hospitalized && !healthcareFunctional) {
-      this.hospitalized = false;
-    }
-
-    if (
-      this.sick &&
-      Math.random() <
-        (this.hospitalized && this.healthcareFunctional
-          ? 0.0015
-          : 0.003 * 1.5) *
-          (1 +
-            (1 - healthcareRatio ** 2) +
-            this.day / 10 +
-            Math.max(this.day - 45, 0) ** 2)
-    ) {
-      this.dead = this.reported;
-      this.sick = false;
-      this.hospitalized = false;
-      this.quarantined = false;
-      this.infected = false;
-      return;
-    }
-
-    if (
-      this.sick &&
-      Math.random() <
-        (this.hospitalized && this.healthcareFunctional ? 0.003 : 0.0015) *
-          0.95 *
-          4 *
-          (1 * healthcareRatio +
-            this.day / 10 +
-            Math.max(this.day - 30, 0) ** 2) *
-          (1 + state.medicine * 2)
-    ) {
-      this.recovered = this.reported;
-      this.sick = false;
-      this.hospitalized = false;
-      this.quarantined = false;
-      this.infected = false;
-      return;
-    }
-
-    this.day++;
-  }
-}
 
 const INFECTED = 1;
 const SICK = 1 << 1;
@@ -224,12 +95,8 @@ const DEAD = 1 << 7;
 
 const DIFFICULTY = 0.9;
 
-const getInitialState = (custom = false) => {
+const getInitialState = (custom = false, secondWave = false) => {
   const initialAgentCount = Math.round(20 + Math.random() * 50 * DIFFICULTY);
-
-  // const patient0 = new Agent();
-  // patient0.patient0 = true;
-  // patient0.daysToSick = 5;
 
   const agentCount = 1 + initialAgentCount;
   const agents = new Uint8Array(AGENT_LIMIT);
@@ -248,12 +115,15 @@ const getInitialState = (custom = false) => {
 
   sickDelays[0] = 5;
 
+  const secondWaveMultiplierContactsPerDay = secondWave ? 0.71 : 1;
+  const secondWaveMultiplierInfectionRate = secondWave ? 0.8 : 1;
+
   const initialState = {
     custom,
     day: 0,
-    infectionProbability: 0.02 * DIFFICULTY,
+    infectionProbability: 0.02 * DIFFICULTY * secondWaveMultiplierInfectionRate,
     quarantineBreakProbability: 0.01 * DIFFICULTY,
-    contactsPerDay: 11 * DIFFICULTY,
+    contactsPerDay: 11 * DIFFICULTY * secondWaveMultiplierContactsPerDay,
     budget: 3,
     economy: 5,
     social: 9,
@@ -307,6 +177,8 @@ const ANARCHY_PENALTY = 7;
 
 const TURN_DELAY = 0;
 
+const weekendRatio = 0.55;
+
 const transition = async (state) => {
   let steps = 0;
 
@@ -321,6 +193,9 @@ const transition = async (state) => {
     people,
     day,
     politics,
+    initialRecovered = 0,
+    initialDead = 0,
+    initialReported = 0,
   } = state;
 
   //console.log({ agents, agentCount, sickDelays, agentsAge });
@@ -344,7 +219,17 @@ const transition = async (state) => {
   //console.time("AGENTS UPDATE");
   let penalty = 0;
 
-  const realDetectionRate = 0.25 + (state.detectionRate / 5) * 0.24;
+  const dayWithOffset = day - 2;
+
+  const weekendRate =
+    dayWithOffset % 7 === 0 || dayWithOffset % 7 === 1
+      ? weekendRatio + Math.random() * (1 - weekendRatio)
+      : 1;
+
+  const realDetectionRate =
+    (0.25 + (state.detectionRate / 5) * 0.24) *
+    weekendRate *
+    (0.9 + Math.random() * 0.1);
   const healthcareFunctional = state.healthcare > 0;
   const healthcareRatio = Math.min(10, state.healthcare) / 10;
 
@@ -504,9 +389,12 @@ const transition = async (state) => {
   const vaccinationScale = state.vaccine > 0 ? 1 / (state.vaccine + 1) : 1;
   const realInfectionProbability = infectionProbability * vaccinationScale;
   const infectionRatio = 1 - agentCount / AGENT_LIMIT;
+
+  const luckyDay = Math.random() < 0.05 ? 0.5 : 1;
+
   const scaledContactsPerDay = Math.max(
     1,
-    Math.ceil(realContactsPerDay * infectionRatio)
+    Math.ceil(realContactsPerDay * infectionRatio * luckyDay)
   );
 
   //console.log({ infectionRatio: infectionRatio * 100 });
@@ -522,10 +410,12 @@ const transition = async (state) => {
         continue;
       }
 
+      const quarantined = agent & QUARANTINED;
+
       if (
         anarchy ||
-        !agent.quarantined ||
-        (agent.quarantined && randomPool[r++ % rp] < quarantineBreakProbability)
+        !quarantined ||
+        (quarantined && randomPool[r++ % rp] < quarantineBreakProbability)
       ) {
         for (let j = 0; j < scaledContactsPerDay; j++) {
           if (randomPool[r++ % rp] < realInfectionProbability) {
@@ -625,12 +515,13 @@ const transition = async (state) => {
   //console.timeEnd("AGENTS NEW");
 
   //console.time("AGENTS STATS");
+
   let sick = 0;
-  let recovered = 0;
-  let dead = 0;
+  let recovered = initialRecovered;
+  let dead = initialDead;
   let quarantined = 0;
   let hospitalized = 0;
-  let reported = 0;
+  let reported = initialReported;
   let infected = 0;
 
   const l = agentCount;
@@ -689,41 +580,6 @@ const transition = async (state) => {
 };
 
 const DEATHRATTLE_LIMIT = 15;
-
-////console.log({ startState, initialAgentCount });
-
-// const log = [
-//   {
-//     date: new Date("2020-03-10T00:00:00.000"),
-//     effectiveDate: new Date("2020-03-10T00:00:00.000"),
-//     title: "Zabezpieczenie sanitarne granic",
-//   },
-//   {
-//     date: new Date("2020-03-10T00:00:00.000"),
-//     effectiveDate: new Date("2020-03-10T00:00:00.000"),
-//     title: "Odwołanie wszystkich imprez masowych",
-//   },
-//   {
-//     date: new Date("2020-03-11T00:00:00.000"),
-//     effectiveDate: new Date("2020-03-11T00:00:00.000"),
-//     title: "Zamknięcie wszystkich placówek oświatowych i szkół wyższych",
-//   },
-//   {
-//     date: new Date("2020-04-01T00:00:00.000"),
-//     effectiveDate: new Date("2020-04-01T00:00:00.000"),
-//     title: "Wprowadzenie godzin dla seniorów",
-//   },
-//   {
-//     date: new Date("2020-04-01T00:00:00.000"),
-//     effectiveDate: new Date("2020-04-01T00:00:00.000"),
-//     title: "Zakaz poruszania się nieletnich",
-//   },
-//   {
-//     date: new Date("2020-04-09T00:00:00.000"),
-//     effectiveDate: new Date("2020-04-16T00:00:00.000"),
-//     title: "Wprowadzenie obowiązku zakrywania twarzy",
-//   },
-// ];
 
 const playState = (action) => async (state, updateProgress, userIntent) => {
   await delay(TURN_DELAY);
@@ -792,6 +648,8 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
 
     // max of 5 per turn
     penalty = Math.min(penalty, PENALTY_THRESHOLD * 5);
+
+    // penalty = 0;
 
     while (penalty >= PENALTY_THRESHOLD) {
       //console.error({ penalty });
@@ -1104,13 +962,13 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
     }
 
     nextState.propagandaImage = propagandaImage;
-  }
 
-  nextState.message =
-    "▪ " +
-    take(10)(shuffle(randomPropaganda))
-      .map((x) => x.toUpperCase())
-      .join(" ▪ ");
+    nextState.message =
+      "▪ " +
+      take(10)(shuffle(randomPropaganda))
+        .map((x) => x.toUpperCase())
+        .join(" ▪ ");
+  }
 
   nextState.log = log;
 
@@ -1123,18 +981,82 @@ const getStartState = () => [getInitialState(false)];
 
 let stopFlag = false;
 
-const reset = async (updateProgress, custom = false) => {
+const reset = async (updateProgress, custom = false, secondWave = false) => {
   stopFlag = false;
   stopGameplayTimeTracking = false;
 
   trackGameplayTime();
 
-  let startState = [getInitialState(custom)];
+  let startState = [getInitialState(custom, secondWave)];
 
-  let steps = 6; //60 - 13;
+  if (secondWave) {
+    let steps = 70;
 
-  while (steps-- > 0) {
-    startState = await playState()(startState, updateProgress, false);
+    while (steps-- > 0) {
+      startState = await playState()(startState, updateProgress, false);
+    }
+
+    const { agents, agentCount, agentsAge, sickDelays } = startState[
+      startState.length - 1
+    ];
+
+    let {
+      recovered: initialRecovered,
+      dead: initialDead,
+      reported: initialReported,
+    } = startState[startState.length - 1];
+
+    steps = 256 - 39;
+
+    startState = [getInitialState(custom, secondWave)];
+
+    let state = startState;
+
+    let i = 0;
+
+    while (steps-- > 0) {
+      const reported = SECOND_WAVE_DAILY_REPORTED[i] || 0;
+      const recovered = SECOND_WAVE_DAILY_RECOVERED[i] || 0;
+      const dead = SECOND_WAVE_DAILY_DEATHS[i] || 0;
+
+      const latestState = state[state.length - 1];
+
+      const nextState = {
+        ...latestState,
+        agents,
+        agentCount,
+        agentsAge,
+        sickDelays,
+        initialRecovered: 70401 - initialRecovered,
+        initialDead: 2543 - initialDead,
+        initialReported: 93483 - initialReported,
+        day: latestState.day + 1,
+        reported: latestState.reported + reported,
+        recovered: latestState.recovered + recovered,
+        dead: latestState.dead + dead,
+      };
+
+      state = [...state, nextState];
+
+      i++;
+    }
+
+    {
+      const latestState = state[state.length - 1];
+
+      latestState.agentCount = agentCount;
+      latestState.agents = agents;
+      latestState.sickDelays = sickDelays;
+      latestState.agentsAge = agentsAge;
+    }
+
+    startState = state;
+  } else {
+    let steps = 6;
+
+    while (steps-- > 0) {
+      startState = await playState()(startState, updateProgress, false);
+    }
   }
 
   return startState;
@@ -1151,7 +1073,6 @@ export default function App() {
   const [state, setState] = useState(getStartState);
   const musicPlayer = useRef();
   const videoPlayer = useRef();
-  const latestState = state[state.length - 1];
   const [event, changeEvent] = useState(undefined);
   const [actions, setActions] = useState([]);
   const [showChart, setShowChart] = useState(false);
@@ -1159,12 +1080,45 @@ export default function App() {
   const [showLogs, setShowLogs] = useState(false);
   const [queuedState, queueState] = useState(undefined);
   const [audio, internalSetAudio] = useState(() => get("music") !== "off");
-  const [daily, setDaily] = useState(false);
+  const [daily, setDaily] = useState(true);
   const [stop, setStop] = useState(false);
+  const [width, height] = useWindowSize();
   const [progress, setProgress] = useState(() => {
     const loaded = get("progress");
     return loaded ? JSON.parse(loaded) : {};
   });
+
+  const onMenuSetActive = (value) => {
+    setMenuActive(value);
+
+    if (audio) {
+      try {
+        musicPlayer.current.play();
+      } catch {}
+    }
+  };
+
+  const onBackClick = () => {
+    setFinished(get("finished") === "true");
+
+    setMenuActive(true);
+  };
+
+  const onDailyClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setDaily(true);
+  };
+
+  const onTotalClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setDaily(false);
+  };
+
+  const onShowLogsClick = () => setShowLogs(true);
 
   const setAudio = (value) => {
     internalSetAudio(value);
@@ -1211,18 +1165,18 @@ export default function App() {
     changeEvent(event);
   };
 
-  window.getState = () => {
-    return state;
-  };
+  // window.getState = () => {
+  //   return state;
+  // };
 
-  window.setState = (state) => {
-    return setState(state);
-  };
+  // window.setState = (state) => {
+  //   return setState(state);
+  // };
 
-  window.setState = () => {};
+  // window.setState = () => {};
 
-  const resetState = async (custom = false) => {
-    const nextState = await reset(updateProgress, custom);
+  const resetState = async (custom = false, secondWave = false) => {
+    const nextState = await reset(updateProgress, custom, secondWave);
 
     setState(nextState);
   };
@@ -1230,6 +1184,8 @@ export default function App() {
   const closeChart = () => setShowChart(false);
   const closeStats = () => setShowStats(false);
   const closeLogs = () => setShowLogs(false);
+  const onShowStatsClick = () => setShowStats(true);
+  const onShowChartClick = () => setShowChart(true);
 
   const togglePlay = () => {
     if (busy && !stopFlag) {
@@ -1238,30 +1194,6 @@ export default function App() {
       setStop(stopFlag);
     } else if (!busy) {
       playWeek();
-    }
-  };
-
-  const skipEvent = async () => {
-    if (event && event.postAction) {
-      event.postAction(latestState);
-    }
-
-    const eventsSource = latestState.events || [];
-    const index = eventsSource.findIndex((x) => x === event);
-
-    let nextEvent = undefined;
-
-    if (index !== -1) {
-      nextEvent = eventsSource[index + 1];
-    }
-
-    setEvent(nextEvent);
-
-    if (!nextEvent && queuedState) {
-      await delay(0);
-
-      setState(queuedState);
-      queueState(undefined);
     }
   };
 
@@ -1349,7 +1281,7 @@ export default function App() {
     setAction(true);
   };
 
-  const today = offsetStartDate(state.length - 1);
+  const onShowActionClick = () => showAction();
 
   const playDelayed = async (action) => {
     setBusy(true);
@@ -1401,11 +1333,15 @@ export default function App() {
     setBusy(false);
   };
 
-  const data = state.map((_, index) => ({
-    ..._,
-    day: index,
-    name: formatDisplayDateWithOffset(index),
-  }));
+  const data = useMemo(
+    () =>
+      state.map((_, index) => ({
+        ..._,
+        day: index,
+        name: formatDisplayDateWithOffset(index),
+      })),
+    [state]
+  );
 
   const latestData = data[data.length - 1];
   const secondToLatestData = data[data.length - 2] ?? latestData;
@@ -1413,14 +1349,10 @@ export default function App() {
     data[data.length - 3] ?? secondToLatestData ?? latestData;
 
   const {
-    agents,
     reported,
     dead,
     recovered,
-    quarantined,
     gameOver,
-    hospitalized,
-    contactsPerDay,
     day,
     budget,
     economy,
@@ -1443,6 +1375,32 @@ export default function App() {
     people: previousPeople,
     politics: previousPolitics,
   } = event ? thirdToLatestData : secondToLatestData;
+
+  const latestState = state[state.length - 1];
+
+  const skipEvent = async () => {
+    if (event && event.postAction) {
+      event.postAction(latestState);
+    }
+
+    const eventsSource = latestState.events || [];
+    const index = eventsSource.findIndex((x) => x === event);
+
+    let nextEvent = undefined;
+
+    if (index !== -1) {
+      nextEvent = eventsSource[index + 1];
+    }
+
+    setEvent(nextEvent);
+
+    if (!nextEvent && queuedState) {
+      await delay(0);
+
+      setState(queuedState);
+      queueState(undefined);
+    }
+  };
 
   const budgetDiff = budget - previousBudget;
   const economyDiff = economy - previousEconomy;
@@ -1477,21 +1435,26 @@ export default function App() {
 
   //console.log({ latestData, data });
 
-  const { agents: _agents, ...latestDataWithoutAgents } = latestData;
-
-  const dailyData = state.map((_, index) => ({
-    ..._,
-    day: index,
-    name: formatDisplayDateWithOffset(index),
-    reported: state[index].reported - state[Math.max(0, index - 1)].reported,
-    recovered: state[index].recovered - state[Math.max(0, index - 1)].recovered,
-    dead: state[index].dead - state[Math.max(0, index - 1)].dead,
-  }));
+  const dailyData = useMemo(
+    () =>
+      state.map((_, index) => ({
+        ..._,
+        day: index,
+        name: formatDisplayDateWithOffset(index),
+        reported:
+          state[index].reported - state[Math.max(0, index - 1)].reported,
+        recovered:
+          state[index].recovered - state[Math.max(0, index - 1)].recovered,
+        dead: state[index].dead - state[Math.max(0, index - 1)].dead,
+      })),
+    [state]
+  );
 
   const dataSource = daily ? dailyData : data;
-  const paddedData = reverse(take(dataSource.length)(reverse(dataSource)));
-
-  const [width, height] = useWindowSize();
+  const paddedData = useMemo(
+    () => reverse(take(dataSource.length)(reverse(dataSource))),
+    [dataSource]
+  );
 
   const toggleMusic = (event) => {
     event.preventDefault();
@@ -1580,457 +1543,98 @@ export default function App() {
 
   //console.log({ event });
 
+  const today = offsetStartDate(latestState.day);
+  const logEnabled = log && log.length > 0;
+  const deathrattleLeft = DEATHRATTLE_LIMIT - deathrattle;
+
   return (
     <div className="App">
-      <div className="map">
-        <Map
-          provider={mapTilerProvider}
-          dprs={[1, 2]}
-          center={[52.06, 19.25]}
-          zoom={6.5}
-          width={width}
-          height={height}
-        />
-      </div>
+      <MapView height={height} width={width} />
       <div className="status-header">
         <StatusBar reported={reported} dead={dead} recovered={recovered} />
-        <div>{formatLongDisplayDate(today)}</div>
+        <Today today={today} />
         {!gameOver ? (
-          <>
-            <div className="action-buttons">
-              <button disabled={busy} onClick={() => showAction()}>
-                Następny dzień
-              </button>
-              <button
-                disabled={busy && stop}
-                className="fast-forward-button"
-                onClick={togglePlay}
-                title={busy ? "Zatrzymaj" : "Rozpocznij"}
-              >
-                {busy ? (
-                  <svg
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="6" y="4" width="4" height="16"></rect>
-                    <rect x="14" y="4" width="4" height="16"></rect>
-                  </svg>
-                ) : (
-                  <svg
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polygon points="13 19 22 12 13 5 13 19"></polygon>
-                    <polygon points="2 19 11 12 2 5 2 19"></polygon>
-                  </svg>
-                )}
-              </button>
-            </div>
-            {busy && <div className="busy-status">Postęp pandemii...</div>}
-            {underControl && (
-              <div className="alert positive">
-                <svg
-                  className="icon icon-tabler icon-tabler-alert-triangle"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <path d="M12 9v2m0 4v.01" />
-                  <path d="M5.07 19H19a2 2 0 0 0 1.75 -2.75L13.75 4a2 2 0 0 0 -3.5 0L3.25 16.25a2 2 0 0 0 1.75 2.75" />
-                </svg>{" "}
-                <span>
-                  Dni do opanowania epidemii:{" "}
-                  <TransitiveNumber>{formatNumber(daysToWin)}</TransitiveNumber>
-                </span>
-              </div>
-            )}
-            {politics === 0 && (
-              <div className="alert">
-                <svg
-                  className="icon icon-tabler icon-tabler-alert-triangle"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <path d="M12 9v2m0 4v.01" />
-                  <path d="M5.07 19H19a2 2 0 0 0 1.75 -2.75L13.75 4a2 2 0 0 0 -3.5 0L3.25 16.25a2 2 0 0 0 1.75 2.75" />
-                </svg>{" "}
-                <span>
-                  Dni do rozwiązania rządu:{" "}
-                  <TransitiveNumber>
-                    {formatNumber(DEATHRATTLE_LIMIT - deathrattle)}
-                  </TransitiveNumber>
-                </span>
-              </div>
-            )}
-          </>
+          <GameControls
+            busy={busy}
+            daysToWin={daysToWin}
+            deathrattleLeft={deathrattleLeft}
+            onShowActionClick={onShowActionClick}
+            politics={politics}
+            stop={stop}
+            togglePlay={togglePlay}
+            underControl={underControl}
+          />
         ) : (
-          <>
-            <button
-              onClick={() => {
-                setFinished(get("finished") === "true");
-
-                setMenuActive(true);
-              }}
-            >
-              Wróć do menu głównego
-            </button>
-            {win ? (
-              <div className="alert positive">
-                <svg
-                  className="icon icon-tabler icon-tabler-alert-triangle"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <path d="M12 9v2m0 4v.01" />
-                  <path d="M5.07 19H19a2 2 0 0 0 1.75 -2.75L13.75 4a2 2 0 0 0 -3.5 0L3.25 16.25a2 2 0 0 0 1.75 2.75" />
-                </svg>{" "}
-                <span>Epidemia opanowana</span>
-              </div>
-            ) : (
-              <div className="alert">
-                <svg
-                  className="icon icon-tabler icon-tabler-alert-triangle"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <path d="M12 9v2m0 4v.01" />
-                  <path d="M5.07 19H19a2 2 0 0 0 1.75 -2.75L13.75 4a2 2 0 0 0 -3.5 0L3.25 16.25a2 2 0 0 0 1.75 2.75" />
-                </svg>{" "}
-                <span>Rząd rozwiązany</span>
-              </div>
-            )}
-          </>
+          <GameOverControls onBackClick={onBackClick} win={win} />
         )}
       </div>
-      {!debug && log && log.length > 0 && (
-        <div className={classNames("container logs", { active: showLogs })}>
-          <div className="container-header">
-            <CloseIcon onClick={closeLogs} />
-            <h3>Dziennik</h3>
-          </div>
-          <Log>{reverse(log)}</Log>
-        </div>
+      {logEnabled && (
+        <Logs closeLogs={closeLogs} log={log} showLogs={showLogs} />
       )}
-      {debug && (
-        <div className="container logs">
-          <pre>{JSON.stringify(latestDataWithoutAgents, null, 2)}</pre>
-        </div>
-      )}
-      <div className={classNames("container chart", { active: showChart })}>
-        <div className="container-header">
-          <CloseIcon onClick={closeChart} />
-          <h3>Statystyki</h3>
-        </div>
-        <div className="tabs">
-          <a
-            href="#"
-            className={classNames("tab", { active: !daily })}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-
-              setDaily(false);
-            }}
-          >
-            Łącznie
-          </a>{" "}
-          <a
-            href="#"
-            className={classNames("tab", { active: daily })}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-
-              setDaily(true);
-            }}
-          >
-            Dziennie
-          </a>
-        </div>
-        <LineChart
-          width={width < 720 ? width - 64 : 360}
-          height={240}
-          data={paddedData}
-        >
-          <XAxis dataKey="name" />
-          <YAxis />
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-          <Line
-            name="Zakażeni"
-            type="monotone"
-            dataKey="reported"
-            stroke="#ffa000"
-            dot={false}
-          />
-          <Line
-            name="Zgony"
-            type="monotone"
-            dataKey="dead"
-            stroke="#e64a19"
-            dot={false}
-          />
-          <Line
-            name="Wyleczenia"
-            type="monotone"
-            dataKey="recovered"
-            stroke="#388e3c"
-            dot={false}
-          />
-          {/* <Line hide={!debug} type="monotone" dataKey="sick" stroke="red" />
-          <Line
-            hide={!debug}
-            type="monotone"
-            dataKey="infected"
-            stroke="violet"
-          />
-          <Line
-            hide={!debug}
-            type="monotone"
-            dataKey="quarantined"
-            stroke="pink"
-          />
-          <Line
-            hide={!debug}
-            type="monotone"
-            dataKey="hospitalized"
-            stroke="orange"
-          />
-          <Line
-            hide={!debug}
-            type="monotone"
-            dataKey="newCases"
-            stroke="rgb(150, 29, 29)"
-          /> */}
-          <Tooltip />
-          <Legend />
-        </LineChart>
-        {debug && (
-          <>
-            {agents.length} - Reported:
-            {reported} - Dead:
-            {dead} - Recovered:
-            {recovered} - Quarantined:
-            {quarantined} - hospitalized:
-            {hospitalized} - contactsPerDay:
-            {contactsPerDay} - newCases:
-            {newCases}
-          </>
-        )}
-      </div>
-      <div
-        className={classNames("container statistics", { active: showStats })}
-      >
-        <div className="container-header">
-          <CloseIcon onClick={closeStats} />
-          <h3>Status</h3>
-        </div>
-        <div className="stats">
-          <StatsRow title="Budżet" diff={budgetDiff} day={day}>
-            {budget}
-          </StatsRow>
-          <StatsRow title="Gospodarka" diff={economyDiff} day={day}>
-            {economy}
-          </StatsRow>
-          <StatsRow title="Socjal" diff={socialDiff} day={day}>
-            {social}
-          </StatsRow>
-          <StatsRow title="Służba zdrowia" diff={healthcareDiff} day={day}>
-            {healthcare}
-          </StatsRow>
-          <StatsRow title="Społeczeństwo" diff={peopleDiff} day={day}>
-            {people}
-          </StatsRow>
-          <StatsRow title="Poparcie partii" diff={politicsDiff} day={day}>
-            {politics}
-          </StatsRow>
-        </div>
-      </div>
+      <Charts
+        closeChart={closeChart}
+        daily={daily}
+        onDailyClick={onDailyClick}
+        onTotalClick={onTotalClick}
+        paddedData={paddedData}
+        showChart={showChart}
+        width={width}
+      />
+      <Statistics
+        budget={budget}
+        budgetDiff={budgetDiff}
+        closeStats={closeStats}
+        day={day}
+        economy={economy}
+        economyDiff={economyDiff}
+        healthcare={healthcare}
+        healthcareDiff={healthcareDiff}
+        people={people}
+        peopleDiff={peopleDiff}
+        politics={politics}
+        politicsDiff={politicsDiff}
+        showStats={showStats}
+        social={social}
+        socialDiff={socialDiff}
+      />
       <div className="logo-box gameplay">
         <Logo />
       </div>
-      <div className="controls">
-        <a href="#" onClick={toggleTvpis}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={24}
-            height={24}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-            <polyline points="17 2 12 7 7 2"></polyline>
-          </svg>{" "}
-          {tvpis ? "Wyłącz" : "Włącz"} TVPiS
-        </a>{" "}
-        •{" "}
-        <a href="#" onClick={toggleMusic}>
-          <svg
-            width={24}
-            height={24}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M9 18V5l12-2v13"></path>
-            <circle cx="6" cy="18" r="3"></circle>
-            <circle cx="18" cy="16" r="3"></circle>
-          </svg>{" "}
-          {audio ? "Wyłącz" : "Włącz"} muzykę
-        </a>
-      </div>
-      <div className="app-bar">
-        <div
-          disabled={!(log && log.length > 0)}
-          onClick={() => setShowLogs(true)}
-        >
-          Dziennik
-        </div>
-        <div onClick={() => setShowStats(true)}>Status</div>
-        <div onClick={() => setShowChart(true)}>Statystyki</div>
-      </div>
+      <Controls
+        audio={audio}
+        toggleMusic={toggleMusic}
+        toggleTvpis={toggleTvpis}
+        tvpis={tvpis}
+      />
+      <AppBar
+        logEnabled={logEnabled}
+        onShowChartClick={onShowChartClick}
+        onShowLogsClick={onShowLogsClick}
+        onShowStatsClick={onShowStatsClick}
+      />
       {!media && event && !busy && (
-        <div className="modal-container" key={event.title}>
-          <div className="event">
-            <div className="event-title">{event.title}</div>
-            {event.image && (
-              <img
-                src={event.image}
-                width={event.imageWidth ?? 1280}
-                height={event.imageHeight ?? 720}
-              />
-            )}
-            <p>{event.logEntry}</p>
-            {event.content}
-            <button onClick={skipEvent}>Dalej</button>
-          </div>
-        </div>
+        <Event event={event} skipEvent={skipEvent} />
       )}
       {action && (
-        <div className="modal-container">
-          <div className="action">
-            <img src={actionLogo} width={1280} height={360} />
-            <div className="action-title">Podejmij decyzję</div>
-            <div className="actions">
-              {actions.map((action, index) => (
-                <button
-                  key={action.title + index}
-                  onClick={() => performAction(action)}
-                >
-                  {action.title}
-                </button>
-              ))}
-              <button onClick={skipAction}>Nie rób nic</button>
-            </div>
-          </div>
-        </div>
+        <Action
+          actionLogo={actionLogo}
+          actions={actions}
+          performAction={performAction}
+          skipAction={skipAction}
+        />
       )}
       {media && (
-        <div className="modal-container">
-          <div className="media">
-            <div className="media-cover">
-              <img
-                className={classNames("video-background", {
-                  active: !mediaCover,
-                })}
-                height={720}
-                src={tvpis ? headlineImage : latestQueuedState.propagandaImage}
-                width={1280}
-              />
-              {tvpis && (
-                <video
-                  autoPlay={tvpis}
-                  className={classNames("video-player", {
-                    active: !mediaCover,
-                  })}
-                  height={720}
-                  poster={
-                    tvpis ? headlineImage : latestQueuedState.propagandaImage
-                  }
-                  preload="auto"
-                  ref={videoPlayer}
-                  src={headlineVideo}
-                  width={1280}
-                ></video>
-              )}
-              {tvpis && (
-                <div className="strip">
-                  <div className="strip-content">
-                    PANDEMIA KORONAWIRUSA • Nowe przypadki{" "}
-                    {formatNumber(newCases)} • Zgony dziś{" "}
-                    {formatNumber(newDeaths)} • Wyzdrowiali dziś{" "}
-                    {formatNumber(newRecovered)}
-                  </div>
-                </div>
-              )}
-              {tvpis && (
-                <div className="strip-primary">
-                  <div className="strip-animated">
-                    {latestQueuedState?.message}
-                  </div>
-                </div>
-              )}
-              <img
-                className={classNames("cover-image", { active: mediaCover })}
-                height={573}
-                onClick={skipVideo}
-                src={latestQueuedState.propagandaImage}
-                title="Pomiń"
-                width={1020}
-              />
-              {mediaCover && (
-                <div className="actions" onClick={skipMedia}>
-                  <button onClick={skipMedia}>Dalej</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <Media
+          latestQueuedState={latestQueuedState}
+          mediaCover={mediaCover}
+          newCases={newCases}
+          newDeaths={newDeaths}
+          newRecovered={newRecovered}
+          skipMedia={skipMedia}
+          skipVideo={skipVideo}
+          tvpis={tvpis}
+          videoPlayer={videoPlayer}
+        />
       )}
       <audio
         autoPlay={audio}
@@ -2039,18 +1643,11 @@ export default function App() {
         src={music}
         volume={event || action || media ? 0.1 : 1.0}
       />
+
       <Menu
         active={menuActive}
         resetState={resetState}
-        setActive={(value) => {
-          setMenuActive(value);
-
-          if (audio) {
-            try {
-              musicPlayer.current.play();
-            } catch {}
-          }
-        }}
+        setActive={onMenuSetActive}
         custom={finished}
         progress={progress}
       />

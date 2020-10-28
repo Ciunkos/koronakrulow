@@ -1,3 +1,21 @@
+.layer {
+  transform: translateZ(0);
+}
+
+.well {
+  width: 100%;
+  margin: 0 -16px;
+  width: calc(100% + 32px);
+  display: flex;
+}
+
+@media screen and (min-width: 720px) {
+  .well {
+    width: calc(100% + 64px);
+    margin: 0 -32px;
+  }
+}
+
 button,
 a.button {
   min-height: 36px;
@@ -250,6 +268,7 @@ a.button {
   background: #252526;
   padding: 16px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  transform: translateZ(0);
 
   .recharts-wrapper {
     margin-bottom: -8px;
@@ -297,6 +316,7 @@ a.button {
   left: 0;
   right: 0;
   bottom: 72px;
+  transform: translateZ(0);
 
   svg {
     width: 16px;
@@ -355,6 +375,7 @@ a.button {
 }
 
 .status-header {
+  transform: translateZ(0);
   display: flex;
   padding: 16px;
   justify-content: center;
@@ -387,6 +408,7 @@ a.button {
   max-height: 100vh;
   overflow: hidden;
   filter: brightness(1.5);
+  transform: translateZ(0);
 }
 
 html,
@@ -405,6 +427,7 @@ body {
   position: absolute;
   top: 32px;
   left: 32px;
+  transform: translateZ(0);
 
   @media screen and (min-width: 720px) {
     line-height: 24px;
@@ -457,6 +480,7 @@ body {
   svg {
     padding: 16px;
     margin: -16px;
+    cursor: pointer;
   }
 }
 
@@ -500,6 +524,7 @@ body {
 }
 
 .app-bar {
+  transform: translateZ(0);
   background: #252526;
   padding: 16px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -514,6 +539,7 @@ body {
   box-sizing: border-box;
   padding: 0;
   align-items: center;
+  cursor: pointer;
 
   & > * {
     display: flex;
