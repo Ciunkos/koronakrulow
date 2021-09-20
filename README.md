@@ -42,7 +42,7 @@ Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na warunkach 
 
 Strona nie ma związku z tvp, celem jest parodia, pastisz i karykatura propagandy. Część wydarzeń w grze jest fikcją - wszelkie podobieństwo do żyjących postaci jest przypadkowe.
 
-Zapoznaj się z licencją gry na stronie głownej gry lub w pliku `/src/Menu.js`.
+Zapoznaj się z licencją gry na stronie głównej gry lub w pliku `/src/Menu.js`.
 
 # Kontakt
 
