@@ -11,13 +11,25 @@ import MapView from "./MapView";
 import MenuOptions from "./MenuOptions";
 import Progress from "./Progress";
 import * as randomPropaganda from "./random";
-import * as actions from "./actions";
-import * as events from "./events";
+import * as allActions from "./actions";
+import * as allEvents from "./events";
 import useApi from "./useApi";
 import { LEADERBOARDS_ENDPOINT } from "./leaderboards";
 import { enabled as secondWaveEnabled } from "./secondWave";
 
 import "./Menu.scss";
+
+const actions = secondWaveEnabled
+  ? allActions
+  : Object.fromEntries(
+      Object.entries(allActions).filter(([, value]) => !value.secondWave)
+    );
+
+const events = secondWaveEnabled
+  ? allEvents
+  : Object.fromEntries(
+      Object.entries(allEvents).filter(([, value]) => !value.secondWave)
+    );
 
 const SHOW_LEADERBOARD = true;
 
@@ -64,7 +76,7 @@ const Menu = ({ active, setActive, resetState, custom, progress }) => {
     if (active && !busy) {
       refetch();
     }
-  }, [active]);
+  }, [active, busy, refetch]);
 
   const leaderboards = leaderboardsSource ?? {
     daily: { won: padded, lost: padded },

@@ -139,6 +139,7 @@ const getInitialState = (custom = false, secondWave = false) => {
     deathrattle: 0,
     underControl: false,
     medicine: 0,
+    secondWave,
     dead: 0,
     recovered: 0,
     reported: 0,
@@ -163,8 +164,8 @@ const getInitialState = (custom = false, secondWave = false) => {
   return initialState;
 };
 
-const STEP_CHUNK = 1000000;
-const STEP_DELAY = 0;
+// const STEP_CHUNK = 1000000;
+// const STEP_DELAY = 0;
 
 const PENALTY_THRESHOLD = 20000;
 
@@ -179,8 +180,10 @@ const TURN_DELAY = 0;
 
 const weekendRatio = 0.55;
 
+const QUARANTINE_DETECTION_RATIO = 0.1;
+
 const transition = async (state) => {
-  let steps = 0;
+  // let steps = 0;
 
   let {
     agents,
@@ -266,7 +269,7 @@ const transition = async (state) => {
     }
 
     if (newAgent & REPORTED && !(newAgent & QUARANTINED)) {
-      if (randomPool[r++ % rp] < 0.5) {
+      if (randomPool[r++ % rp] < QUARANTINE_DETECTION_RATIO) {
         newAgent |= QUARANTINED;
 
         agents[i] = newAgent;
@@ -920,7 +923,12 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
 
     latestState.action = action;
 
-    const maybeActionKeyValue = Object.entries(allActions).find(
+    const actions = latestState.secondWave
+      ? allActions
+      : Object.fromEntries(
+          Object.entries(allActions).filter(([, value]) => !value.secondWave)
+        );
+    const maybeActionKeyValue = Object.entries(actions).find(
       ([, value]) => value === action
     );
 
@@ -996,9 +1004,8 @@ const reset = async (updateProgress, custom = false, secondWave = false) => {
       startState = await playState()(startState, updateProgress, false);
     }
 
-    const { agents, agentCount, agentsAge, sickDelays } = startState[
-      startState.length - 1
-    ];
+    const { agents, agentCount, agentsAge, sickDelays } =
+      startState[startState.length - 1];
 
     let {
       recovered: initialRecovered,
@@ -1048,6 +1055,8 @@ const reset = async (updateProgress, custom = false, secondWave = false) => {
       latestState.agents = agents;
       latestState.sickDelays = sickDelays;
       latestState.agentsAge = agentsAge;
+
+      latestState.events = [events.e20];
     }
 
     startState = state;
@@ -1164,16 +1173,6 @@ export default function App() {
 
     changeEvent(event);
   };
-
-  // window.getState = () => {
-  //   return state;
-  // };
-
-  // window.setState = (state) => {
-  //   return setState(state);
-  // };
-
-  // window.setState = () => {};
 
   const resetState = async (custom = false, secondWave = false) => {
     const nextState = await reset(updateProgress, custom, secondWave);
@@ -1485,7 +1484,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    const possibleActions = Object.values(allActions);
+    const possibleActions = latestState.secondWave
+      ? Object.values(allActions)
+      : Object.values(allActions).filter((value) => !value.secondWave);
     const appliedActions = data.filter((x) => x.action).map((x) => x.action);
 
     const filteredActions = possibleActions
@@ -1541,11 +1542,18 @@ export default function App() {
     setActions(actions);
   }, [latestState]);
 
-  //console.log({ event });
-
   const today = offsetStartDate(latestState.day);
   const logEnabled = log && log.length > 0;
   const deathrattleLeft = DEATHRATTLE_LIMIT - deathrattle;
+
+  const popup = Boolean(event || action || media);
+  const volume = popup ? 0.5 : 1.0;
+
+  useEffect(() => {
+    if (musicPlayer && musicPlayer.current) {
+      musicPlayer.current.volume = audio ? volume : 0;
+    }
+  }, [volume, audio]);
 
   return (
     <div className="App">
@@ -1641,9 +1649,8 @@ export default function App() {
         loop
         ref={musicPlayer}
         src={music}
-        volume={event || action || media ? 0.1 : 1.0}
+        volume={volume}
       />
-
       <Menu
         active={menuActive}
         resetState={resetState}

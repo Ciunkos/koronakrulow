@@ -31,7 +31,7 @@ const MenuOptions = ({
         Gra dowolna
       </button>
       <div className="hint">
-        Gra dowolna pozwala wybierać akcje z wszystkich dostępnych opcji
+        Gra swobodna pozwala wybrać akcje spośród wszystkich dostępnych opcji
       </div>
       {!custom && (
         <div className="requirement">

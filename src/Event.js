@@ -15,6 +15,19 @@ const Event = ({ event, skipEvent }) => (
           />
         </div>
       )}
+      {event.video && (
+        <div className="well">
+          <video
+            autoPlay
+            preload="auto"
+            className="video-player layer"
+            height={event.imageHeight ?? 720}
+            loading="eager"
+            src={event.video}
+            width={event.imageWidth ?? 1280}
+          />
+        </div>
+      )}
       <p>{event.logEntry}</p>
       {event.content}
       <button onClick={skipEvent}>Dalej</button>
