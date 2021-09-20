@@ -20,12 +20,24 @@ import e16Image from "./events/e16.jpg";
 import e17Image from "./events/e17.jpg";
 import e18Image from "./events/e18.jpg";
 import e19Image from "./events/e19.jpg";
+import e20Video from "./events/e20.mp4";
+import e21Video from "./events/e21.mp4";
+import e22Video from "./events/e22.mp4";
+import e23Video from "./events/e23.mp4";
 import { submitLeaderboards } from "./leaderboards";
 
 const createEvent = (title, logEntry, effect, options) => ({
   title,
   logEntry,
   effect,
+  ...options,
+});
+
+const createSecondWaveEvent = (title, logEntry, effect, options) => ({
+  title,
+  logEntry,
+  effect,
+  secondWave: true,
   ...options,
 });
 
@@ -254,4 +266,32 @@ export const e19 = createEvent(
       </div>
     ),
   }
+);
+
+export const e20 = createSecondWaveEvent(
+  "Koronawirus w odwrocie!",
+  "Premier Morawiecki ogłasza - koronawirus w odwrocie! Nie ma się czego obawiać. Polska dumnie triumfuje w walce z wirusem!",
+  (state) => {},
+  { video: e20Video }
+);
+
+export const e21 = createSecondWaveEvent(
+  "Kwarantanna narodowa!",
+  "Bezpieczeństwo kontaktów międzyludzkich najwyższym priorytetem (nie)rządu.",
+  (state) => {},
+  { video: e21Video }
+);
+
+export const e22 = createSecondWaveEvent(
+  "Ryczerze Chrystusa wezwani do walki!",
+  '"Wzywam wszystkich zwolenników do obrony kościołów..." - słowa naczelnego wodza nie odbiły się bez echa.',
+  (state) => {},
+  { video: e22Video }
+);
+
+export const e23 = createSecondWaveEvent(
+  "Strategia walki z wirusem opracowana",
+  "Głowy rządu opracowały nowy plan walki z wirusem, i nie tylko...",
+  (state) => {},
+  { video: e23Video }
 );

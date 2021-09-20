@@ -5,6 +5,14 @@ const createAction = (title, logEntry, effect, options) => ({
   ...options,
 });
 
+const createSecondWaveAction = (title, logEntry, effect, options) => ({
+  title,
+  logEntry,
+  effect,
+  secondWave: true,
+  ...options,
+});
+
 export const a1 = createAction(
   "Zamknij granice",
   "Polska izoluje się od napływu zarazy od sąsiadów.",
@@ -1300,8 +1308,8 @@ export const a113 = createAction(
 );
 
 export const a114 = createAction(
-  "Inwestuj w produkcję trumień i zakłady pogrzebowe",
-  "Rząd spełnia potrzeby obywateli. Zwiększone moce produkcyjne trumień skracają kolejki na cmentarzach!",
+  "Inwestuj w produkcję trumien i zakłady pogrzebowe",
+  "Rząd spełnia potrzeby obywateli. Zwiększone moce produkcyjne trumien skracają kolejki na cmentarzach!",
   (state) => {
     state.budget -= 2;
     state.economy += 2;
@@ -2476,5 +2484,2194 @@ export const a216 = createAction(
   },
   {
     message: "Program zdalna szkoła+ na plus",
+  }
+);
+
+// DRUGA FALA
+
+export const a217 = createSecondWaveAction(
+  "Wprowadź seks za zgodą kapłana",
+  "Nowe prawo wymaga pisemnego zezwolenia proboszcza parafii do odbycia stosunków seksualnych. Penalizowane jest obywanie stosunków pozamałżeńskich.",
+  (state) => {
+    state.people -= 5;
+    state.policits += 4;
+    state.social += 1;
+  },
+  {
+    message: "Oto słowo Boże",
+  }
+);
+
+export const a218 = createSecondWaveAction(
+  "Pal zwłoki zmarłych na COVID-19 w Auschwitz",
+  "Krematoria w obozie zagłady zostały wykorzystane przez rząd do redukcji skażonego materiału biologicznego. Uwaga międzynarodowa potępia decyzje polskiego rządu.",
+  (state) => {
+    state.people -= 2;
+    state.healthcare += 1;
+  },
+  {
+    message: "Widać biały dym nad obozem",
+  }
+);
+
+export const a219 = createSecondWaveAction(
+  "Mianuj Jezusa Chrystusa królem Polski",
+  "Polska zmienia ustrój na republikę katolicką, gdzie pierwszorzędnym prawem jest prawo kościelne.",
+  (state) => {
+    state.policits += 2;
+    state.people -= 4;
+  },
+  {
+    message: "Klękajcie narody",
+  }
+);
+
+export const a220 = createSecondWaveAction(
+  "Przekształć placówki szkolne w szpitale",
+  "Infrastruktura zamkniętych szkół poszłuży do ratowania pacjentów dla których brakuje miejsc w szpitalach.",
+  (state) => {
+    state.people -= 1;
+    state.healthcare += 2;
+  },
+  {
+    message: "Ławki szkolne idealne jako łóżka covidowe",
+  }
+);
+
+export const a221 = createSecondWaveAction(
+  "Zwiększ produkcję cebuli i czosnknu jako leku na COVID-19",
+  "Udowodnione działanie wspomagające naturalnych produktów wspomaga leczenie pacjentów. Ponadto, Polska chce konkurować z Holandią w eksporcie produktów hydroponicznych.",
+  (state) => {
+    state.budget -= 3;
+    state.people += 1;
+    state.healthcare += 1;
+    state.economy += 2;
+    state.infectionProbability *= 0.95;
+  },
+  {
+    message: "Kiszonki ważne w budowaniu odporności",
+  }
+);
+
+export const a222 = createSecondWaveAction(
+  "Wprowadź licencję na pornografię",
+  "Aby skorzystać ze stron dla pełnoletnich, należy okazać dowód osobisty w najbliższym urzędzie skarbowym. Dostęp udzielany jest na 30 minut.",
+  (state) => {
+    state.people -= 3;
+  },
+  {
+    message: "Porno kłamie tak samo jak telewizja",
+  }
+);
+
+export const a223 = createSecondWaveAction(
+  "Deportuj Mameda Khalidova",
+  "Spada ilość ataków przez Czeczenów i mniejszości etniczne. Strach przed deportacją zapobiega aktom agresji.",
+  (state) => {
+    state.people += 2;
+  },
+  {
+    message: "Polskie kobiety bezpieczne od najeźdźców",
+  }
+);
+
+export const a224 = createSecondWaveAction(
+  "Pokryj ludzi testami jednostkowymi",
+  "Każdy obywatel musi dokonać sprawdzenia swojego stanu zdrowia - zmierzyć temperaturę i zanotować niepokojące objawy. Codzienny raport musi przesłać do lokalnego oddziału Sanepidu.",
+  (state) => {
+    state.people -= 2;
+    state.infectionProbability *= 0.8;
+  },
+  {
+    message: "Kaczyński testuje na produkcji",
+  }
+);
+
+export const a225 = createSecondWaveAction(
+  "Wprowadź obowiązek noszenia foliowych czapeczek",
+  "Foliowe czapeczki skutecznie chonią przed manipulacją myślami, chemtrails i teoriami spiskowymi.",
+  (state) => {
+    state.contactsPerDay *= 0.95;
+  },
+  {
+    message: "Chemtrails widoczne nad polskim niebem",
+  }
+);
+
+export const a226 = createSecondWaveAction(
+  "Zamknij ojca Maty",
+  "Znany polskiego prawnik, krytykujący zmiany PiS w sądownictwie, skazany za nieprzychylność jedynemu słuszemu rządowi.",
+  (state) => {
+    state.people -= 8;
+    state.policits += 4;
+  },
+  {
+    message: "Patointeligencja zadarła z rządem",
+  }
+);
+
+export const a227 = createSecondWaveAction(
+  "Wprowadź publiczną chłostę dla par homoseksualnych",
+  "W celu prewencji działań homopropagandy, rząd piętnuje występki aby skutecznie uchronić innnych obywateli przed dewiacją.",
+  (state) => {
+    state.people -= 6;
+    state.policits += 2;
+  },
+  {
+    message: "Rząd patrzy co robisz w łóżku",
+  }
+);
+
+export const a228 = createSecondWaveAction(
+  "Pal heretyków na stosach",
+  "Igrzyska śmierci stają się codzienną rozrywką fanatycznych Katolików.",
+  (state) => {
+    state.people -= 10;
+    state.policits += 10;
+  },
+  {
+    message: "Średniowiecze, to dopiero były dobre czasy",
+  }
+);
+
+export const a229 = createSecondWaveAction(
+  "Strasz opinię publiczną zalewem imigrantów",
+  "Pomimo ograniczeń w przemieszczaniu się po Europie, narracja rządu buduje w Polakach strach przed obcymi.",
+  (state) => {
+    state.people -= 1;
+    state.policits += 3;
+  },
+  {
+    message: "Polska otwartym krajem, tylko dla Polaków",
+  }
+);
+
+export const a230 = createSecondWaveAction(
+  "Przyjmij narzuconą kwotę imigrantów",
+  'Imigranci przebywają w obozach. Niemieckie media nazywają je "polskimi obozami".',
+  (state) => {
+    state.people -= 1;
+    state.policits -= 3;
+    state.economy += 1;
+    state.social -= 8;
+  },
+  {
+    message: "Unia zalewa nas śmieciem ludzkim",
+  }
+);
+
+export const a231 = createSecondWaveAction(
+  "Zwiększ produkcję materiałów propagandowych",
+  "Kraje reżimowe zazdroszczą Polsce skutecznych działań propagandowych. Polska spada w rankingu OBWE.",
+  (state) => {
+    state.budget -= 3;
+    state.policits += 5;
+    state.people -= 1;
+  },
+  {
+    message: "W naszym PRL jest cudownie",
+  }
+);
+
+export const a232 = createSecondWaveAction(
+  "Oferuj Koronę Królów w modelu Pay Per View",
+  "Produkcja TVP cieszy się uznaniem wśród grona widów 65+. Widzowie dokonują przelewów przekazami pieniężnymi, tak jak do Rydzyka.",
+  (state) => {
+    state.budget += 1;
+  },
+  {
+    message: "Korona Krulów przebija popularnością KSW",
+  }
+);
+
+export const a233 = createSecondWaveAction(
+  "Wprowadź kontrolę prasy",
+  "Materiały prasowe przed publikacją muszą przejść weryfikację Głównego Urzędu Kontroli Prasy, Publikacji i Widowisk.",
+  (state) => {
+    state.economy -= 2;
+    state.policits += 3;
+    state.people -= 2;
+  },
+  {
+    message: "gazetapolska.pl jako strona startowa",
+  }
+);
+
+export const a234 = createSecondWaveAction(
+  "Zamknij sklepy online w niedziele",
+  "Serwery sklepów muszą zwracać kod błędu 666 w dni świąteczne.",
+  (state) => {
+    state.economy -= 4;
+    state.policits += 2;
+    state.people -= 1;
+  },
+  {
+    message: "Cejrowski pionierem branży e-commerce",
+  }
+);
+
+export const a235 = createSecondWaveAction(
+  "Wprowadź podatek cukrowy",
+  "Pod przykrywką walki z otyłością, rząd poszukuje kolejnego zastrzyku gotówki.",
+  (state) => {
+    state.budget += 4;
+    state.economy -= 1;
+  },
+  {
+    message: "Cola szkodzi, tak jak opozycja",
+  }
+);
+
+export const a236 = createSecondWaveAction(
+  "Wdróż Lex Uber",
+  "Tzw. złotówy cieszą się w legislacji. Niestety, wszystko obija się na kieszeni konsumentów.",
+  (state) => {
+    state.budget += 1;
+    state.economy += 1;
+    state.people -= 2;
+  },
+  {
+    message: "Zagrniczne korporacje drenują polskie kieszenie",
+  }
+);
+
+export const a237 = createSecondWaveAction(
+  "Wprowadź pełny lockdown",
+  "Narodowa kwarantanna wprowadzona. Psy załatwiają się na balkonach.",
+  (state) => {
+    state.economy -= 10;
+    state.people -= 5;
+    state.policits -= 5;
+    state.healthcare += 4;
+    state.contactsPerDay *= 0.5;
+  },
+  {
+    message: "Skończyło się śmieszkowanie",
+  }
+);
+
+export const a238 = createSecondWaveAction(
+  "Przekaż alkohol z przemytu na potrzeby na potrzeby dezynfekcji",
+  "Kontrabanda zasila magazyny szpitali.",
+  (state) => {
+    state.healthcare += 1;
+    state.infectionProbability *= 0.9;
+  },
+  {
+    message: "Metanol skutecznym prohibitorem zakażeń",
+  }
+);
+
+export const a239 = createSecondWaveAction(
+  "Płać policji dodatek 200+ od każdego spałowanego lub zagazowanego obywatela",
+  "TODO:",
+  (state) => {
+    state.budget -= 3;
+    state.people -= 2;
+    state.policits += 2;
+    state.policeAuthority += 5;
+  },
+  {
+    message: "OMON zakontraktowany do pomocy policji",
+  }
+);
+
+export const a240 = createSecondWaveAction(
+  "Truj przeciwników politycznych Nowiczokiem",
+  "TODO:",
+  (state) => {
+    state.people -= 5;
+    state.policits += 8;
+  },
+  {
+    message: "Nic się stało. Proszę się rozejść",
+  }
+);
+
+export const a241 = createSecondWaveAction(
+  "Sugeruj noszenie masek samochodowych na twarzy",
+  "Handlarze częściami zamiennymi dziękują rządzącym za boom w ich branży.",
+  (state) => {
+    state.economy += 1;
+    state.budget -= 1;
+    state.infectionProbability *= 0.99;
+  },
+  {
+    message: "Wysoka strefa zgniotu chroni Polaków",
+  }
+);
+
+export const a242 = createSecondWaveAction(
+  "Zleć wykonywanie kompromitujących materiałów przeciwko LGBT",
+  "W prasie, telwizji i sieci wrze od ataków na lewicowe ugrupowania.",
+  (state) => {
+    state.budget -= 4;
+    state.policits += 2;
+    state.people -= 1;
+  },
+  {
+    message: "Lewacki faszyzm niszczy Polskę",
+  }
+);
+
+export const a243 = createSecondWaveAction(
+  "Podpal Tęczę na Placu Zbawiciela",
+  "Symbol lewackich bojówek, w mniemaniu rządu, spłonął. Rafał Trzaskowski oskarżony o zdradę stanu!",
+  (state) => {
+    state.budget -= 1;
+    state.policeAuthority -= 3;
+    state.policits += 5;
+    state.people -= 1;
+  },
+  {
+    message: "Nie ma miejsca na symbole neonazistowskie",
+  }
+);
+
+export const a244 = createSecondWaveAction(
+  "Zamknij budki z kebabem",
+  "Dieta obcokrajowców zakazana ustawą w celu prewencji zalewu Europy imigrantami. Polska ostatnim walczącym bastionem.",
+  (state) => {
+    state.economy -= 1;
+    state.people -= 1;
+    state.healthcare += 1;
+  },
+  {
+    message: "Kupując kebaba, osiedlasz Araba",
+  }
+);
+
+export const a245 = createSecondWaveAction(
+  "Emituj filmy antyaborcyjne na antenie TVP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Mumunki w wieczorynce na TVP 1",
+  }
+);
+
+export const a246 = createSecondWaveAction(
+  "Wprowadź bykowe",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Ideologia singli niszczy polskie rodziny",
+  }
+);
+
+export const a247 = createSecondWaveAction(
+  "Rozpocznij transfer pieniędzy ze spółek Skarbu Państwa do swoich mediów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Antypolskie media finansowane przez zachód",
+  }
+);
+
+export const a248 = createSecondWaveAction(
+  "Beatyfikuj Jarosława Kaczyńskiego",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wielki Polak, następca Jana Pawła II",
+  }
+);
+
+export const a249 = createSecondWaveAction(
+  "Wprowadź powszechny obowiązek obecności na mszach świętych w niedziele",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Religia drogowzkazem życiowym",
+  }
+);
+
+export const a250 = createSecondWaveAction(
+  "Wprowadź kolejne podwyżki dla policji",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wierny pies, dobry pies",
+  }
+);
+
+export const a251 = createSecondWaveAction(
+  "Wprowadź obowiązek instalacji aplikacji ProteGO Safe STOP COVID",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Dobrowolna aplikacja, obowiązkowo dla każdego",
+  }
+);
+
+export const a252 = createSecondWaveAction(
+  "Rozpocznij wysyłanie alertów RCB z promocjami w Biedronce",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Filet z podludzia 8,79 zł/kg",
+  }
+);
+
+export const a253 = createSecondWaveAction(
+  "Nagródź Sasina",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nagroda Polskiego Kompasu dla Jacka Sasina",
+  }
+);
+
+export const a254 = createSecondWaveAction(
+  "Obniż kwotę wolną od podatku",
+  "TODO: ",
+  (state) => {
+    state.people -= 1;
+    state.budget += 2;
+    state.economy -= 2;
+    state.social += 1;
+  },
+  {
+    message: "Morawiecki: Nikt nie jest bez vat",
+  }
+);
+
+export const a255 = createSecondWaveAction(
+  "Wprowadź lekcje Naturalnego Planowania Rodziny w przedszkolach",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Księża prowadzą korki dla najmłodzych",
+  }
+);
+
+export const a256 = createSecondWaveAction(
+  "Finansuj budowy pomników Jana Pawła II",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Murale, pomniki, to mało. JP II w kazdym domu",
+  }
+);
+
+export const a257 = createSecondWaveAction(
+  "Mianuj Dodę ministrem kultury",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Doda fajną dżagą jest",
+  }
+);
+
+export const a258 = createSecondWaveAction(
+  "Wprowadź piątkę dla zwierząt",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Piątka dla zwierząt i szóstka w Lotto",
+  }
+);
+
+export const a259 = createSecondWaveAction(
+  "Wykonuj samobójstwa przeciwników politycznych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Lepper nie miał na nas nic",
+  }
+);
+
+export const a260 = createSecondWaveAction(
+  "Przydziel całkowity monopol Poczcie Polskiej",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Inpost pośmieszkował to ma",
+  }
+);
+
+export const a261 = createSecondWaveAction(
+  "Powołaj ponownie Telekomunikację Polską",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "My łączymy ludzi",
+  }
+);
+
+export const a262 = createSecondWaveAction(
+  "Ukradnij kurtkę Romana Giertycha podczas przeszukania",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Christian Paul wizażystą Prezesa",
+  }
+);
+
+export const a263 = createSecondWaveAction(
+  "Wprowadź na rynek samochód napędzany fekaliami",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Izera w nowej bio-odsłonie:",
+  }
+);
+
+export const a264 = createSecondWaveAction(
+  "Wprowadź program Dykta+",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Mieszkania dla młodych w kontenerach z dykty",
+  }
+);
+
+export const a265 = createSecondWaveAction(
+  "Wprowadź ustawowy obowiązek noszenia maseczek",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Koniec z usprawiedliwieniami od rodziców",
+  }
+);
+
+export const a266 = createSecondWaveAction(
+  "Zwolnij lekarzy z odpowiedzialności",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Żartowaliśmy, wracajcie do pracy",
+  }
+);
+
+export const a267 = createSecondWaveAction(
+  "Wprowadź przymusowy angaż niewykwalifikowanych lekarzy do walki z COVID",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Pracownicy budowlani szpachlują chorych",
+  }
+);
+
+export const a268 = createSecondWaveAction(
+  "Zdelegalizuj CBD",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "CDB to jak LGBT dla mózgu",
+  }
+);
+
+export const a269 = createSecondWaveAction(
+  "Odbierz pieniądze z tarczy antykryzysowej z odsetkami pod błahymi pretekstami",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wyszczekani przedsiębiorcy z ukróconym łańcuchem",
+  }
+);
+
+export const a270 = createSecondWaveAction(
+  "Zezwól obcokrajowcom wykonywania obowiązków lekarskich bez nostryfikacji dyplomów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Ja ni panimaju",
+  }
+);
+
+export const a271 = createSecondWaveAction(
+  "Wezwij Rycerzy Chrystusa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Bóg z nami, chuj z wami",
+  }
+);
+
+export const a272 = createSecondWaveAction(
+  "Wprowadź program Tarcza dla Życia",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Życie wieczne przed doczesnym",
+  }
+);
+
+export const a273 = createSecondWaveAction(
+  "Rozpocznij czystki w opozycji",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Czas na rewolucję ludu!",
+  }
+);
+
+export const a274 = createSecondWaveAction(
+  "Wyślij księży do walki z COVID",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Sutanny lepsze od kombinezonów",
+  }
+);
+
+export const a275 = createSecondWaveAction(
+  "Zakaż organizacji jarmarków bożonarodzeniowych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Jarmarki przyciągają tirowców",
+  }
+);
+
+export const a276 = createSecondWaveAction(
+  "Inwigiluj komunikację opozycji za pomocą Pegazusa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wiemy co myślisz",
+  }
+);
+
+export const a277 = createSecondWaveAction(
+  "Rozpocznij program teleoperacji",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zrób to sam!",
+  }
+);
+
+export const a278 = createSecondWaveAction(
+  "Przeprowadź kuchenne rewolucje w gastronomii",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Czas udusić kaczkę!",
+  }
+);
+
+export const a279 = createSecondWaveAction(
+  "Wprowadź zakaz uboju rytualnego",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Polska broni kozy od Arabów",
+  }
+);
+
+export const a280 = createSecondWaveAction(
+  "Wprowadź zakaz hodowli zwierząt futerkowych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Klaudia El Dursi bez płaszczyka",
+  }
+);
+
+export const a281 = createSecondWaveAction(
+  "Wprowadź zakaz hodowli i importu psów uważanych za agresywne",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Amstaffy niweczą plan 500+",
+  }
+);
+
+export const a282 = createSecondWaveAction(
+  "Internuj nieprzychylnych sędziów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kto nie z nami, ten przeciwko nam",
+  }
+);
+
+export const a283 = createSecondWaveAction(
+  "Dewaluuj walutę do polskiego sasina",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Deficyt budżetowy w 2020 to tylko 1557 sasinów",
+  }
+);
+
+export const a284 = createSecondWaveAction(
+  "Zezwól na aborcję na życzenie dla kobiet 65+",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Elektorat przeciwko aborcji",
+  }
+);
+
+export const a285 = createSecondWaveAction(
+  "Zwolnij ekspertów jako iż nie realizują wizji Partii",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Eksperci w błędzie, tylko rząd ma rację",
+  }
+);
+
+export const a286 = createSecondWaveAction(
+  "Wezwij Sasina, aby zrobił kilka wałów, aby uchronić Polskę od powodzi",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Susza? Powódź? Sasin!",
+  }
+);
+
+export const a287 = createSecondWaveAction(
+  "Wprowadź godzinę policyjną",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Polacy idą spać po wieczorynce",
+  }
+);
+
+export const a288 = createSecondWaveAction(
+  "Powołaj najdzielniejszych Rycerzy Chrystusa do obrony Prezesa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Gloria victis",
+  }
+);
+
+export const a289 = createSecondWaveAction(
+  "Wprowadź obowiązek pracy zdalnej dla gastronomii i branży budowlanej",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kucharzu, umyj swoją patelnię!",
+  }
+);
+
+export const a290 = createSecondWaveAction(
+  "Wprowadź podział na strefy",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Strefy wolne of LGBT, wolne od koronawirusa",
+  }
+);
+
+export const a291 = createSecondWaveAction(
+  "Zorganizuj EURO COVID 2020 na Stadionie Narodowym",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Biało-czerwoni do boju!",
+  }
+);
+
+export const a292 = createSecondWaveAction(
+  "Zbuduj prezesowi prywatny bunkier",
+  "Replika kompleksu Riese na Żoliborzu",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Manifestacje poparcia przed domem prezesa PiS",
+  }
+);
+
+export const a293 = createSecondWaveAction(
+  "Przebierz kota, Mateusza i Andrzeja na Halloween",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Morawiecki: Cukierek, albo fiskus!",
+  }
+);
+
+export const a294 = createSecondWaveAction(
+  "Nakaż Sasinowi zwrot 70 baniek",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Sasin wpisany do rejestru BIK",
+  }
+);
+
+export const a295 = createSecondWaveAction(
+  "Wprowadź obowiązek wypowiedzi polityków z wykrywaczem kłamstw",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Cisza medialna",
+  }
+);
+
+export const a296 = createSecondWaveAction(
+  "Zakaż emisji produkcji pedofiliskich przez serwisy VOD",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Netflix notuje drastyczny spadek oglądalności",
+  }
+);
+
+export const a297 = createSecondWaveAction(
+  "Odwróć wykres aby pokazać spadek/wypłaszczenie krzywej zachorowań",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: 'Ekspert: "Jesteśmy w d*pie"',
+  }
+);
+
+export const a298 = createSecondWaveAction(
+  "Depenalizuj gwałty i ukrywaj pedofilię w Kościele",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Żeby życie miało smaczek",
+  }
+);
+
+export const a299 = createSecondWaveAction(
+  "Wprowadź komunistów na uczelnie wyższe",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Przeciwdziałanie dyskryminacji iluzją",
+  }
+);
+
+export const a300 = createSecondWaveAction(
+  "Wprowadź zakaz organizacji wesel",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wiernemu wystarczy ślub przed Bogiem",
+  }
+);
+
+export const a301 = createSecondWaveAction(
+  "Wprowadź zakaz organizacji targów online",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Koronawirus przenosi się przez kable ethernetowe",
+  }
+);
+
+export const a302 = createSecondWaveAction(
+  "Wprowadź limit telekonferencji do 5 osób",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zgromadzenia w sieci nośnikiem dezinformacji",
+  }
+);
+
+export const a303 = createSecondWaveAction(
+  "Finansuj zakup urządzeń telekomunikacyjnych dla uczniów i nauczycieli",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "500+ dla nauczycieli",
+  }
+);
+
+export const a304 = createSecondWaveAction(
+  "Zakaż aborcji z powodu gwałtów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Gwałciciele domagają się praw ojcowskich",
+  }
+);
+
+export const a305 = createSecondWaveAction(
+  "Przenieś stolicę Polski na Podkarpacie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nisko rząda dostępu do morza!",
+  }
+);
+
+export const a306 = createSecondWaveAction(
+  "Reinkarnuj służby MO i ZOMO",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Obywatele stawiają się do obrony polskości",
+  }
+);
+
+export const a307 = createSecondWaveAction(
+  "Schowaj Andrzeja do szafy",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Andrzej Duda ma koronawirusa od ponad pół roku",
+  }
+);
+
+export const a308 = createSecondWaveAction(
+  "Wprowadź szkolenia kłamstwa i propagandy dla polityków i urzędników",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "To nie nasza ręka!",
+  }
+);
+
+export const a309 = createSecondWaveAction(
+  "Wprowadź godziny dla seniorów w sklepikach szkolnych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zakaz sprzedaży zupek chińskich seniorom",
+  }
+);
+
+export const a310 = createSecondWaveAction(
+  "Wprowadź godziny dla seniorów w sklepach online",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zniżka tyle ile lat w Vision Express!",
+  }
+);
+
+export const a311 = createSecondWaveAction(
+  "Rozpocznij ruch BLM w Polsce",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Lewacy pomylili BLM z Black Lives Matter",
+  }
+);
+
+export const a312 = createSecondWaveAction(
+  "Rozpocznij ruch Matka+",
+  "Kobiety jako inkubatory tworzą linie produkcyjne.",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Rolą kobiety jest rodzić",
+  }
+);
+
+export const a313 = createSecondWaveAction(
+  "Deleguj Sasina aby zdefraudował kolejne kilkadziesiąt baniek",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Program Sasin+ wdrożony",
+  }
+);
+
+export const a314 = createSecondWaveAction(
+  "Wybuduj dodatkowe przedszkola i żłobki",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Najmłodsi w służbie narodu",
+  }
+);
+
+export const a315 = createSecondWaveAction(
+  "Wybuduj metro w każdym mieście wojewódzkim",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Sasin osobiście nadzoruje postęp prac",
+  }
+);
+
+export const a316 = createSecondWaveAction(
+  "Zaprzestań podawania grzybów halucynogennych redaktorom i gościom TVP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Na wzór Colorado, Polska legalizuje marihunaen",
+  }
+);
+
+export const a317 = createSecondWaveAction(
+  "Wydłuż urlopy macierzyńskie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Rząd wspiera kobiety",
+  }
+);
+
+export const a318 = createSecondWaveAction(
+  "Wykonaj test przedsiębiorcy",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Morawiecki nie zdał",
+  }
+);
+
+export const a319 = createSecondWaveAction(
+  "Rozpocznij polski program kosmiczny",
+  "Rząd oczekuje kosmicznych zysków z kolonizacji pobliskich planet. USA zazdrości Polsce lotów kosmicznych.",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Polska wylądowała po ciemnej stronie Księżyca",
+  }
+);
+
+// TODO:
+// Zgrywka event !
+export const a320 = createSecondWaveAction(
+  "Nakaż Ziobrze zaprzestać prześladowania Stonogi i jego rodziny",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Po apelach, Ziobro zaprzestał prześladowań",
+  }
+);
+
+export const a321 = createSecondWaveAction(
+  "Zlikwiduj opłaty targowe",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "PiS uwalnia od opłat narzuconych przez PO",
+  }
+);
+
+export const a322 = createSecondWaveAction(
+  "Lecz chorych na COVID jabłkami",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: '"One apple a day, keeps a doctor away"',
+  }
+);
+
+export const a323 = createSecondWaveAction(
+  "Wprowadź w pełni odpłatne chorobowe dla zakażonych lub objętych kwarantanną",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Widzialne ręce rządu które leczą",
+  }
+);
+
+export const a324 = createSecondWaveAction(
+  "Zamknij siłownie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Sfrustrowani kibole wyżywają się na kobietach",
+  }
+);
+
+export const a325 = createSecondWaveAction(
+  "Zamknij gastronomię",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Z pustego i Salomon nie naleje",
+  }
+);
+
+export const a326 = createSecondWaveAction(
+  "Wprowadź nauczanie zdalne dla szkół",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Rząd finansuje poradniki na YouTube od Hindusów",
+  }
+);
+
+export const a327 = createSecondWaveAction(
+  "Wprowadź nauczanie zdalne dla żłobków i przedszkoli",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kupka online - innowacja na skalę światową",
+  }
+);
+
+export const a328 = createSecondWaveAction(
+  "Rozpocznij teleporady",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Sprzedawcy z telezakupów mango oferują pomoc",
+  }
+);
+
+export const a329 = createSecondWaveAction(
+  "Wprowadź teleaborcje",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Pod numerem 0 700 - dodatkowo płatne",
+  }
+);
+
+export const a330 = createSecondWaveAction(
+  "Przekształć Ordo luris w Ministerstwo Prawdy",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wiemy jak żyć i gdzie twa rzyć",
+  }
+);
+
+export const a331 = createSecondWaveAction(
+  "Wyślij Najmana do obrony Jasnej Góry",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Obrońcy wiary bronią fundamentów tradycji",
+  }
+);
+
+export const a332 = createSecondWaveAction(
+  "Znacjonalizuj mBank",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "mBank wysyłał pushe ***** *** na produkcji",
+  }
+);
+
+export const a333 = createSecondWaveAction(
+  "Wprowadź refuncację antykoncepji",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Antykoncepcja tańsza niż gumy Turbo",
+  }
+);
+
+export const a334 = createSecondWaveAction(
+  "Wprowadź przymusowe ćwiczenia dla otyłych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Aplikacja Kwarantanna Domowa jako fit opaska",
+  }
+);
+
+export const a335 = createSecondWaveAction(
+  "Wprowadź obowiązek poddania się testom albo przymusowa kwarantanna",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Antycovidowcy zagrożeniem dla społeczeństwa",
+  }
+);
+
+export const a336 = createSecondWaveAction(
+  "Zamknij przestrzeń powierzną nad Polską",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zachodnie samoloty szpiegowskie likwidowane",
+  }
+);
+
+export const a337 = createSecondWaveAction(
+  "Zamów zapasy Remdesiviru",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Magazyny medyczne pękają w szwach",
+  }
+);
+
+export const a338 = createSecondWaveAction(
+  "Przydziel giermka każdemu ministrowi",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Co dwie głowy, to nie jedna",
+  }
+);
+
+export const a339 = createSecondWaveAction(
+  "Zakaż sprzedaży alkoholu po godz. 21",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Spożycie alkoholu znacząco wzrosło",
+  }
+);
+
+export const a340 = createSecondWaveAction(
+  "Znacjonalizuj majątek Rydzyka",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kościół odrwaca się od nas w potrzebie",
+  }
+);
+
+export const a341 = createSecondWaveAction(
+  "Mianuj Kaję Godek przedstawicielem Matek Polek",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Symbol nawrócenia dla zdeprawowanych kobiet",
+  }
+);
+
+export const a342 = createSecondWaveAction(
+  "Wprowadź obowiązkową kastrację chemiczną duchownych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Odnotowano największy spadek gwałtów nieletnich",
+  }
+);
+
+export const a343 = createSecondWaveAction(
+  "Wprowadź obowiązek reprodukcji",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Praca kobiet to przyszłość",
+  }
+);
+
+export const a344 = createSecondWaveAction(
+  "Rozdawaj medale Matki Bohaterki",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "TVP nagrodziło najbardziej obfite matki 2020",
+  }
+);
+
+export const a345 = createSecondWaveAction(
+  "Wprowadź karę 30 lat więzienia za pronienie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kobiety odpowiadają za ciało mordujące dzieci",
+  }
+);
+
+export const a346 = createSecondWaveAction(
+  "Wprowadź karę śmierci za masturbację",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Uschnięta ręka to za mało",
+  }
+);
+
+export const a347 = createSecondWaveAction(
+  "Wprowadź obowiązek zakładanie kagańców Sebastianom",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Pamiętaj! Posprzątaj po swoim Sebastianie!",
+  }
+);
+
+export const a348 = createSecondWaveAction(
+  "Wprowadź prawo szariatu",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Gdzie diabeł nie może, tam babę pośle",
+  }
+);
+
+export const a349 = createSecondWaveAction(
+  "Zabroń porodów metodami nienaturalnymi",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kobieta nie mogąca normalnie urodzić nie warta",
+  }
+);
+
+export const a350 = createSecondWaveAction(
+  "Zakaż badań prenatalnych i USG",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Bóg tak chciał",
+  }
+);
+
+export const a351 = createSecondWaveAction(
+  "Kamienuj kobiety dopuszczające się cudzołóstwa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Stream TVP codziennie o 20.00",
+  }
+);
+
+export const a352 = createSecondWaveAction(
+  "Wyślij wozy TVP do taranowania demonstratorów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wozy TVP zasilają szeregi policji",
+  }
+);
+
+export const a353 = createSecondWaveAction(
+  "Ukrywaj płace prezenterów TVP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Trzydzieći srebrników to średnia płaca w TVP",
+  }
+);
+
+export const a354 = createSecondWaveAction(
+  "Wprowadź zajęcia z WF-u w Counter-Strike'u",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Bunny-hopping na rozgrzewkę, a potem gała",
+  }
+);
+
+export const a355 = createSecondWaveAction(
+  "Przyznaj dodatkowe finansowanie Poczcie Polskiej",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Poczta Polska spełnia potrzeby obywateli",
+  }
+);
+
+export const a356 = createSecondWaveAction(
+  "Organizuj koncerty z obrazem Matki Boskiej",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wiara chroni przed wirusem",
+  }
+);
+
+export const a357 = createSecondWaveAction(
+  "Nawiąż współpracę z Niemcami w celu przyjęcia pacjentów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Niemcy specjalistami w sprawie eugeniki",
+  }
+);
+
+export const a358 = createSecondWaveAction(
+  "Mianuj aferzystów na ministrów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Politycy PiS zasługują na godziwe zarobki",
+  }
+);
+
+export const a359 = createSecondWaveAction(
+  "Wprowadź publiczny rejestr wydatków na walkę z COVID-19",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nie możemy więcej kraść",
+  }
+);
+
+// TODO: filmik
+export const a360 = createSecondWaveAction(
+  "Wyszkól kota w sztuce obronnej",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kot wierniejszy niż pies",
+  }
+);
+
+export const a361 = createSecondWaveAction(
+  "Zresetuj licznij długu publicznego",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Przekręcił się licznik długu - raj dla premiera",
+  }
+);
+
+export const a362 = createSecondWaveAction(
+  "Wywal na bruk pacjentów nie-COVIDOWYCH ze szpitali",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Tych pacjentów nie obsługujemy",
+  }
+);
+
+export const a363 = createSecondWaveAction(
+  "Wprowadź eugenikę osób wyższych niż 1,5 m",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Prezes filarem narodu",
+  }
+);
+
+export const a364 = createSecondWaveAction(
+  "Zabroń kobietom kierowania pojazdami",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kobiety za kółkiem stwarzają zagrożenie narodowe",
+  }
+);
+
+export const a365 = createSecondWaveAction(
+  "Nakaż kobietom zakrywanie ciała",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Cnota przeciwko obsceniczności",
+  }
+);
+
+export const a366 = createSecondWaveAction(
+  "Wyposaż ministrów w porterty Prezesa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nie miej innego prezesa przede mną",
+  }
+);
+
+export const a367 = createSecondWaveAction(
+  "Stygmatyzuj tatuażem kobiety po aborcji lub gwałcie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wyrzutkowie społeczeństwa z własnej woli",
+  }
+);
+
+export const a368 = createSecondWaveAction(
+  "Obierz prawo wyborcze kobietom",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kobiety krzyczą jakieś herezje na temat ich praw",
+  }
+);
+
+export const a369 = createSecondWaveAction(
+  "Oskarż rodziców dzieci niepełnosprawnych o chciwość",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "A można było dokonać aborcji",
+  }
+);
+
+export const a370 = createSecondWaveAction(
+  "Dopisz więcej przypadków aby baby nie przychodziły pod dom Prezesa",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Spokój pod domem Prezesa",
+  }
+);
+
+export const a371 = createSecondWaveAction(
+  "Otwórz nowe cmentarze na 1 listopada",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nowe miejsca pochówku dla chętnych",
+  }
+);
+
+export const a372 = createSecondWaveAction(
+  "Nadaj ochronę osobistą aktywistom PiS",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Ochrona SOP dla uciśnionych",
+  }
+);
+
+export const a373 = createSecondWaveAction(
+  "Rozpocznij współpracę z A.S. Bytom",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wszystkie ręce na pokład",
+  }
+);
+
+export const a374 = createSecondWaveAction(
+  "Zaktualizuj Windowsa 95 Prezesowi do Windowsa XP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Saper nigdy nie był tak satysfakcjonujący",
+  }
+);
+
+export const a375 = createSecondWaveAction(
+  "Zlikwiduj abolicję podatkową",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Emigranci uciekają przed podatkami",
+  }
+);
+
+export const a376 = createSecondWaveAction(
+  "Ucz dzieci żeby nie dzieliły przez Ziobro",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: '"Pamiętaj cholero, nie dziel przez Ziobro"',
+  }
+);
+
+export const a377 = createSecondWaveAction(
+  "Sponsoruj wejściówki na mecze przychylnym kibolom",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "PO nie wpuszała kiboli, my ich sponsorujemy!",
+  }
+);
+
+export const a378 = createSecondWaveAction(
+  "Przełóż premierę Cyberpunka 2077",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Cyberpunk 2077 opóźniony przez protesty kobiet",
+  }
+);
+
+export const a379 = createSecondWaveAction(
+  "Wydaj list gończy za Stonogą",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Ziobro dalej prześladuje Stonogę",
+  }
+);
+
+export const a380 = createSecondWaveAction(
+  "Zamknij cmentarze",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Chryzantemy złociste, w półlitrówce po czystej",
+  }
+);
+
+export const a381 = createSecondWaveAction(
+  "Zdyskredytuj protestujące kobiety jako narkomanki i prostytutki",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zamiast rodzić to chodzą na jakieś manifestacje",
+  }
+);
+
+export const a382 = createSecondWaveAction(
+  "Wyślij bojówki WKS-u do bicia protestujących kobiet",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Zamiast bronić przed islamem, biją polską damę",
+  }
+);
+
+export const a383 = createSecondWaveAction(
+  "Wprowadź areszty domowe",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Wyselekcjonowano przecinwików narodu do izolacji",
+  }
+);
+
+export const a384 = createSecondWaveAction(
+  "Emituj paradokument 'Koronawirus Szpital' na antenie TVP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: 'Dziś program "Koronawirus Szpital" o godz. 16.45',
+  }
+);
+
+export const a385 = createSecondWaveAction(
+  "Odłączaj od respiratorów pacjentów nieprzychylnych PiS",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Trzeba wybierać, kryterium jest jasne",
+  }
+);
+
+export const a386 = createSecondWaveAction(
+  "Zorganizuj kolejny ślub kościelny Kurskiemu",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Do trzech razy sztuka!",
+  }
+);
+
+export const a387 = createSecondWaveAction(
+  "Deleguj Sasina do podlewania kwiatków",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kwiatki usłchły",
+  }
+);
+
+export const a388 = createSecondWaveAction(
+  "Buduj mury wokół skażonych miast",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Na wsiach poparcie PiS najwyższe od lat!",
+  }
+);
+
+export const a389 = createSecondWaveAction(
+  "Wyślij jednostki eksterminacyjne do ognisk zakażeń",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nam strzelać nie kazano",
+  }
+);
+
+export const a390 = createSecondWaveAction(
+  "Nakaż wyprowadzanie kobiet na smyczach",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kobiety nieposłuszne na szkolenia behawioralne",
+  }
+);
+
+export const a391 = createSecondWaveAction(
+  "Wprowadź obowiązek noszenia prezerwatyw",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Izolacja całopowierzchniowa zabezpiecza",
+  }
+);
+
+// Santa claus
+export const a392 = createSecondWaveAction(
+  "Zakaż organizacji wigilii klasowych",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Dzieci dostają upominki od rządu",
+  }
+);
+
+export const a393 = createSecondWaveAction(
+  "Wykonaj naloty na pozdziemne siłownie i salony fryzjerskie",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Trenerzy i fryzjerzy wyklęci walczą z reżimem",
+    // TODO: alt - Polacy strzygą się u psich fryzjerów
+  }
+);
+
+export const a394 = createSecondWaveAction(
+  "Zorganizuj Sylwestra z Jedynką",
+  "Na scenie premier Morawiecki i prezes Kaczyński",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Tłumy na ulicach czekają na Sylwestra z Jedynką",
+  }
+);
+
+export const a395 = createSecondWaveAction(
+  "Zabroń instalacji LPG w pojazdach",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Korek wstydu przyczyną dewiacji",
+  }
+);
+
+export const a396 = createSecondWaveAction(
+  "Wyślij operatorów ABW do rozjeżdzania protestujących",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Służby ślubowały czystość etniczną",
+  }
+);
+
+export const a397 = createSecondWaveAction(
+  "Zorganizuj bitwę o kościoły",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Gminy z najmniejszą liczbą protestów wygrają",
+  }
+);
+
+export const a398 = createSecondWaveAction(
+  "Odmów bierzmowania protestującej młodzieży",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nieletni kierowani do poprawczaków",
+  }
+);
+
+export const a399 = createSecondWaveAction(
+  "Wprowadź strefy wolne od BHP",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Środowisko pracy wolne od wpływów zachodu",
+  }
+);
+
+export const a400 = createSecondWaveAction(
+  "Promuj alkomaty twarzą Peszko",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Odpowiedzialna zabawa po alkoholu mottem reklamy",
+  }
+);
+
+export const a401 = createSecondWaveAction(
+  "Wdróż strategię walki z COVID-19",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Nowa strategia rządu w walce z wirusem",
+  }
+);
+
+export const a402 = createSecondWaveAction(
+  "Zamknij kościoły",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Koronka codziennie w TVP",
+  }
+);
+
+export const a403 = createSecondWaveAction(
+  "Wprowadź akcję antystrajkową",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Akcja #niestrajkuje",
+  }
+);
+
+// TODO: Jaco Sassine zdjęcie
+export const a404 = createSecondWaveAction(
+  "Wprowadź na rynek polską linię perfum",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Perfumy Jaco Sassine podbijają serca Polek",
+  }
+);
+
+export const a405 = createSecondWaveAction(
+  "Weź udział w unijnym przetargu na zakup respiratorów",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Unia w końcu odpłaca się Polsce",
+  }
+);
+
+export const a406 = createSecondWaveAction(
+  "Wprowadź strefy wolne od 5G",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Umysły Polaków wolne od psionicznych ataków",
+  }
+);
+
+export const a407 = createSecondWaveAction(
+  "Przeprowadź powszechny sort ludności",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Niska złożoność gorszego sortu Polaków",
+  }
+);
+
+export const a408 = createSecondWaveAction(
+  "Wprowadź dofinansowanie przebranżowień",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Trzeba było iść na studia",
+  }
+);
+
+export const a409 = createSecondWaveAction(
+  "Wprowadź dofinansowania leasingu",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "Kto bogatemu zabroni",
+  }
+);
+
+export const a410 = createSecondWaveAction(
+  "Wprowadź zwolnienia z ZUS",
+  "TODO:",
+  (state) => {
+    // TODO:
+  },
+  {
+    message: "ZUS na kroplówce utrzymuje Polaków",
   }
 );

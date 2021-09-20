@@ -95,7 +95,9 @@ const main = async () => {
     (key) => `import ${key} from "./${key}.jpg";`
   );
 
-  const exports = `export { ${Object.keys(index).join(", ")} };`;
+  const exports = `export {\r\n${Object.keys(index)
+    .map((x) => `  ${x},`)
+    .join("\r\n")}\r\n};`;
 
   const indexModule = `${imports.join("\r\n")}\r\n\r\n${exports}\r\n`;
 
