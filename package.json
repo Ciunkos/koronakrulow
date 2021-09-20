@@ -25,6 +25,7 @@
     "download": "node --experimental-modules paski.js",
     "eject": "react-scripts eject",
     "package": "npm run download && npm run random && npm run build && npm run compress",
+    "prettier": "prettier --write \"**/*.{js,css,json,scss,md}\"",
     "random": "node --experimental-modules random.js",
     "start": "react-scripts start",
     "test": "react-scripts test"
@@ -52,6 +53,7 @@
     "imagemin-optipng": "7.1.0",
     "imagemin-pngquant": "8.0.0",
     "jimp": "0.10.3",
-    "node-fetch": "2.6.0"
+    "node-fetch": "2.6.0",
+    "prettier": "^2.4.1"
   }
 }
