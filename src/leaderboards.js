@@ -1,3 +1,5 @@
+export const SHOW_LEADERBOARD = false;
+
 export const LEADERBOARDS_ENDPOINT = "https://koronakrulow.pl/leaderboards/";
 
 const KEY = "8955de21141f62d71ec533f864f23262192fb277bdf21e1d928bd519d79f5b05";

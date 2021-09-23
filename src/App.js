@@ -30,6 +30,7 @@ import Today from "./Today";
 import GameControls from "./GameControls";
 import GameOverControls from "./GameOverControls";
 import offsetStartDate from "./offsetStartDate";
+import { SHOW_LEADERBOARD } from "./leaderboards";
 import {
   SECOND_WAVE_DAILY_DEATHS,
   SECOND_WAVE_DAILY_RECOVERED,
@@ -759,7 +760,10 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
       nextState.events = [...(nextState.events || []), events.e8];
       nextState.events = [...(nextState.events || []), events.e14];
       nextState.events = [...(nextState.events || []), events.e18];
-      nextState.events = [...(nextState.events || []), events.e19];
+
+      if (SHOW_LEADERBOARD) {
+        nextState.events = [...(nextState.events || []), events.e19];
+      }
 
       nextState.gameOver = true;
       nextState.win = false;
@@ -794,7 +798,10 @@ const playState = (action) => async (state, updateProgress, userIntent) => {
           nextState.events = [...(nextState.events || []), events.e9];
           nextState.events = [...(nextState.events || []), events.e14];
           nextState.events = [...(nextState.events || []), events.e18];
-          nextState.events = [...(nextState.events || []), events.e19];
+
+          if (SHOW_LEADERBOARD) {
+            nextState.events = [...(nextState.events || []), events.e19];
+          }
 
           nextState.gameOver = true;
           nextState.win = true;

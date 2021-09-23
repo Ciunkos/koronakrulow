@@ -1,5 +1,5 @@
 import { serialize } from "@sandstreamdev/std/query";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const randomSeed = () => Math.random();
 
@@ -44,9 +44,9 @@ const useApi = (endpoint, query, options) => {
     };
   }, [endpoint, query, seed, options]);
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     setSeed(randomSeed());
-  };
+  });
 
   return [data, { busy, error, refetch }];
 };
