@@ -19,14 +19,6 @@ const Legal = ({ details, toggleDetails }) => (
     </a>
     {details && (
       <div className="legal-details">
-        <p>
-          Aplikacja rejestruje w pełni anonimowe statystyki o przebiegu
-          rozgrywki i źródła wejść na stronę - dowiedz się więcej na{" "}
-          <a href="https://docs.simpleanalytics.com/what-we-collect">
-            stronie usługodawcy
-          </a>
-          .
-        </p>
         <p>Część użytych obrazów znajduje się w domenie publicznej.</p>
         <p>
           Obraz{" "}

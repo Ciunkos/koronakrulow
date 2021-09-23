@@ -15,7 +15,7 @@ import useWindowSize from "./useWindowSize";
 import { get, set } from "./localStorage";
 import music from "./the-descent-by-kevin-macleod-from-filmmusic-io.mp3";
 import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
-import analytics from "./analytics";
+import analytics, { ANALYTICS_ENABLED } from "./analytics";
 import StatusBar from "./StatusBar";
 import MapView from "./MapView";
 import Event from "./Event";
@@ -44,6 +44,10 @@ import "./Action.scss";
 import "./Media.scss";
 
 const trackTime = async () => {
+  if (!ANALYTICS_ENABLED) {
+    return;
+  }
+
   let i = 0;
 
   while (true) {
@@ -58,6 +62,10 @@ trackTime();
 let stopGameplayTimeTracking = false;
 
 const trackGameplayTime = async () => {
+  if (!ANALYTICS_ENABLED) {
+    return;
+  }
+
   let i = 0;
 
   while (true) {

@@ -1,5 +1,5 @@
-export default (event) => {
-  try {
-    window.sa_event(event);
-  } catch {}
+export const ANALYTICS_ENABLED = false;
+
+export default () => {
+  return;
 };
