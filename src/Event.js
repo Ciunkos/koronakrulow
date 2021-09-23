@@ -19,10 +19,11 @@ const Event = ({ event, skipEvent }) => (
         <div className="well">
           <video
             autoPlay
-            preload="auto"
             className="video-player layer"
             height={event.imageHeight ?? 720}
             loading="eager"
+            playsInline
+            preload="auto"
             src={event.video}
             width={event.imageWidth ?? 1280}
           />

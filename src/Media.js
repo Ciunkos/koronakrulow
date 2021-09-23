@@ -35,12 +35,13 @@ const Media = ({
               active: !mediaCover,
             })}
             height={720}
+            playsInline
             poster={tvpis ? headlineImage : latestQueuedState.propagandaImage}
             preload="auto"
             ref={videoPlayer}
             src={headlineVideo}
             width={1280}
-          ></video>
+          />
         )}
         {tvpis && (
           <div className="strip layer">

@@ -1215,8 +1215,6 @@ export default function App() {
     setMediaCover(false);
     setMedia(false);
 
-    musicPlayer.current.volume = 1;
-
     if (!event && queuedState) {
       await delay(0);
 
@@ -1226,8 +1224,6 @@ export default function App() {
   };
 
   const showMedia = () => {
-    musicPlayer.current.volume = 0.5;
-
     setMediaCover(!tvpis);
     setMedia(true);
 
