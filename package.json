@@ -9,7 +9,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "leaflet": "^1.6.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "pigeon-maps": "^0.15.0",
     "pigeon-marker": "^0.3.4",
     "pigeon-overlay": "^0.2.3",
