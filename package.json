@@ -9,14 +9,14 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "leaflet": "^1.6.0",
-    "node-sass": "^4.14.1",
+    "sass": "^1.52.2",
     "pigeon-maps": "^0.15.0",
     "pigeon-marker": "^0.3.4",
     "pigeon-overlay": "^0.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.6.3",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.1",
     "recharts": "^1.8.5"
   },
   "scripts": {
@@ -47,13 +47,13 @@
   },
   "homepage": ".",
   "devDependencies": {
-    "glob": "^7.1.6",
-    "imagemin": "^7.0.1",
-    "imagemin-mozjpeg": "^8.0.0",
-    "imagemin-optipng": "^7.1.0",
-    "imagemin-pngquant": "^8.0.0",
-    "jimp": "^0.10.3",
-    "node-fetch": "^2.6.0",
-    "prettier": "^2.4.1"
+    "glob": "^8.0.3",
+    "imagemin": "^8.0.1",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-optipng": "^8.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "jimp": "^0.16.1",
+    "node-fetch": "^3.2.5",
+    "prettier": "^2.6.2"
   }
 }

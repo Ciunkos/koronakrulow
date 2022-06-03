@@ -1,9 +1,9 @@
-import { reverse } from "@sandstreamdev/std/array";
-import { classNames } from "@sandstreamdev/std/web";
+import { reverse } from "@sandstreamdev/std/array/index.js";
+import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
-import CloseIcon from "./CloseIcon";
-import Log from "./Log";
+import CloseIcon from "./CloseIcon.js";
+import Log from "./Log.js";
 
 const Logs = ({ closeLogs, log, showLogs }) => (
   <div className={classNames("container logs", { active: showLogs })}>

@@ -1,4 +1,4 @@
-import { serialize } from "@sandstreamdev/std/query";
+import { serialize } from "@sandstreamdev/std/query/index.js";
 import { useCallback, useEffect, useState } from "react";
 
 const randomSeed = () => Math.random();

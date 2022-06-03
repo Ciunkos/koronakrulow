@@ -1,9 +1,9 @@
-import { classNames } from "@sandstreamdev/std/web";
+import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
 import headlineImage from "./headline.jpg";
 import headlineVideo from "./headline.mp4";
-import formatNumber from "./formatNumber";
+import formatNumber from "./formatNumber.js";
 
 const Media = ({
   latestQueuedState,

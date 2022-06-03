@@ -1,11 +1,11 @@
-import { exact } from "@sandstreamdev/std/array";
-import { clamp } from "@sandstreamdev/std/math";
+import { exact } from "@sandstreamdev/std/array/index.js";
+import { clamp } from "@sandstreamdev/std/math/index.js";
 import React, { useEffect, useMemo, useState } from "react";
 
-import useApi from "./useApi";
-import { LEADERBOARDS_ENDPOINT } from "./leaderboards";
-import Leaderboard from "./Leaderboard";
-import { enabled as secondWaveEnabled } from "./secondWave";
+import useApi from "./useApi.js";
+import { LEADERBOARDS_ENDPOINT } from "./leaderboards.js";
+import Leaderboard from "./Leaderboard.js";
+import { enabled as secondWaveEnabled } from "./secondWave.js";
 
 const LEADERBOARD_RANGE = 5;
 

@@ -24,7 +24,7 @@ import e20Video from "./events/e20.mp4";
 import e21Video from "./events/e21.mp4";
 import e22Video from "./events/e22.mp4";
 import e23Video from "./events/e23.mp4";
-import { submitLeaderboards } from "./leaderboards";
+import { submitLeaderboards } from "./leaderboards.js";
 
 const createEvent = (title, logEntry, effect, options) => ({
   title,

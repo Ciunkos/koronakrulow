@@ -1,4 +1,4 @@
-import { classNames } from "@sandstreamdev/std/web";
+import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 import {
   LineChart,
@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-import CloseIcon from "./CloseIcon";
+import CloseIcon from "./CloseIcon.js";
 
 const isAnimationActive = false;
 

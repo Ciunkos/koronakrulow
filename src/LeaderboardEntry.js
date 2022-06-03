@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
-import StatusBar from "./StatusBar";
-import formatLongDisplayDateWithOffset from "./formatLongDisplayDateWithOffset";
+import StatusBar from "./StatusBar.js";
+import formatLongDisplayDateWithOffset from "./formatLongDisplayDateWithOffset.js";
 
 const LeaderboardEntry = ({ index, name, day, reported, dead, recovered }) => (
   <div className="leaderboard-entry">

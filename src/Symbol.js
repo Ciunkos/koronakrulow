@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 
-import Transition from "./Transition";
+import Transition from "./Transition.js";
 
 const isDecrementing = (a, b) => {
   const numberA = Number(a);

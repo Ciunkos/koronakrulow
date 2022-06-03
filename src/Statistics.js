@@ -1,8 +1,8 @@
-import { classNames } from "@sandstreamdev/std/web";
+import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
-import CloseIcon from "./CloseIcon";
-import StatsRow from "./StatsRow";
+import CloseIcon from "./CloseIcon.js";
+import StatsRow from "./StatsRow.js";
 
 const Statistics = ({
   budget,

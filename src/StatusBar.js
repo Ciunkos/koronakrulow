@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 
-import TransitiveNumber from "./TransitiveNumber";
-import formatNumber from "./formatNumber";
-import Infected from "./Infected";
-import Dead from "./Dead";
-import Recovered from "./Recovered";
+import TransitiveNumber from "./TransitiveNumber.js";
+import formatNumber from "./formatNumber.js";
+import Infected from "./Infected.js";
+import Dead from "./Dead.js";
+import Recovered from "./Recovered.js";
 
 const StatusBar = ({ reported, dead, recovered }) => (
   <div className="status-bar">

@@ -1,41 +1,46 @@
-import { range, reverse, take, shuffle } from "@sandstreamdev/std/array";
-import isFunction from "@sandstreamdev/std/is/function";
-import { delay } from "@sandstreamdev/std/async";
-import { clamp } from "@sandstreamdev/std/math";
+import {
+  range,
+  reverse,
+  take,
+  shuffle,
+} from "@sandstreamdev/std/array/index.js";
+import isFunction from "@sandstreamdev/std/is/function.js";
+import { delay } from "@sandstreamdev/std/async/index.js";
+import { clamp } from "@sandstreamdev/std/math/index.js";
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import * as allActions from "./actions";
-import * as events from "./events";
-import * as stripes from "./stripes";
-import * as randomStripes from "./random";
+import * as allActions from "./actions.js";
+import * as events from "./events.js";
+import * as stripes from "./stripes/index.js";
+import * as randomStripes from "./random/index.js";
 import actionLogo from "./actionLogo.png";
-import Menu from "./Menu";
-import Logo from "./Logo";
-import randomPropaganda from "./randomPropaganda";
-import useWindowSize from "./useWindowSize";
-import { get, set } from "./localStorage";
+import Menu from "./Menu.js";
+import Logo from "./Logo.js";
+import randomPropaganda from "./randomPropaganda.js";
+import useWindowSize from "./useWindowSize.js";
+import { get, set } from "./localStorage.js";
 import music from "./the-descent-by-kevin-macleod-from-filmmusic-io.mp3";
-import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset";
-import analytics, { ANALYTICS_ENABLED } from "./analytics";
-import StatusBar from "./StatusBar";
-import MapView from "./MapView";
-import Event from "./Event";
-import Action from "./Action";
-import Media from "./Media";
-import Statistics from "./Statistics";
-import Logs from "./Logs";
-import Charts from "./Charts";
-import Controls from "./Controls";
-import AppBar from "./AppBar";
-import Today from "./Today";
-import GameControls from "./GameControls";
-import GameOverControls from "./GameOverControls";
-import offsetStartDate from "./offsetStartDate";
-import { SHOW_LEADERBOARD } from "./leaderboards";
+import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset.js";
+import analytics, { ANALYTICS_ENABLED } from "./analytics.js";
+import StatusBar from "./StatusBar.js";
+import MapView from "./MapView.js";
+import Event from "./Event.js";
+import Action from "./Action.js";
+import Media from "./Media.js";
+import Statistics from "./Statistics.js";
+import Logs from "./Logs.js";
+import Charts from "./Charts.js";
+import Controls from "./Controls.js";
+import AppBar from "./AppBar.js";
+import Today from "./Today.js";
+import GameControls from "./GameControls.js";
+import GameOverControls from "./GameOverControls.js";
+import offsetStartDate from "./offsetStartDate.js";
+import { SHOW_LEADERBOARD } from "./leaderboards.js";
 import {
   SECOND_WAVE_DAILY_DEATHS,
   SECOND_WAVE_DAILY_RECOVERED,
   SECOND_WAVE_DAILY_REPORTED,
-} from "./secondWave";
+} from "./secondWave.js";
 
 import "./index.css";
 import "./App.scss";
