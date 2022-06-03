@@ -1,6 +1,6 @@
 {
-  "name": "korona",
-  "version": "0.1.0",
+  "name": "koronakrulow",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "dependencies": {
@@ -16,7 +16,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.6.3",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.1",
     "recharts": "^1.8.5"
   },
   "scripts": {
@@ -47,13 +47,13 @@
   },
   "homepage": ".",
   "devDependencies": {
-    "glob": "7.1.6",
-    "imagemin": "7.0.1",
-    "imagemin-mozjpeg": "8.0.0",
-    "imagemin-optipng": "7.1.0",
-    "imagemin-pngquant": "8.0.0",
-    "jimp": "0.10.3",
-    "node-fetch": "2.6.0",
+    "glob": "^7.1.6",
+    "imagemin": "^7.0.1",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-optipng": "^7.1.0",
+    "imagemin-pngquant": "^8.0.0",
+    "jimp": "^0.10.3",
+    "node-fetch": "^2.6.0",
     "prettier": "^2.4.1"
   }
 }
