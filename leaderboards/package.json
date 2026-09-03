@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@sandstreamdev/std": "^0.13.0",
-    "body-parser": "^1.20.6",
+    "body-parser": "^2.3.0",
     "cors": "^2.8.5",
     "express": "^5.2.0"
   }
