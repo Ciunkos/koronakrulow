@@ -1,18 +1,25 @@
 import React, { memo } from "react";
 import Map from "pigeon-maps";
 
-function mapTilerProvider(x, y, z, dpr) {
-  const s = String.fromCharCode(97 + ((x + y + z) % 3));
-  return `https://${s}.basemaps.cartocdn.com/dark_nolabels/${z}/${x}/${y}${
-    dpr >= 2 ? "@2x" : ""
-  }.png`;
+function esriDarkGrayProvider(x, y, z) {
+  return `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/${z}/${y}/${x}`;
 }
+
+const attribution = (
+  <span>
+    Tiles &copy;{" "}
+    <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">
+      Esri
+    </a>{" "}
+    &mdash; Esri, DeLorme, NAVTEQ
+  </span>
+);
 
 const MapView = ({ width, height }) => (
   <div className="map">
     <Map
-      provider={mapTilerProvider}
-      dprs={[1, 2]}
+      provider={esriDarkGrayProvider}
+      attribution={attribution}
       center={[52.06, 19.25]}
       zoom={6.5}
       width={width}
