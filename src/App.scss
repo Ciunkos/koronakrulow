@@ -72,10 +72,6 @@ a.button {
   }
 }
 
-.pigeon-attribution {
-  display: none !important;
-}
-
 .status-bar {
   display: flex;
   padding: 16px;
@@ -412,8 +408,18 @@ a.button {
   max-width: 100vw;
   max-height: 100vh;
   overflow: hidden;
-  filter: brightness(0.7);
+  background-color: #0d0d0d;
   transform: translateZ(0);
+}
+
+.map-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: none;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  pointer-events: none;
 }
 
 html,
@@ -422,10 +428,6 @@ body {
   padding: 0;
   overflow: hidden;
   line-height: 1.7;
-}
-
-.map > div {
-  background-color: #262626 !important;
 }
 
 .logo-box {

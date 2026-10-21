@@ -51,23 +51,15 @@ const Legal = ({ details, toggleDetails }) => (
           .
         </p>
         <p>
-          Mapy{" "}
+          Mapa na podstawie danych{" "}
           <a
-            href="https://pigeon-maps.js.org/"
+            href="https://www.naturalearthdata.com/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Pigeon
+            Natural Earth
           </a>{" "}
-          na licencji © autorzy{" "}
-          <a
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            OpenStreetMap
-          </a>
-          .
+          (domena publiczna).
         </p>
         <p>
           Ikony stworzone przez{" "}
