@@ -4,9 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <title>
-      Korona Krulów - Polityka w czasie zarazy
-    </title>
+    <title>Korona Krulów - Polityka w czasie zarazy</title>
     <meta
       name="description"
       content="Satyryczna gra o koronawirusie, polskiej polityce i propagandzie TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!"
@@ -71,9 +69,95 @@
       content="Satyryczna gra o koronawirusie, polskiej polityce i propagandzie TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!"
     />
     <meta name="twitter:image" content="https://koronakrulow.pl/promo.jpg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://koronakrulow.pl/#organization",
+            "name": "Korona Krulów",
+            "url": "https://koronakrulow.pl/",
+            "logo": "https://koronakrulow.pl/android-chrome-384x384.png",
+            "sameAs": [
+              "https://twitter.com/koronakrulow",
+              "https://github.com/Ciunkos/koronakrulow"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://koronakrulow.pl/#website",
+            "name": "Korona Krulów",
+            "url": "https://koronakrulow.pl/",
+            "inLanguage": "pl",
+            "publisher": { "@id": "https://koronakrulow.pl/#organization" }
+          },
+          {
+            "@type": "VideoGame",
+            "@id": "https://koronakrulow.pl/#game",
+            "name": "Korona Krulów - Polityka w czasie zarazy",
+            "description": "Satyryczna gra o koronawirusie, polskiej polityce i propagandzie TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!",
+            "url": "https://koronakrulow.pl/",
+            "image": "https://koronakrulow.pl/promo.jpg",
+            "genre": "Satire",
+            "gamePlatform": "Web browser",
+            "applicationCategory": "Game",
+            "operatingSystem": "Any",
+            "inLanguage": "pl",
+            "isAccessibleForFree": true,
+            "publisher": { "@id": "https://koronakrulow.pl/#organization" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <noscript>Korona Krulów wymaga włączonego JavaScriptu do uruchomienia gry.</noscript>
-    <div id="root"></div>
+    <noscript>
+      Korona Krulów wymaga włączonego JavaScriptu do uruchomienia gry.
+    </noscript>
+    <div id="root">
+      <main
+        style="
+          box-sizing: border-box;
+          min-height: 100vh;
+          padding: 32px max(32px, calc((100% - 720px) / 2));
+          background: #262626;
+          color: #fff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            sans-serif;
+          line-height: 1.7;
+        "
+      >
+        <h1>Korona Krulów - Polityka w czasie zarazy</h1>
+        <p>
+          Satyryczna gra o koronawirusie, polskiej polityce i propagandzie
+          TVPiS. Poczuj się jak Prezes i pokieruj Polską w dobie pandemii!
+        </p>
+        <p>
+          Od gracza zależy decyzja, czy będzie walczył z epidemią, skupi się na
+          aborcji czy na nasyłaniu policji na ludzi. W każdej turze w grze
+          wyświetlane są paski grozy, a wątek wyborów przewija się przez całą
+          grę - od gracza zależy przebieg kampanii Dudy.
+        </p>
+        <p>
+          Wygrasz wybory? Ocalisz ludzi? Opracujesz szczepionkę? Sprawdź, grając
+          w Koronę Krulów! W grze można zaprzestać finansowania WHO, wprowadzić
+          stan wyjątkowy, a nawet wojenny dla wytrwałych.
+        </p>
+        <p>
+          <a href="https://koronakrulow.pl/" style="color: #fff"
+            >Zagraj w Koronę Krulów</a
+          >
+          ·
+          <a href="https://github.com/Ciunkos/koronakrulow" style="color: #fff"
+            >Kod źródłowy na GitHubie</a
+          >
+          ·
+          <a href="https://twitter.com/koronakrulow" style="color: #fff"
+            >@koronakrulow na Twitterze</a
+          >
+        </p>
+      </main>
+    </div>
   </body>
 </html>
