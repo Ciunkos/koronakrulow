@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sandstreamdev/std": "^0.13.0",
+    "@sandstreamdev/std": "^0.15.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -45,12 +45,12 @@
   "homepage": ".",
   "devDependencies": {
     "glob": "^8.0.3",
-    "imagemin": "^8.0.1",
+    "imagemin": "^9.0.1",
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-optipng": "^8.0.0",
-    "imagemin-pngquant": "^9.0.2",
-    "jimp": "^0.22.12",
-    "node-fetch": "^3.2.10",
+    "imagemin-pngquant": "^10.0.0",
+    "jimp": "^1.6.1",
+    "node-fetch": "^3.3.2",
     "prettier": "^2.6.2"
   }
 }

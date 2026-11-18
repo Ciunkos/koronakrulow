@@ -13,9 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sandstreamdev/std": "^0.13.0",
+    "@sandstreamdev/std": "^0.15.0",
     "body-parser": "^2.4.0",
     "cors": "^2.8.5",
-    "express": "^5.2.0"
+    "express": "^5.3.0"
   }
 }

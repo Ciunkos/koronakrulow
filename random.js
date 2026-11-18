@@ -1,7 +1,7 @@
 import { existsSync, promises } from "fs";
 import delay from "@sandstreamdev/std/async/delay.js";
 import fetch from "node-fetch";
-import jimp from "jimp";
+import { Jimp } from "jimp";
 
 import actions from "./src/randomPropaganda.js";
 
@@ -62,17 +62,17 @@ const main = async () => {
 
         console.log("Pasek pobrany");
 
-        const image = await jimp.read(data);
+        const image = await Jimp.read(data);
 
-        console.log(image.getWidth() + " x " + image.getHeight());
+        console.log(image.width + " x " + image.height);
 
-        const resized = image.autocrop().resize(jimp.AUTO, 720);
+        const resized = image.autocrop().resize({ h: 720 });
 
-        console.log(resized.getWidth() + " x " + resized.getHeight());
+        console.log(resized.width + " x " + resized.height);
 
-        const cropped = resized.cover(1280, 720);
+        const cropped = resized.cover({ w: 1280, h: 720 });
 
-        const croppedData = await cropped.getBufferAsync("image/jpeg");
+        const croppedData = await cropped.getBuffer("image/jpeg");
 
         await writeFile(outputPath, croppedData);
 
