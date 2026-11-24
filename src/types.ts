@@ -57,12 +57,8 @@ export interface GameState {
   sick?: number;
 }
 
-/**
- * What an action effect may change. `policits` and `bugdet` are misspellings
- * in the action data (16 effects). They write to fields nothing reads, so
- * those parts of the effects do nothing; they are kept to preserve gameplay.
- */
-export type ActionTarget = GameState & { policits: number; bugdet: number };
+/** What an action effect may change. */
+export type ActionTarget = GameState;
 
 export type EventKey = keyof typeof Events;
 

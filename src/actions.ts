@@ -1421,7 +1421,7 @@ export const a122 = createAction(
   "Odrzuć wszystkie wnioski o pomoc finansową",
   "Tarcza antykryzysowa: Wszystkie wnioski odrzucone. Bo mają błędy.",
   (state) => {
-    state.bugdet += 5;
+    state.budget += 5;
     state.economy -= 3;
     state.people -= 2;
     state.politics += 2;
@@ -2498,7 +2498,7 @@ export const a217 = createSecondWaveAction(
   "Nowe prawo wymaga pisemnego zezwolenia proboszcza parafii do odbycia stosunków seksualnych. Penalizowane jest obywanie stosunków pozamałżeńskich.",
   (state) => {
     state.people -= 5;
-    state.policits += 4;
+    state.politics += 4;
     state.social += 1;
   },
   {
@@ -2522,7 +2522,7 @@ export const a219 = createSecondWaveAction(
   "Mianuj Jezusa Chrystusa królem Polski",
   "Polska zmienia ustrój na republikę katolicką, gdzie pierwszorzędnym prawem jest prawo kościelne.",
   (state) => {
-    state.policits += 2;
+    state.politics += 2;
     state.people -= 4;
   },
   {
@@ -2607,7 +2607,7 @@ export const a226 = createSecondWaveAction(
   "Znany polskiego prawnik, krytykujący zmiany PiS w sądownictwie, skazany za nieprzychylność jedynemu słuszemu rządowi.",
   (state) => {
     state.people -= 8;
-    state.policits += 4;
+    state.politics += 4;
   },
   {
     message: "Patointeligencja zadarła z rządem",
@@ -2619,7 +2619,7 @@ export const a227 = createSecondWaveAction(
   "W celu prewencji działań homopropagandy, rząd piętnuje występki aby skutecznie uchronić innnych obywateli przed dewiacją.",
   (state) => {
     state.people -= 6;
-    state.policits += 2;
+    state.politics += 2;
   },
   {
     message: "Rząd patrzy co robisz w łóżku",
@@ -2631,7 +2631,7 @@ export const a228 = createSecondWaveAction(
   "Igrzyska śmierci stają się codzienną rozrywką fanatycznych Katolików.",
   (state) => {
     state.people -= 10;
-    state.policits += 10;
+    state.politics += 10;
   },
   {
     message: "Średniowiecze, to dopiero były dobre czasy",
@@ -2643,7 +2643,7 @@ export const a229 = createSecondWaveAction(
   "Pomimo ograniczeń w przemieszczaniu się po Europie, narracja rządu buduje w Polakach strach przed obcymi.",
   (state) => {
     state.people -= 1;
-    state.policits += 3;
+    state.politics += 3;
   },
   {
     message: "Polska otwartym krajem, tylko dla Polaków",
@@ -2655,7 +2655,7 @@ export const a230 = createSecondWaveAction(
   'Imigranci przebywają w obozach. Niemieckie media nazywają je "polskimi obozami".',
   (state) => {
     state.people -= 1;
-    state.policits -= 3;
+    state.politics -= 3;
     state.economy += 1;
     state.social -= 8;
   },
@@ -2669,7 +2669,7 @@ export const a231 = createSecondWaveAction(
   "Kraje reżimowe zazdroszczą Polsce skutecznych działań propagandowych. Polska spada w rankingu OBWE.",
   (state) => {
     state.budget -= 3;
-    state.policits += 5;
+    state.politics += 5;
     state.people -= 1;
   },
   {
@@ -2693,7 +2693,7 @@ export const a233 = createSecondWaveAction(
   "Materiały prasowe przed publikacją muszą przejść weryfikację Głównego Urzędu Kontroli Prasy, Publikacji i Widowisk.",
   (state) => {
     state.economy -= 2;
-    state.policits += 3;
+    state.politics += 3;
     state.people -= 2;
   },
   {
@@ -2706,7 +2706,7 @@ export const a234 = createSecondWaveAction(
   "Serwery sklepów muszą zwracać kod błędu 666 w dni świąteczne.",
   (state) => {
     state.economy -= 4;
-    state.policits += 2;
+    state.politics += 2;
     state.people -= 1;
   },
   {
@@ -2745,7 +2745,7 @@ export const a237 = createSecondWaveAction(
   (state) => {
     state.economy -= 10;
     state.people -= 5;
-    state.policits -= 5;
+    state.politics -= 5;
     state.healthcare += 4;
     state.contactsPerDay *= 0.5;
   },
@@ -2772,7 +2772,7 @@ export const a239 = createSecondWaveAction(
   (state) => {
     state.budget -= 3;
     state.people -= 2;
-    state.policits += 2;
+    state.politics += 2;
     state.policeAuthority += 5;
   },
   {
@@ -2785,7 +2785,7 @@ export const a240 = createSecondWaveAction(
   "TODO:",
   (state) => {
     state.people -= 5;
-    state.policits += 8;
+    state.politics += 8;
   },
   {
     message: "Nic się stało. Proszę się rozejść",
@@ -2810,7 +2810,7 @@ export const a242 = createSecondWaveAction(
   "W prasie, telwizji i sieci wrze od ataków na lewicowe ugrupowania.",
   (state) => {
     state.budget -= 4;
-    state.policits += 2;
+    state.politics += 2;
     state.people -= 1;
   },
   {
@@ -2824,7 +2824,7 @@ export const a243 = createSecondWaveAction(
   (state) => {
     state.budget -= 1;
     state.policeAuthority -= 3;
-    state.policits += 5;
+    state.politics += 5;
     state.people -= 1;
   },
   {

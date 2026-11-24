@@ -22,7 +22,6 @@ import useWindowSize from "./useWindowSize.ts";
 import { get, set } from "./localStorage.ts";
 import { parseProgress } from "./progress.ts";
 import type {
-  ActionTarget,
   GameAction,
   GameEvent,
   GameState,
@@ -658,9 +657,7 @@ const playState =
     if (action) {
       ////console.log({ action });
 
-      // ActionTarget adds two misspelled fields that some effects write to (see
-      // types.ts); they are not part of the state, so this is the one cast.
-      action.effect(nextState as ActionTarget);
+      action.effect(nextState);
 
       log.push({
         date,
