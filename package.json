@@ -52,5 +52,8 @@
     "jimp": "^1.6.1",
     "node-fetch": "^3.3.2",
     "prettier": "^2.6.2"
+  },
+  "overrides": {
+    "zod": "^4.6.7"
   }
 }
