@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
-import TvIcon from "./TvIcon.jsx";
-import MusicIcon from "./MusicIcon.jsx";
+import TvIcon from "./TvIcon.tsx";
+import MusicIcon from "./MusicIcon.tsx";
 
 const Controls = ({ audio, toggleMusic, toggleTvpis, tvpis }) => (
   <div className="controls">

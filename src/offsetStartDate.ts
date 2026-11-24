@@ -1,4 +1,4 @@
-import startDate from "./startDate.js";
+import startDate from "./startDate.ts";
 
 const addDays = (days) => (date) => {
   const result = new Date(date);

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import LeaderboardEntry from "./LeaderboardEntry.jsx";
+import LeaderboardEntry from "./LeaderboardEntry.tsx";
 
 const LeaderboardEntries = ({ children }) => (
   <div className="leaderboard-entries layer">

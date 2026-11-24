@@ -1,5 +1,5 @@
-import formatDisplayDate from "./formatDisplayDate.js";
-import offsetStartDate from "./offsetStartDate.js";
+import formatDisplayDate from "./formatDisplayDate.ts";
+import offsetStartDate from "./offsetStartDate.ts";
 
 const formatDisplayDateWithOffset = (offset) =>
   formatDisplayDate(offsetStartDate(offset));

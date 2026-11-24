@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import formatLongDisplayDate from "./formatLongDisplayDate.js";
+import formatLongDisplayDate from "./formatLongDisplayDate.ts";
 
 const Today = ({ today }) => <div>{formatLongDisplayDate(today)}</div>;
 

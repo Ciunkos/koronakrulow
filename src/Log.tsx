@@ -1,7 +1,7 @@
 import { groupBy } from "@sandstreamdev/std/object/index.js";
 import React, { memo } from "react";
 
-import formatLongDisplayDate from "./formatLongDisplayDate.js";
+import formatLongDisplayDate from "./formatLongDisplayDate.ts";
 
 import "./Log.scss";
 

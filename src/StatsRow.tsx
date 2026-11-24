@@ -2,8 +2,8 @@ import { range } from "@sandstreamdev/std/array/index.js";
 import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
-import TransitiveNumber from "./TransitiveNumber.jsx";
-import formatNumber from "./formatNumber.js";
+import TransitiveNumber from "./TransitiveNumber.tsx";
+import formatNumber from "./formatNumber.ts";
 
 const StatsRow = ({ day, diff, title, children: value }) => (
   <div className={classNames("stats-row", { empty: value === 0 })}>

@@ -1,18 +1,18 @@
 import React, { memo, useState } from "react";
 
-import useWindowSize from "./useWindowSize.js";
-import analytics from "./analytics.js";
-import Legal from "./Legal.jsx";
-import Logo from "./Logo.jsx";
-import MapView from "./MapView.jsx";
-import MenuOptions from "./MenuOptions.jsx";
-import Progress from "./Progress.jsx";
-import LeaderboardsController from "./LeaderboardsController.jsx";
-import * as randomPropaganda from "./random/index.js";
-import * as allActions from "./actions.js";
-import * as allEvents from "./events.jsx";
-import { SHOW_LEADERBOARD } from "./leaderboards.js";
-import { enabled as secondWaveEnabled } from "./secondWave.js";
+import useWindowSize from "./useWindowSize.ts";
+import analytics from "./analytics.ts";
+import Legal from "./Legal.tsx";
+import Logo from "./Logo.tsx";
+import MapView from "./MapView.tsx";
+import MenuOptions from "./MenuOptions.tsx";
+import Progress from "./Progress.tsx";
+import LeaderboardsController from "./LeaderboardsController.tsx";
+import * as randomPropaganda from "./random/index.ts";
+import * as allActions from "./actions.ts";
+import * as allEvents from "./events.tsx";
+import { SHOW_LEADERBOARD } from "./leaderboards.ts";
+import { enabled as secondWaveEnabled } from "./secondWave.ts";
 
 import "./Menu.scss";
 

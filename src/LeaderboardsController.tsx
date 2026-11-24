@@ -2,10 +2,10 @@ import { exact } from "@sandstreamdev/std/array/index.js";
 import { clamp } from "@sandstreamdev/std/math/index.js";
 import React, { useEffect, useMemo, useState } from "react";
 
-import useApi from "./useApi.js";
-import { LEADERBOARDS_ENDPOINT } from "./leaderboards.js";
-import Leaderboard from "./Leaderboard.jsx";
-import { enabled as secondWaveEnabled } from "./secondWave.js";
+import useApi from "./useApi.ts";
+import { LEADERBOARDS_ENDPOINT } from "./leaderboards.ts";
+import Leaderboard from "./Leaderboard.tsx";
+import { enabled as secondWaveEnabled } from "./secondWave.ts";
 
 const LEADERBOARD_RANGE = 5;
 

@@ -1,7 +1,7 @@
 import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
-import LeaderboardEntries from "./LeaderboardEntries.jsx";
+import LeaderboardEntries from "./LeaderboardEntries.tsx";
 
 const Leaderboard = ({
   daily,

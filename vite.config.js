@@ -32,6 +32,6 @@ export default defineConfig({
     // Jest-style globals (test, expect) and automatic cleanup, as before.
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/setupTests.js",
+    setupFiles: "./src/setupTests.ts",
   },
 });

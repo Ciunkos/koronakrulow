@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-import CloseIcon from "./CloseIcon.jsx";
+import CloseIcon from "./CloseIcon.tsx";
 
 const isAnimationActive = false;
 

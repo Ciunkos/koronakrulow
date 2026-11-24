@@ -3,7 +3,7 @@ import React, { memo } from "react";
 
 import headlineImage from "./headline.jpg";
 import headlineVideo from "./headline.mp4";
-import formatNumber from "./formatNumber.js";
+import formatNumber from "./formatNumber.ts";
 
 const Media = ({
   latestQueuedState,

@@ -9,7 +9,7 @@
 //   ne_10m_admin_0_boundary_lines_land, ne_10m_admin_1_states_provinces_lines,
 //   ne_10m_roads, ne_10m_urban_areas
 //
-// Usage: node map.js <directory with the .geojson files>
+// Usage: node map.ts <directory with the .geojson files>
 //
 // The projection matches the previous tile map: Web Mercator at zoom 6.5,
 // centered on Poland, so the SVG is drawn 1:1 in CSS pixels around its center.

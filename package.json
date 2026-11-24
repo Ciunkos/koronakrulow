@@ -18,13 +18,13 @@
   },
   "scripts": {
     "build": "vite build",
-    "compress": "node --experimental-modules compress.js",
-    "download": "node --experimental-modules paski.js",
+    "compress": "node compress.ts",
+    "download": "node paski.ts",
     "lint": "eslint .",
     "package": "npm run download && npm run random && npm run build && npm run compress",
     "prettier": "prettier --write \"**/*.{js,jsx,css,json,scss,md}\"",
     "preview": "vite preview --outDir build",
-    "random": "node --experimental-modules random.js",
+    "random": "node random.ts",
     "start": "vite",
     "test": "vitest run"
   },

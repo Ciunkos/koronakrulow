@@ -2,8 +2,8 @@ import { reverse } from "@sandstreamdev/std/array/index.js";
 import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
-import CloseIcon from "./CloseIcon.jsx";
-import Log from "./Log.jsx";
+import CloseIcon from "./CloseIcon.tsx";
+import Log from "./Log.tsx";
 
 const Logs = ({ closeLogs, log, showLogs }) => (
   <div className={classNames("container logs", { active: showLogs })}>

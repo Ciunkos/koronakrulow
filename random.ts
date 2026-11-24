@@ -3,7 +3,7 @@ import delay from "@sandstreamdev/std/async/delay.js";
 import fetch from "node-fetch";
 import { Jimp } from "jimp";
 
-import * as actions from "./src/actions.js";
+import actions from "./src/randomPropaganda.ts";
 
 const { writeFile } = promises;
 
@@ -12,43 +12,21 @@ const main = async () => {
 
   const index = {};
 
-  let tooLong = false;
+  let i = 0;
 
-  for (const [key, action] of Object.entries(actions)) {
-    const { message } = action;
-
-    if (!message) {
-      continue;
-    }
-
+  for (const message of actions) {
     if (message.length > 48) {
-      console.log(
-        "Too long message " +
-          message.length +
-          "/48 of " +
-          key +
-          " of " +
-          message
-      );
-      tooLong = true;
-    }
-  }
-
-  if (tooLong) {
-    return;
-  }
-
-  for (const [key, action] of Object.entries(actions)) {
-    const { message } = action;
-
-    if (!message) {
       continue;
     }
 
-    const outputPath = `./src/stripes/${key}.jpg`;
+    const key = `r${i}`;
+
+    const outputPath = `./src/random/${key}.jpg`;
 
     if (existsSync(outputPath)) {
       index[key] = key;
+
+      i++;
 
       continue;
     }
@@ -109,6 +87,8 @@ const main = async () => {
         console.error(error);
       }
     }
+
+    i++;
   }
 
   const imports = Object.keys(index).map(
@@ -121,7 +101,7 @@ const main = async () => {
 
   const indexModule = `${imports.join("\r\n")}\r\n\r\n${exports}\r\n`;
 
-  await writeFile(`./src/stripes/index.js`, indexModule, "utf8");
+  await writeFile(`./src/random/index.ts`, indexModule, "utf8");
 };
 
 main();

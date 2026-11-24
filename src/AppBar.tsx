@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import onActivate from "./onActivate.js";
+import onActivate from "./onActivate.ts";
 
 const AppBar = ({
   logEnabled,
