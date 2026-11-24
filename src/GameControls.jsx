@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 
-import TransitiveNumber from "./TransitiveNumber.js";
+import TransitiveNumber from "./TransitiveNumber.jsx";
 import formatNumber from "./formatNumber.js";
-import AlertIcon from "./AlertIcon.js";
+import AlertIcon from "./AlertIcon.jsx";
 
 const GameControls = ({
   busy,

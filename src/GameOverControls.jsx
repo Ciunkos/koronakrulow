@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import AlertIcon from "./AlertIcon.js";
+import AlertIcon from "./AlertIcon.jsx";
 
 const GameOverControls = ({ onBackClick, win }) => (
   <>

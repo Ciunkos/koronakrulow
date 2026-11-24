@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import Symbol from "./Symbol.js";
+import Symbol from "./Symbol.jsx";
 
 const TransitiveNumber = ({
   children,

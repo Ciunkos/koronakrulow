@@ -2,15 +2,15 @@ import React, { memo, useState } from "react";
 
 import useWindowSize from "./useWindowSize.js";
 import analytics from "./analytics.js";
-import Legal from "./Legal.js";
-import Logo from "./Logo.js";
-import MapView from "./MapView.js";
-import MenuOptions from "./MenuOptions.js";
-import Progress from "./Progress.js";
-import LeaderboardsController from "./LeaderboardsController.js";
+import Legal from "./Legal.jsx";
+import Logo from "./Logo.jsx";
+import MapView from "./MapView.jsx";
+import MenuOptions from "./MenuOptions.jsx";
+import Progress from "./Progress.jsx";
+import LeaderboardsController from "./LeaderboardsController.jsx";
 import * as randomPropaganda from "./random/index.js";
 import * as allActions from "./actions.js";
-import * as allEvents from "./events.js";
+import * as allEvents from "./events.jsx";
 import { SHOW_LEADERBOARD } from "./leaderboards.js";
 import { enabled as secondWaveEnabled } from "./secondWave.js";
 

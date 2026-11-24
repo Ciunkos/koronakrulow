@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import useApi from "./useApi.js";
 import { LEADERBOARDS_ENDPOINT } from "./leaderboards.js";
-import Leaderboard from "./Leaderboard.js";
+import Leaderboard from "./Leaderboard.jsx";
 import { enabled as secondWaveEnabled } from "./secondWave.js";
 
 const LEADERBOARD_RANGE = 5;

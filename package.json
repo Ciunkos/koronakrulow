@@ -12,23 +12,19 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-is": "^19.3.1",
-    "react-scripts": "^5.0.1",
     "recharts": "^3.10.1",
     "sass": "^1.108.2"
   },
   "scripts": {
-    "build": "CI=false react-scripts build",
+    "build": "vite build",
     "compress": "node --experimental-modules compress.js",
     "download": "node --experimental-modules paski.js",
-    "eject": "react-scripts eject",
     "package": "npm run download && npm run random && npm run build && npm run compress",
     "prettier": "prettier --write \"**/*.{js,css,json,scss,md}\"",
+    "preview": "vite preview --outDir build",
     "random": "node --experimental-modules random.js",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "start": "vite",
+    "test": "vitest run"
   },
   "browserslist": {
     "production": [
@@ -42,14 +38,17 @@
       "last 1 safari version"
     ]
   },
-  "homepage": ".",
   "devDependencies": {
     "@svgr/plugin-svgo": "file:stubs/svgr-plugin-svgo",
+    "@vitejs/plugin-react": "^6.3.0",
     "glob": "^14.0.6",
     "jimp": "^1.6.1",
+    "jsdom": "^31.0.1",
     "node-fetch": "^3.3.2",
     "prettier": "^3.10.1",
     "sharp": "^0.35.5",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0",
     "workbox-webpack-plugin": "file:stubs/workbox-webpack-plugin"
   },
   "overrides": {

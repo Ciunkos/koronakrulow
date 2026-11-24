@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import StatusBar from "./StatusBar.js";
+import StatusBar from "./StatusBar.jsx";
 import formatLongDisplayDateWithOffset from "./formatLongDisplayDateWithOffset.js";
 
 const LeaderboardEntry = ({ index, name, day, reported, dead, recovered }) => (
