@@ -44,6 +44,7 @@
   },
   "homepage": ".",
   "devDependencies": {
+    "@svgr/plugin-svgo": "file:stubs/svgr-plugin-svgo",
     "glob": "^8.0.3",
     "imagemin": "^9.0.1",
     "imagemin-mozjpeg": "^10.0.0",
@@ -51,9 +52,15 @@
     "imagemin-pngquant": "^10.0.0",
     "jimp": "^1.6.1",
     "node-fetch": "^3.3.2",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "workbox-webpack-plugin": "file:stubs/workbox-webpack-plugin"
   },
   "overrides": {
-    "zod": "^4.6.7"
+    "zod": "^4.6.7",
+    "resolve-url-loader": "^5.0.0",
+    "serialize-javascript": "^7.1.4",
+    "@tootallnate/once": "^2.0.1",
+    "@svgr/plugin-svgo": "$@svgr/plugin-svgo",
+    "workbox-webpack-plugin": "$workbox-webpack-plugin"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "name": "workbox-webpack-plugin",
+  "version": "6.6.0-stub.1",
+  "private": true,
+  "description": "Local stub: react-scripts 5 only instantiates InjectManifest when src/service-worker.js exists, which this project does not have. See README.md, Overrides.",
+  "main": "index.js",
+  "license": "MIT"
+}
