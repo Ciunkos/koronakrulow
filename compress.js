@@ -1,12 +1,12 @@
 import { promises } from "fs";
 import glob from "glob";
 import fs from "fs";
-import imagemin from "imagemin";
-import imageminMozjpeg from "imagemin-mozjpeg";
-import imageminPngquant from "imagemin-pngquant";
-import imageminOptipng from "imagemin-optipng";
+import sharp from "sharp";
 
 const { writeFile } = promises;
+
+// Read each file fully before overwriting it.
+sharp.cache(false);
 
 const getFileSizeInBytes = (fileName) => {
   const stats = fs.statSync(fileName);
@@ -14,18 +14,30 @@ const getFileSizeInBytes = (fileName) => {
   return fileSizeInBytes;
 };
 
+// Same settings as the former imagemin pipeline:
+// mozjpeg { quality: 95, progressive: true } -> jpeg with mozjpeg defaults,
+// pngquant { quality: [0.9, 0.95], speed: 4 } -> png palette, quality 95, effort 7 (= 11 - speed),
+// optipng { optimizationLevel: 4 } -> maximum zlib compression.
 const options = {
-  optipng: {
-    optimizationLevel: 4,
-  },
-  pngquant: {
-    quality: [0.9, 0.95],
-    speed: 4,
-  },
-  mozjpeg: {
+  jpeg: {
+    mozjpeg: true,
     progressive: true,
     quality: 95,
   },
+  png: {
+    palette: true,
+    quality: 95,
+    effort: 7,
+    compressionLevel: 9,
+  },
+};
+
+const optimize = (file) => {
+  const image = sharp(file);
+
+  return file.endsWith(".jpg")
+    ? image.jpeg(options.jpeg).toBuffer()
+    : image.png(options.png).toBuffer();
 };
 
 const main = () => {
@@ -43,21 +55,12 @@ const main = () => {
 
     for (const file of files) {
       const j = i;
-      const plugins = [
-        file.endsWith(".jpg") && imageminMozjpeg(options.mozjpeg),
-        file.endsWith(".png") && imageminPngquant(options.pngquant),
-        file.endsWith(".png") && imageminOptipng(options.optipng),
-      ].filter(Boolean);
 
       console.log(`Optimizing [${j}/${files.length}]: ${file}...`);
 
       const before = getFileSizeInBytes(file);
 
-      const result = await imagemin([file], {
-        plugins,
-      });
-
-      const [{ data }] = result;
+      const data = await optimize(file);
 
       const after = data.byteLength;
 

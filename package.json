@@ -46,13 +46,10 @@
   "devDependencies": {
     "@svgr/plugin-svgo": "file:stubs/svgr-plugin-svgo",
     "glob": "^8.0.3",
-    "imagemin": "^9.0.1",
-    "imagemin-mozjpeg": "^10.0.0",
-    "imagemin-optipng": "^8.0.0",
-    "imagemin-pngquant": "^10.0.0",
     "jimp": "^1.6.1",
     "node-fetch": "^3.3.2",
     "prettier": "^2.6.2",
+    "sharp": "^0.35.5",
     "workbox-webpack-plugin": "file:stubs/workbox-webpack-plugin"
   },
   "overrides": {
