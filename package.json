@@ -61,6 +61,7 @@
     "serialize-javascript": "^7.1.4",
     "@tootallnate/once": "^2.0.1",
     "@svgr/plugin-svgo": "$@svgr/plugin-svgo",
-    "workbox-webpack-plugin": "$workbox-webpack-plugin"
+    "workbox-webpack-plugin": "$workbox-webpack-plugin",
+    "postcss-selector-parser": "6.0.10"
   }
 }
