@@ -4,6 +4,7 @@ import {
   take,
   shuffle,
 } from "@sandstreamdev/std/array/index.js";
+import { playQuietly } from "./playQuietly.ts";
 import isFunction from "@sandstreamdev/std/is/function.js";
 import { delay } from "@sandstreamdev/std/async/index.js";
 import { clamp } from "@sandstreamdev/std/math/index.js";
@@ -1156,9 +1157,7 @@ export default function App() {
     setMenuActive(value);
 
     if (audio) {
-      try {
-        musicPlayer.current?.play();
-      } catch {}
+      void playQuietly(musicPlayer.current);
     }
   };
 
@@ -1521,7 +1520,7 @@ export default function App() {
 
     if (player.paused) {
       setAudio(true);
-      player.play();
+      void playQuietly(player);
 
       analytics("music-enable");
     } else {
