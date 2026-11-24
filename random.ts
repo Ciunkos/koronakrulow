@@ -10,7 +10,7 @@ const { writeFile } = promises;
 const main = async () => {
   let mode = 0;
 
-  const index = {};
+  const index: Record<string, string> = {};
 
   let i = 0;
 
@@ -38,7 +38,6 @@ const main = async () => {
         const encodedMessage = encodeURIComponent(message);
 
         const response = await fetch("https://pasek-tvpis.pl/", {
-          credentials: "omit",
           headers: {
             accept:
               "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -55,7 +54,6 @@ const main = async () => {
           referrerPolicy: "no-referrer-when-downgrade",
           body: `fimg=${mode}&msg=${encodedMessage}`,
           method: "POST",
-          mode: "cors",
         });
 
         const data = await response.buffer();

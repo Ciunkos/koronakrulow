@@ -15,8 +15,49 @@
 // centered on Poland, so the SVG is drawn 1:1 in CSS pixels around its center.
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { z } from "zod";
 
-const CENTER = [19.25, 52.06];
+// GeoJSON positions are [lon, lat] (sometimes with more values); projected
+// points are [x, y].
+type Position = [number, number, ...number[]];
+type Point = [number, number];
+
+const PositionSchema = z.tuple([z.number(), z.number()]).rest(z.number());
+
+const GeometrySchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("Polygon"),
+    coordinates: z.array(z.array(PositionSchema)),
+  }),
+  z.object({
+    type: z.literal("MultiPolygon"),
+    coordinates: z.array(z.array(z.array(PositionSchema))),
+  }),
+  z.object({
+    type: z.literal("LineString"),
+    coordinates: z.array(PositionSchema),
+  }),
+  z.object({
+    type: z.literal("MultiLineString"),
+    coordinates: z.array(z.array(PositionSchema)),
+  }),
+  z.object({ type: z.enum(["Point", "MultiPoint", "GeometryCollection"]) }),
+]);
+
+type Geometry = z.infer<typeof GeometrySchema>;
+
+const FeatureCollectionSchema = z.object({
+  features: z.array(
+    z.object({
+      geometry: GeometrySchema.nullable(),
+      properties: z.record(z.string(), z.unknown()).nullable(),
+    })
+  ),
+});
+
+type Feature = z.infer<typeof FeatureCollectionSchema>["features"][number];
+
+const CENTER: Point = [19.25, 52.06];
 const ZOOM = 6.5;
 const WIDTH = 3000;
 const HEIGHT = 2000;
@@ -25,7 +66,7 @@ const TOLERANCE = 0.8;
 
 const WORLD = 256 * 2 ** ZOOM;
 
-const mercator = ([lon, lat]) => {
+const mercator = ([lon, lat]: Position): Point => {
   const sin = Math.sin((lat * Math.PI) / 180);
   return [
     ((lon + 180) / 360) * WORLD,
@@ -34,7 +75,7 @@ const mercator = ([lon, lat]) => {
 };
 
 const [cx, cy] = mercator(CENTER);
-const project = (point) => {
+const project = (point: Position): Point => {
   const [x, y] = mercator(point);
   return [x - cx + WIDTH / 2, y - cy + HEIGHT / 2];
 };
@@ -44,11 +85,12 @@ const MIN_Y = -PAD;
 const MAX_X = WIDTH + PAD;
 const MAX_Y = HEIGHT + PAD;
 
-const inside = ([x, y]) => x >= MIN_X && x <= MAX_X && y >= MIN_Y && y <= MAX_Y;
+const inside = ([x, y]: Point) =>
+  x >= MIN_X && x <= MAX_X && y >= MIN_Y && y <= MAX_Y;
 
 // Sutherland-Hodgman against each edge of the padded frame.
-const clipRing = (ring) => {
-  const edges = [
+const clipRing = (ring: Point[]): Point[] => {
+  const edges: [(p: Point) => boolean, (a: Point, b: Point) => Point][] = [
     [(p) => p[0] >= MIN_X, (a, b) => lerpX(a, b, MIN_X)],
     [(p) => p[0] <= MAX_X, (a, b) => lerpX(a, b, MAX_X)],
     [(p) => p[1] >= MIN_Y, (a, b) => lerpY(a, b, MIN_Y)],
@@ -77,20 +119,20 @@ const clipRing = (ring) => {
   return output;
 };
 
-const lerpX = ([x1, y1], [x2, y2], x) => [
+const lerpX = ([x1, y1]: Point, [x2, y2]: Point, x: number): Point => [
   x,
   y1 + ((y2 - y1) * (x - x1)) / (x2 - x1),
 ];
-const lerpY = ([x1, y1], [x2, y2], y) => [
+const lerpY = ([x1, y1]: Point, [x2, y2]: Point, y: number): Point => [
   x1 + ((x2 - x1) * (y - y1)) / (y2 - y1),
   y,
 ];
 
 // Splits a line into the runs that stay within the frame, keeping one point
 // past each edge so strokes reach it.
-const clipLine = (line) => {
-  const runs = [];
-  let run = [];
+const clipLine = (line: Point[]): Point[][] => {
+  const runs: Point[][] = [];
+  let run: Point[] = [];
   line.forEach((point, i) => {
     const near =
       inside(point) ||
@@ -109,7 +151,7 @@ const clipLine = (line) => {
   return runs.filter((r) => r.length > 1);
 };
 
-const segmentDistance = ([x, y], [x1, y1], [x2, y2]) => {
+const segmentDistance = ([x, y]: Point, [x1, y1]: Point, [x2, y2]: Point) => {
   const dx = x2 - x1;
   const dy = y2 - y1;
   const length = dx * dx + dy * dy;
@@ -120,15 +162,16 @@ const segmentDistance = ([x, y], [x1, y1], [x2, y2]) => {
   return Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy));
 };
 
-const simplify = (points) => {
+const simplify = (points: Point[]): Point[] => {
   if (points.length < 3) {
     return points;
   }
   const keep = new Uint8Array(points.length);
   keep[0] = keep[points.length - 1] = 1;
-  const stack = [[0, points.length - 1]];
-  while (stack.length > 0) {
-    const [first, last] = stack.pop();
+  const stack: [number, number][] = [[0, points.length - 1]];
+  let top: [number, number] | undefined;
+  while ((top = stack.pop())) {
+    const [first, last] = top;
     let max = 0;
     let index = 0;
     for (let i = first + 1; i < last; i++) {
@@ -147,11 +190,11 @@ const simplify = (points) => {
 };
 
 // Whole pixels as relative moves keep the file small; the map is drawn 1:1.
-const toPath = (points, closed) => {
+const toPath = (points: Point[], closed: boolean) => {
   let d = "";
-  let last = null;
+  let last: Point | null = null;
   points.forEach(([x, y]) => {
-    const point = [Math.round(x), Math.round(y)];
+    const point: Point = [Math.round(x), Math.round(y)];
     if (!last) {
       d += `M${point[0]} ${point[1]}`;
     } else {
@@ -167,10 +210,14 @@ const toPath = (points, closed) => {
   return closed ? `${d}z` : d;
 };
 
-const read = (directory, name) =>
-  JSON.parse(readFileSync(join(directory, `${name}.geojson`), "utf8")).features;
+// The GeoJSON files are validated: a file that is not a feature collection
+// with the expected geometry fails here instead of producing a broken map.
+const read = (directory: string, name: string): Feature[] =>
+  FeatureCollectionSchema.parse(
+    JSON.parse(readFileSync(join(directory, `${name}.geojson`), "utf8"))
+  ).features;
 
-const polygonsOf = (geometry) =>
+const polygonsOf = (geometry: Geometry | null): Position[][][] =>
   !geometry
     ? []
     : geometry.type === "Polygon"
@@ -179,7 +226,7 @@ const polygonsOf = (geometry) =>
         ? geometry.coordinates
         : [];
 
-const linesOf = (geometry) =>
+const linesOf = (geometry: Geometry | null): Position[][] =>
   !geometry
     ? []
     : geometry.type === "LineString"
@@ -188,7 +235,7 @@ const linesOf = (geometry) =>
         ? geometry.coordinates
         : [];
 
-const area = (points) => {
+const area = (points: Point[]) => {
   let sum = 0;
   for (let i = 0; i < points.length; i++) {
     const [x1, y1] = points[i];
@@ -198,7 +245,7 @@ const area = (points) => {
   return Math.abs(sum / 2);
 };
 
-const fills = (features, minArea = 0) =>
+const fills = (features: Feature[], minArea = 0) =>
   features
     .flatMap((feature) => polygonsOf(feature.geometry))
     .flatMap((polygon) => polygon)
@@ -207,7 +254,7 @@ const fills = (features, minArea = 0) =>
     .map((ring) => toPath(ring, true))
     .join("");
 
-const strokes = (features) =>
+const strokes = (features: Feature[]) =>
   features
     .flatMap((feature) => linesOf(feature.geometry))
     .flatMap((line) => clipLine(line.map(project)))
@@ -216,7 +263,7 @@ const strokes = (features) =>
     .map((line) => toPath(line, false))
     .join("");
 
-const main = (directory) => {
+const main = (directory: string) => {
   const land = read(directory, "ne_10m_land");
   // Kept apart: the two sets overlap, which an even-odd fill would cancel out.
   const lakes = [
@@ -231,16 +278,16 @@ const main = (directory) => {
   const regions = read(directory, "ne_10m_admin_1_states_provinces_lines");
   const roads = read(directory, "ne_10m_roads").filter(
     (feature) =>
-      feature.properties.continent === "Europe" &&
-      feature.properties.featurecla === "Road"
+      feature.properties?.continent === "Europe" &&
+      feature.properties?.featurecla === "Road"
   );
   const urban = read(directory, "ne_10m_urban_areas");
 
   const majorRoads = roads.filter(
-    (feature) => feature.properties.type === "Major Highway"
+    (feature) => feature.properties?.type === "Major Highway"
   );
   const minorRoads = roads.filter(
-    (feature) => feature.properties.type !== "Major Highway"
+    (feature) => feature.properties?.type !== "Major Highway"
   );
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
@@ -271,4 +318,11 @@ ${lakes
   console.log(`src/map.svg: ${Math.round(svg.length / 1024)} KiB`);
 };
 
-main(process.argv[2]);
+const [directory] = process.argv.slice(2);
+
+if (!directory) {
+  console.error("Usage: node map.ts <directory with the .geojson files>");
+  process.exit(1);
+}
+
+main(directory);

@@ -8,7 +8,7 @@ const { writeFile } = promises;
 // Read each file fully before overwriting it.
 sharp.cache(false);
 
-const getFileSizeInBytes = (fileName) => {
+const getFileSizeInBytes = (fileName: string) => {
   const stats = fs.statSync(fileName);
   const fileSizeInBytes = stats["size"];
   return fileSizeInBytes;
@@ -32,7 +32,7 @@ const options = {
   },
 };
 
-const optimize = (file) => {
+const optimize = (file: string) => {
   const image = sharp(file);
 
   return file.endsWith(".jpg")
