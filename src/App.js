@@ -1622,7 +1622,7 @@ export default function App() {
         socialDiff={socialDiff}
       />
       <div className="logo-box gameplay">
-        <Logo />
+        <Logo heading={false} />
       </div>
       <Controls
         audio={audio}
