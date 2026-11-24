@@ -174,19 +174,19 @@ const polygonsOf = (geometry) =>
   !geometry
     ? []
     : geometry.type === "Polygon"
-    ? [geometry.coordinates]
-    : geometry.type === "MultiPolygon"
-    ? geometry.coordinates
-    : [];
+      ? [geometry.coordinates]
+      : geometry.type === "MultiPolygon"
+        ? geometry.coordinates
+        : [];
 
 const linesOf = (geometry) =>
   !geometry
     ? []
     : geometry.type === "LineString"
-    ? [geometry.coordinates]
-    : geometry.type === "MultiLineString"
-    ? geometry.coordinates
-    : [];
+      ? [geometry.coordinates]
+      : geometry.type === "MultiLineString"
+        ? geometry.coordinates
+        : [];
 
 const area = (points) => {
   let sum = 0;

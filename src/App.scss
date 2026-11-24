@@ -202,7 +202,8 @@ a.button {
       border-radius: 2px;
       opacity: 1;
       transform: scale(1);
-      transition: opacity 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) 0s,
+      transition:
+        opacity 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) 0s,
         transform 0.5s ease-out 0s;
       transition-delay: 1.5s;
 
@@ -268,7 +269,9 @@ a.button {
 .container {
   background: #252526;
   padding: 16px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
   transform: translateZ(0);
 
   .recharts-wrapper {
@@ -529,7 +532,9 @@ body {
   transform: translateZ(0);
   background: #252526;
   padding: 16px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
   min-height: 56px;
   font-weight: bold;
   position: fixed;
