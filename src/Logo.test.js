@@ -13,5 +13,7 @@ test("renders the title as the page heading by default", () => {
 test("renders no heading when heading is false", () => {
   const { container, getByText } = render(<Logo heading={false} />);
   expect(container.querySelectorAll("h1, h2, h3, h4, h5, h6")).toHaveLength(0);
+  // decorative copy: no second banner landmark either
+  expect(container.querySelectorAll("header")).toHaveLength(0);
   expect(getByText("Korona Krulów")).toBeTruthy();
 });

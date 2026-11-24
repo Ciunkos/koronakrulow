@@ -159,7 +159,8 @@
   }
 }
 
-header {
+header,
+.logo-header {
   display: flex;
   align-items: center;
   flex-shrink: 0;
