@@ -12,43 +12,48 @@ PS. W grze można zaprzestać finansowania WHO, wprowadzić stan wyjątkowy (a n
 
 # Instrukcja uruchomienia
 
-Zainstaluj zależności:
+Gra jest budowana przez [Vite](https://vite.dev/). Zainstaluj zależności:
 
 ```sh
 npm install
 ```
 
-Potem aby uruchomić grę w trybie deweloperskim:
+Potem aby uruchomić grę w trybie deweloperskim (http://localhost:3000):
 
-```
+```sh
 npm start
+```
+
+Testy (Vitest) i lint (ESLint):
+
+```sh
+npm test
+npm run lint
 ```
 
 ## Budowanie na produkcję
 
+```sh
+npm run build
+```
+
 Gra posiada kilka skryptów ściągających paski na podstawie tekstów w akcjach. Aby zbudować pełną paczkę należy uruchomić:
 
-```
+```sh
 npm run package
 ```
 
-Po ukończreniu katolog `build` nadaje się do statycznego serwowania przez serwer HTTP lub ręcznego odpalenia.
+Po ukończeniu katalog `build` nadaje się do statycznego serwowania przez serwer HTTP, na przykład `npm run preview`.
+
+Build targets the browsers in Vite's default `baseline-widely-available` set (Chrome and Edge 111+, Firefox 114+, Safari 16.4+). Create React App targeted `>0.2%, not dead, not op_mini all`, which also covered older browsers; add `@vitejs/plugin-legacy` if those matter again.
 
 ## Overrides
 
-The project stays on Create React App (`react-scripts` 5), which pins old toolchain packages. `package.json` `overrides` replace some of them. Each entry is either a patched version that the calling code works with or a local stub (in `stubs/`) for code that never runs in this project. Remove an entry when its reason no longer holds.
+`package.json` `overrides` pin a transitive package to a patched version that the code using it still works with. Remove an entry when its reason no longer holds.
 
-| Package                  | Override                             | Why                                                                                                                                                                       | Evidence                                                                                                                                                                                                                                                 |
-| ------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `zod`                    | `^4.6.7`                             | GHSA-mrhx-c7xc-m3w5 (zod < 4.6.6) under `jimp` 1.6.1 (`paski.js`, `random.js`). Drop it when `jimp` ^1.7.0 (which moved to zod 4 itself) is past the 7-day npm cooldown.  | jimp only uses zod APIs that zod 4 keeps; the download scripts' image pipeline gives byte-identical JPEGs on zod 3 and 4.                                                                                                                                |
-| `resolve-url-loader`     | `^5.0.0`                             | Version 4 (pinned by react-scripts) bundles postcss 7, which has several advisories.                                                                                      | v5 only removed the `engine` and `keepQuery` options; react-scripts passes `sourceMap` and `root`. The build output is byte-identical.                                                                                                                   |
-| `serialize-javascript`   | `^7.1.4`                             | Advisories in < 7.1.3, used by `css-minimizer-webpack-plugin`.                                                                                                            | Same `serialize(obj, options)` export; the build output is byte-identical.                                                                                                                                                                               |
-| `@tootallnate/once`      | `^2.0.1`                             | Advisory in < 2.0.1, used by jsdom's `http-proxy-agent` (tests only).                                                                                                     | v2 still exports `default`, which `http-proxy-agent` 4 calls; the tests pass.                                                                                                                                                                            |
-| `@svgr/plugin-svgo`      | stub, `stubs/svgr-plugin-svgo`       | Pulls in svgo 1, css-select 2 and nth-check 1 (advisories).                                                                                                               | react-scripts runs `@svgr/webpack` with `svgo: false`, and the real plugin returns the code unchanged in that case. The stub does the same and throws if svgo is ever turned on. `src/map.svg` still builds to the same file.                            |
-| `workbox-webpack-plugin` | stub, `stubs/workbox-webpack-plugin` | Pulls in workbox-build, rollup and rollup-plugin-terser (advisories).                                                                                                     | react-scripts only creates `InjectManifest` when `src/service-worker.js` exists. This project has no service worker: `src/index.js` calls `unregister()`. The stub throws if it is ever used. To add a service worker, remove the stub and the override. |
-| `uuid`                   | `^11.1.1`                            | Advisory in < 11.1.1, used by `sockjs` (webpack-dev-server, `npm start` only). The owner accepted the new `prepare` script flagged by the dependency review (2026-11-24). | `sockjs` only calls `require("uuid").v4()`, which uuid 11 still exports for CommonJS; the dev server starts and serves the app.                                                                                                                          |
-
-The stubs are wired as `devDependencies` (`file:stubs/...`) and referenced from `overrides` with `$name`, because a `file:` path written directly in `overrides` resolves relative to the dependent package.
+| Package | Override | Why                                                                                                                                                                      | Evidence                                                                                                                  |
+| ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `zod`   | `^4.6.7` | GHSA-mrhx-c7xc-m3w5 (zod < 4.6.6) under `jimp` 1.6.1 (`paski.js`, `random.js`). Drop it when `jimp` ^1.7.0 (which moved to zod 4 itself) is past the 7-day npm cooldown. | jimp only uses zod APIs that zod 4 keeps; the download scripts' image pipeline gives byte-identical JPEGs on zod 3 and 4. |
 
 # Licencje
 
@@ -58,7 +63,7 @@ Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na warunkach 
 
 Strona nie ma związku z tvp, celem jest parodia, pastisz i karykatura propagandy. Część wydarzeń w grze jest fikcją - wszelkie podobieństwo do żyjących postaci jest przypadkowe.
 
-Zapoznaj się z licencją gry na stronie głównej gry lub w pliku `/src/Menu.js`.
+Zapoznaj się z licencją gry na stronie głównej gry lub w pliku `/src/Menu.jsx`.
 
 # Kontakt
 

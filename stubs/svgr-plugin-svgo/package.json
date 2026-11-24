@@ -1,8 +1,0 @@
-{
-  "name": "@svgr/plugin-svgo",
-  "version": "5.5.0-stub.1",
-  "private": true,
-  "description": "Local stub: react-scripts 5 runs @svgr/webpack with svgo: false, so the real plugin (and svgo 1) never runs. See README.md, Overrides.",
-  "main": "index.js",
-  "license": "MIT"
-}

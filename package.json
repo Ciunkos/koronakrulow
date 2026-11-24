@@ -40,7 +40,6 @@
     ]
   },
   "devDependencies": {
-    "@svgr/plugin-svgo": "file:stubs/svgr-plugin-svgo",
     "@vitejs/plugin-react": "^6.3.0",
     "eslint": "^9.39.5",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -54,16 +53,9 @@
     "prettier": "^3.10.1",
     "sharp": "^0.35.5",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0",
-    "workbox-webpack-plugin": "file:stubs/workbox-webpack-plugin"
+    "vitest": "^5.1.0"
   },
   "overrides": {
-    "zod": "^4.6.7",
-    "resolve-url-loader": "^5.0.0",
-    "serialize-javascript": "^7.1.4",
-    "@tootallnate/once": "^2.0.1",
-    "@svgr/plugin-svgo": "$@svgr/plugin-svgo",
-    "workbox-webpack-plugin": "$workbox-webpack-plugin",
-    "uuid": "^11.1.1"
+    "zod": "^4.6.7"
   }
 }
