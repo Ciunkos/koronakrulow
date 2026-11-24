@@ -2,15 +2,19 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
-// Replaces the eslint-config-react-app checks that Create React App ran
-// during the build. The build no longer lints; run `npm run lint`.
-export default [
+// The build does not lint; run `npm run lint` (or `npm run check`).
+export default tseslint.config(
   {
-    ignores: ["build/", "node_modules/", "stubs/"],
+    ignores: ["build/", "node_modules/"],
   },
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["**/*.{ts,tsx}"],
+  })),
   {
-    files: ["src/**/*.{js,jsx}"],
+    files: ["src/**/*.{ts,tsx}"],
     ...react.configs.flat.recommended,
     ...react.configs.flat["jsx-runtime"],
     ...jsxA11y.flatConfigs.recommended,
@@ -31,11 +35,24 @@ export default [
       ...jsxA11y.flatConfigs.recommended.rules,
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      // The game is plain JavaScript without prop types.
+      // Props are typed with TypeScript.
       "react/prop-types": "off",
-      // Same settings as eslint-config-react-app.
-      "no-unused-vars": ["warn", { args: "none", ignoreRestSiblings: true }],
-      "no-unused-expressions": [
+      "react/jsx-uses-react": "warn",
+      // The TV clips and the music have no caption files to attach.
+      "jsx-a11y/media-has-caption": "off",
+    },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      // A destructuring may mix reassigned and constant values.
+      "prefer-const": ["error", { destructuring: "all" }],
+      // Same settings as eslint-config-react-app had for unused code.
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { args: "none", ignoreRestSiblings: true },
+      ],
+      "@typescript-eslint/no-unused-expressions": [
         "error",
         {
           allowShortCircuit: true,
@@ -43,21 +60,18 @@ export default [
           allowTaggedTemplates: true,
         },
       ],
-      "react/jsx-uses-react": "warn",
-      // The TV clips and the music have no caption files to attach.
-      "jsx-a11y/media-has-caption": "off",
     },
   },
   {
-    files: ["src/**/*.test.{js,jsx}", "src/setupTests.js"],
+    files: ["src/**/*.test.{ts,tsx}", "src/setupTests.ts"],
     languageOptions: {
       globals: { ...globals.browser, ...globals.vitest },
     },
   },
   {
-    files: ["*.js", "leaderboards/**/*.js"],
+    files: ["*.ts", "*.js", "leaderboards/**/*.js"],
     languageOptions: {
       globals: { ...globals.node },
     },
-  },
-];
+  }
+);

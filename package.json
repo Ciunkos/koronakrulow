@@ -18,15 +18,17 @@
   },
   "scripts": {
     "build": "vite build",
+    "check": "npm run typecheck && npm test && npm run lint",
     "compress": "node compress.ts",
     "download": "node paski.ts",
     "lint": "eslint .",
     "package": "npm run download && npm run random && npm run build && npm run compress",
-    "prettier": "prettier --write \"**/*.{js,jsx,css,json,scss,md}\"",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,scss,md}\"",
     "preview": "vite preview --outDir build",
     "random": "node random.ts",
     "start": "vite",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json"
   },
   "browserslist": {
     "production": [

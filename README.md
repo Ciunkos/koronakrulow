@@ -12,7 +12,7 @@ PS. W grze można zaprzestać finansowania WHO, wprowadzić stan wyjątkowy (a n
 
 # Instrukcja uruchomienia
 
-Gra jest budowana przez [Vite](https://vite.dev/). Zainstaluj zależności:
+Gra jest napisana w TypeScript (tryb `strict`) i budowana przez [Vite](https://vite.dev/). Zainstaluj zależności:
 
 ```sh
 npm install
@@ -24,12 +24,16 @@ Potem aby uruchomić grę w trybie deweloperskim (http://localhost:3000):
 npm start
 ```
 
-Testy (Vitest) i lint (ESLint):
+Sprawdzenie typów (TypeScript), testy (Vitest) i lint (ESLint), osobno lub razem:
 
 ```sh
+npm run typecheck
 npm test
 npm run lint
+npm run check
 ```
+
+Skrypty `paski.ts`, `random.ts`, `compress.ts` i `map.ts` uruchamia bezpośrednio Node.js 26 (wbudowane usuwanie typów, bez kompilacji), np. `node map.ts <katalog z plikami .geojson>`.
 
 ## Budowanie na produkcję
 
