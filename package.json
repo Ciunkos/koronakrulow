@@ -14,7 +14,7 @@
     "react-is": "^19.3.1",
     "react-scripts": "^5.0.1",
     "recharts": "^2.15.4",
-    "sass": "^1.52.2"
+    "sass": "^1.108.2"
   },
   "scripts": {
     "build": "CI=false react-scripts build",
