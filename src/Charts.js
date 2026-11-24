@@ -14,6 +14,11 @@ import CloseIcon from "./CloseIcon.js";
 
 const isAnimationActive = false;
 
+// Recharts 3 sorts legend and tooltip items alphabetically by default;
+// keep the order of the lines below, as Recharts 2 did.
+const seriesOrder = ["reported", "dead", "recovered"];
+const bySeriesOrder = ({ dataKey }) => seriesOrder.indexOf(dataKey);
+
 const Charts = ({
   closeChart,
   daily,
@@ -46,6 +51,7 @@ const Charts = ({
       </a>
     </div>
     <LineChart
+      accessibilityLayer={false}
       width={width < 720 ? width - 64 : 360}
       height={240}
       data={paddedData}
@@ -77,8 +83,8 @@ const Charts = ({
         stroke="#388e3c"
         type="monotone"
       />
-      <Tooltip />
-      <Legend />
+      <Tooltip itemSorter={bySeriesOrder} />
+      <Legend itemSorter={bySeriesOrder} />
     </LineChart>
   </div>
 );

@@ -13,7 +13,7 @@
     "react-dom": "^19.3.1",
     "react-is": "^19.3.1",
     "react-scripts": "^5.0.1",
-    "recharts": "^2.15.4",
+    "recharts": "^3.10.1",
     "sass": "^1.108.2"
   },
   "scripts": {
@@ -59,9 +59,6 @@
     "@tootallnate/once": "^2.0.1",
     "@svgr/plugin-svgo": "$@svgr/plugin-svgo",
     "workbox-webpack-plugin": "$workbox-webpack-plugin",
-    "uuid": "^11.1.1",
-    "recharts": {
-      "react-is": "$react-is"
-    }
+    "uuid": "^11.1.1"
   }
 }
