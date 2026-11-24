@@ -34,21 +34,21 @@ const Charts = ({
       <h3>Statystyki</h3>
     </div>
     <div className="tabs">
-      <a
-        href="#"
-        className={classNames("tab", { active: daily })}
+      <button
+        type="button"
+        className={classNames("link tab", { active: daily })}
         onClick={onDailyClick}
       >
         {" "}
         Dziennie
-      </a>
-      <a
-        href="#"
-        className={classNames("tab", { active: !daily })}
+      </button>
+      <button
+        type="button"
+        className={classNames("link tab", { active: !daily })}
         onClick={onTotalClick}
       >
         Łącznie
-      </a>
+      </button>
     </div>
     <LineChart
       accessibilityLayer={false}

@@ -7,4 +7,6 @@ export const set = (key) => (value) => {
   localStorage.setItem(key, value);
 };
 
-export default { get, set };
+const storage = { get, set };
+
+export default storage;

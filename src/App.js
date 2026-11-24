@@ -1438,6 +1438,9 @@ export default function App() {
     const firstEvent = eventsSource[0];
     //console.log({ firstEvent, eventsSource, latestState });
     setEvent(firstEvent);
+    // setEvent is recreated on every render; the event should change only
+    // when the turn brings new events.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latestState.events]);
 
   //console.log({
@@ -1556,6 +1559,9 @@ export default function App() {
     }
 
     setActions(actions);
+    // Draw new actions once per turn (latestState). custom comes from
+    // latestState, and data is derived from the same state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latestState]);
 
   const today = offsetStartDate(latestState.day);

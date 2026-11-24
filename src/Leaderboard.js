@@ -22,55 +22,55 @@ const Leaderboard = ({
     <h3>Ranking</h3>
     {secondWaveEnabled && (
       <div className="tabs">
-        <a
-          href="#"
-          className={classNames("tab", { active: secondWave })}
+        <button
+          type="button"
+          className={classNames("link tab", { active: secondWave })}
           onClick={onSecondWaveClick}
         >
           DRUGA FALA
-        </a>
-        <a
-          href="#"
-          className={classNames("tab", { active: !secondWave })}
+        </button>
+        <button
+          type="button"
+          className={classNames("link tab", { active: !secondWave })}
           onClick={onFirstWaveClick}
         >
           PIERWSZA FALA
-        </a>
+        </button>
       </div>
     )}
     <div className="tabs">
-      <a
-        href="#"
-        className={classNames("tab", { active: daily })}
+      <button
+        type="button"
+        className={classNames("link tab", { active: daily })}
         onClick={onDailyClick}
       >
         Dzisiaj
-      </a>
-      <a
-        href="#"
-        className={classNames("tab", { active: !daily })}
+      </button>
+      <button
+        type="button"
+        className={classNames("link tab", { active: !daily })}
         onClick={onTotalClick}
       >
         Łączny
-      </a>
+      </button>
     </div>
     <div className="leaderboards">
       <div>
         <h4>Najszybciej opanowana epidemia</h4>
         <LeaderboardEntries>{leaderboardsWonSource}</LeaderboardEntries>
         {hasMoreWon && (
-          <a href="#" onClick={showMoreWon}>
+          <button type="button" className="link" onClick={showMoreWon}>
             Pokaż więcej
-          </a>
+          </button>
         )}
       </div>
       <div>
         <h4>Najszybciej rozwiązany rząd</h4>
         <LeaderboardEntries>{leaderboardsLostSource}</LeaderboardEntries>
         {hasMoreLost && (
-          <a href="#" onClick={showMoreLost}>
+          <button type="button" className="link" onClick={showMoreLost}>
             Pokaż więcej
-          </a>
+          </button>
         )}
       </div>
     </div>

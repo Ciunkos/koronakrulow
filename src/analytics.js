@@ -1,5 +1,7 @@
 export const ANALYTICS_ENABLED = false;
 
-export default () => {
+const analytics = () => {
   return;
 };
+
+export default analytics;

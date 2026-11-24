@@ -63,6 +63,22 @@ a.button {
   }
 }
 
+// A button that does something on the page but looks like the text link it
+// replaced (anchors with href="#" are not valid links).
+button.link {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover:not([disabled]) {
+    background: none;
+  }
+
+  &:focus-visible {
+    outline: auto !important;
+  }
+}
+
 .event,
 .action,
 .media {
@@ -338,7 +354,8 @@ a.button {
     text-align: right;
   }
 
-  a {
+  a,
+  .link {
     color: white;
     text-decoration: none;
     font-weight: 600;

@@ -7,6 +7,7 @@ const Event = ({ event, skipEvent }) => (
       {event.image && (
         <div className="well">
           <img
+            alt=""
             className="layer"
             height={event.imageHeight ?? 720}
             loading="eager"

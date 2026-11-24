@@ -20,6 +20,7 @@ const Media = ({
     <div className="media">
       <div className="media-cover">
         <img
+          alt=""
           className={classNames("video-background layer", {
             active: !mediaCover,
           })}
@@ -58,6 +59,7 @@ const Media = ({
           </div>
         )}
         <img
+          alt=""
           className={classNames("cover-image layer", { active: mediaCover })}
           height={573}
           onClick={skipVideo}

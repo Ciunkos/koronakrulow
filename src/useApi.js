@@ -46,7 +46,7 @@ const useApi = (endpoint, query, options) => {
 
   const refetch = useCallback(() => {
     setSeed(randomSeed());
-  });
+  }, []);
 
   return [data, { busy, error, refetch }];
 };

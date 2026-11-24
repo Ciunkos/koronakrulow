@@ -1,5 +1,5 @@
 // https://propaganda-czy-falsz.github.io/
-export default [
+const randomPropaganda = [
   "GOSPODARKA W OLIMPIJSKIEJ FORMIE",
   "BRUKSELA POZWALA HISZPANOM PAŁOWAĆ LUDZI, A NAM ZABRANIA ZWALCZAĆ KORNIKA DRUKARZA",
   "DELFIN PLATFORMY BUDZI KONTROWERSJE",
@@ -516,3 +516,5 @@ export default [
   "Trwa walka z ostrym cieniem mgły",
   "Kaczyński sam wyzwolił Polskę od komuny",
 ];
+
+export default randomPropaganda;

@@ -4,7 +4,13 @@ const Action = ({ actionLogo, actions, performAction, skipAction }) => (
   <div className="modal-container">
     <div className="action">
       <div className="well">
-        <img src={actionLogo} width={1280} height={360} loading="eager" />
+        <img
+          alt=""
+          src={actionLogo}
+          width={1280}
+          height={360}
+          loading="eager"
+        />
       </div>
       <div className="action-title">Podejmij decyzję</div>
       <div className="actions">

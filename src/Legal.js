@@ -12,11 +12,11 @@ const Legal = ({ details, toggleDetails }) => (
       propagandy. Część wydarzeń w grze jest fikcją - wszelkie podobieństwo do
       żyjących postaci jest przypadkowe.
     </p>
-    <a href="#" onClick={toggleDetails}>
+    <button type="button" className="link" onClick={toggleDetails}>
       {!details
         ? "Pokaż informacje o prywatności i licencjach"
         : "Ukryj informacje o prywatności i licencjach"}
-    </a>
+    </button>
     {details && (
       <div className="legal-details">
         <p>Część użytych obrazów znajduje się w domenie publicznej.</p>

@@ -5,13 +5,13 @@ import MusicIcon from "./MusicIcon.js";
 
 const Controls = ({ audio, toggleMusic, toggleTvpis, tvpis }) => (
   <div className="controls">
-    <a href="#" onClick={toggleTvpis}>
+    <button type="button" className="link" onClick={toggleTvpis}>
       <TvIcon /> {tvpis ? "Wyłącz" : "Włącz"} TVPiS
-    </a>{" "}
+    </button>{" "}
     •{" "}
-    <a href="#" onClick={toggleMusic}>
+    <button type="button" className="link" onClick={toggleMusic}>
       <MusicIcon /> {audio ? "Wyłącz" : "Włącz"} muzykę
-    </a>
+    </button>
   </div>
 );
 
