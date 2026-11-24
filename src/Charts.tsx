@@ -11,13 +11,26 @@ import {
 } from "recharts";
 
 import CloseIcon from "./CloseIcon.tsx";
+import type { MouseEvent } from "react";
+import type { ChartDatum } from "./types.ts";
 
 const isAnimationActive = false;
 
 // Recharts 3 sorts legend and tooltip items alphabetically by default;
 // keep the order of the lines below, as Recharts 2 did.
 const seriesOrder = ["reported", "dead", "recovered"];
-const bySeriesOrder = ({ dataKey }) => seriesOrder.indexOf(dataKey);
+const bySeriesOrder = ({ dataKey }: { dataKey?: unknown }) =>
+  typeof dataKey === "string" ? seriesOrder.indexOf(dataKey) : -1;
+
+interface ChartsProps {
+  closeChart: () => void;
+  daily: boolean;
+  onDailyClick: (event: MouseEvent) => void;
+  onTotalClick: (event: MouseEvent) => void;
+  paddedData: ChartDatum[];
+  showChart: boolean;
+  width: number;
+}
 
 const Charts = ({
   closeChart,
@@ -27,7 +40,7 @@ const Charts = ({
   paddedData,
   showChart,
   width,
-}) => (
+}: ChartsProps) => (
   <div className={classNames("container chart", { active: showChart })}>
     <div className="container-header">
       <CloseIcon onClick={closeChart} />

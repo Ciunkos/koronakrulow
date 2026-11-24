@@ -5,7 +5,14 @@ import React, { memo } from "react";
 import TransitiveNumber from "./TransitiveNumber.tsx";
 import formatNumber from "./formatNumber.ts";
 
-const StatsRow = ({ day, diff, title, children: value }) => (
+interface StatsRowProps {
+  day: number;
+  diff: number;
+  title: string;
+  children: number;
+}
+
+const StatsRow = ({ day, diff, title, children: value }: StatsRowProps) => (
   <div className={classNames("stats-row", { empty: value === 0 })}>
     <div className="stats-row-header">
       <div className="stats-row-label">

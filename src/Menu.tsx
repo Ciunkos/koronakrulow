@@ -1,4 +1,5 @@
 import React, { memo, useState } from "react";
+import type { MouseEvent } from "react";
 
 import useWindowSize from "./useWindowSize.ts";
 import analytics from "./analytics.ts";
@@ -15,6 +16,7 @@ import { SHOW_LEADERBOARD } from "./leaderboards.ts";
 import { enabled as secondWaveEnabled } from "./secondWave.ts";
 
 import "./Menu.scss";
+import type { Progress as ProgressData } from "./types.ts";
 
 const actions = secondWaveEnabled
   ? allActions
@@ -28,11 +30,25 @@ const events = secondWaveEnabled
       Object.entries(allEvents).filter(([, value]) => !value.secondWave)
     );
 
-const Menu = ({ active, setActive, resetState, custom, progress }) => {
+interface MenuProps {
+  active: boolean;
+  setActive: (active: boolean) => void;
+  resetState: (custom?: boolean, secondWave?: boolean) => Promise<void>;
+  custom: boolean;
+  progress: ProgressData;
+}
+
+const Menu = ({
+  active,
+  setActive,
+  resetState,
+  custom,
+  progress,
+}: MenuProps) => {
   const [width, height] = useWindowSize();
   const [details, showDetails] = useState(false);
 
-  const toggleDetails = (event) => {
+  const toggleDetails = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 

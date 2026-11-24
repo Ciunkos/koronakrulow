@@ -1,11 +1,25 @@
-const createAction = (title, logEntry, effect, options) => ({
+import type { ActionOptions, ActionTarget, GameAction } from "./types.ts";
+
+type Effect = (state: ActionTarget) => void;
+
+const createAction = (
+  title: string,
+  logEntry: string,
+  effect: Effect,
+  options?: ActionOptions
+): GameAction => ({
   title,
   logEntry,
   effect,
   ...options,
 });
 
-const createSecondWaveAction = (title, logEntry, effect, options) => ({
+const createSecondWaveAction = (
+  title: string,
+  logEntry: string,
+  effect: Effect,
+  options?: ActionOptions
+): GameAction => ({
   title,
   logEntry,
   effect,
@@ -1059,10 +1073,7 @@ export const a92 = createAction(
   { requires: a57, message: "Izrael dziękuje Polsce" }
 );
 
-let a93;
-let a94;
-
-a93 = createAction(
+const a93 = createAction(
   "Rozpocznij wdrożenie sieci 5G w Polsce",
   'Ludzie panikują widząc sieci Wi-Fi nazwane "TEST 5G MOC 500%".',
   (state) => {
@@ -1073,7 +1084,7 @@ a93 = createAction(
   { excludes: () => a94, message: "5G szansą rozwoju Polski" }
 );
 
-a94 = createAction(
+const a94 = createAction(
   "Zablokuj wdrożenie sieci 5G w Polsce",
   "Rządowy zespół naukowców dowiódł szkodliwości sieci 5G i wpływu na rozwój koronawirusa!",
   (state) => {
@@ -1135,8 +1146,6 @@ export const a98 = createAction(
     customFilter: (state) => state.healthcare >= 7,
   }
 );
-
-let a137;
 
 export const a100 = createAction(
   "Wdróż powszechne stosowanie polskiego leku na COVID-19",
@@ -1493,7 +1502,7 @@ export const a134 = fakeElection();
 export const a135 = fakeElection();
 export const a136 = fakeElection();
 
-a137 = createAction(
+const a137 = createAction(
   "Opracuj polski lek na COVID-19",
   "Uczestnicy projektów folding@home i rosetta@home pozwolili stworzyć skuteczny lek na koronawirusa.",
   (state) => {
@@ -1631,8 +1640,6 @@ export const a147 = createAction(
   },
   { message: "Polski rząd wspiera polskie firmy" }
 );
-
-let a187;
 
 export const a148 = createAction(
   "Zamknij miasta powyżej 100 tys. mieszkańców",
@@ -2103,7 +2110,7 @@ export const a186 = createAction(
   { message: "Łamiąca wiadomość: Wprowadzono stan epidemii", event: "e15" }
 );
 
-a187 = createAction(
+const a187 = createAction(
   "Wprowadź stan wyjątkowy",
   "Koronawirus zagrożeniem dla bezpieczeństwa obywateli i porządku publicznego. Rząd wprowadza stan wyjątkowy!",
   (state) => {
@@ -2232,10 +2239,7 @@ export const a196 = createAction(
   { message: "Leczenie pod chmurką" }
 );
 
-let a197;
-let a198;
-
-a197 = createAction(
+const a197 = createAction(
   "Zwiększ tymczasowo VAT",
   "Dodatkowe wpływy do budżetu kosztem gospodarki? Przedsiębiorcy rozważają protesty. Nikt nie wierzy obietnicom powrotu do poprzedniej stawki po ustaniu kryzysu.",
   (state) => {
@@ -2246,7 +2250,7 @@ a197 = createAction(
   { excludes: () => a198, message: "Tusk ponownie zwiększył VAT" }
 );
 
-a198 = createAction(
+const a198 = createAction(
   "Zmniejsz VAT",
   "Zmniejszona stawka VAT tworzy nadzieję na odnowienie polskiej gospodarki.",
   (state) => {

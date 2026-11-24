@@ -5,6 +5,6 @@ const formatter = new Intl.DateTimeFormat("pl-PL", {
   day: "numeric",
 });
 
-const formatLongDisplayDate = (date) => formatter.format(date);
+const formatLongDisplayDate = (date: Date) => formatter.format(date);
 
 export default formatLongDisplayDate;

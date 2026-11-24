@@ -8,6 +8,7 @@ import isFunction from "@sandstreamdev/std/is/function.js";
 import { delay } from "@sandstreamdev/std/async/index.js";
 import { clamp } from "@sandstreamdev/std/math/index.js";
 import React, { useRef, useState, useEffect, useMemo } from "react";
+import type { MouseEvent } from "react";
 import * as allActions from "./actions.ts";
 import * as events from "./events.tsx";
 import * as stripes from "./stripes/index.ts";
@@ -18,6 +19,15 @@ import Logo from "./Logo.tsx";
 import randomPropaganda from "./randomPropaganda.ts";
 import useWindowSize from "./useWindowSize.ts";
 import { get, set } from "./localStorage.ts";
+import { parseProgress } from "./progress.ts";
+import type {
+  ActionTarget,
+  GameAction,
+  GameEvent,
+  GameState,
+  Progress,
+  UpdateProgress,
+} from "./types.ts";
 import music from "./the-descent-by-kevin-macleod-from-filmmusic-io.mp3";
 import formatDisplayDateWithOffset from "./formatDisplayDateWithOffset.ts";
 import analytics, { ANALYTICS_ENABLED } from "./analytics.ts";
@@ -90,6 +100,9 @@ const trackGameplayTime = async () => {
   }
 };
 
+// Stripe images by action key (a1, a2, ...).
+const stripeImages: Record<string, string | undefined> = stripes;
+
 const AGENT_LIMIT = 37734000;
 
 const debug = false;
@@ -109,7 +122,7 @@ const DEAD = 1 << 7;
 
 const DIFFICULTY = 0.9;
 
-const getInitialState = (custom = false, secondWave = false) => {
+const getInitialState = (custom = false, secondWave = false): GameState => {
   const initialAgentCount = Math.round(20 + Math.random() * 50 * DIFFICULTY);
 
   const agentCount = 1 + initialAgentCount;
@@ -132,7 +145,7 @@ const getInitialState = (custom = false, secondWave = false) => {
   const secondWaveMultiplierContactsPerDay = secondWave ? 0.71 : 1;
   const secondWaveMultiplierInfectionRate = secondWave ? 0.8 : 1;
 
-  const initialState = {
+  const initialState: GameState = {
     custom,
     day: 0,
     infectionProbability: 0.02 * DIFFICULTY * secondWaveMultiplierInfectionRate,
@@ -196,7 +209,7 @@ const weekendRatio = 0.55;
 
 const QUARANTINE_DETECTION_RATIO = 0.1;
 
-const transition = async (state) => {
+const transition = async (state: GameState): Promise<GameState> => {
   // let steps = 0;
 
   let {
@@ -573,7 +586,7 @@ const transition = async (state) => {
   await delay(TURN_DELAY);
 
   //console.time("NEXT STATE");
-  const nextState = {
+  const nextState: GameState = {
     ...state,
     day: day + 1,
     agents,
@@ -598,418 +611,439 @@ const transition = async (state) => {
 
 const DEATHRATTLE_LIMIT = 15;
 
-const playState = (action) => async (state, updateProgress, userIntent) => {
-  await delay(TURN_DELAY);
+const playState =
+  (action?: GameAction) =>
+  async (
+    state: GameState[],
+    updateProgress: UpdateProgress,
+    userIntent: boolean
+  ): Promise<GameState[]> => {
+    await delay(TURN_DELAY);
 
-  const latestState = state[state.length - 1];
-  const secondToLatestState = state[state.length - 2];
-  const thirdToLatestState = state[state.length - 3];
+    const latestState = state[state.length - 1];
+    const secondToLatestState = state[state.length - 2];
+    const thirdToLatestState = state[state.length - 3];
 
-  const nextState = await transition(latestState);
+    const nextState = await transition(latestState);
 
-  //console.log("latestState.reported: " + latestState.reported);
-  //console.log("nextState.reported: " + nextState.reported);
+    //console.log("latestState.reported: " + latestState.reported);
+    //console.log("nextState.reported: " + nextState.reported);
 
-  if (nextState.reported > 0 && latestState.reported === 0) {
-    //console.log("PATIENT-0");
+    if (nextState.reported > 0 && latestState.reported === 0) {
+      //console.log("PATIENT-0");
 
-    //console.log({ eventsUpdated: "e0" });
-    nextState.events = [
-      ...(nextState.events || []),
-      events.e0,
-      ...(debug
-        ? [events.e1, events.e2, events.e3, events.e4, events.e5, events.e6]
-        : []),
-    ];
-  }
-
-  if (nextState.dead > 0 && latestState.dead === 0) {
-    nextState.events = [...(nextState.events || []), events.e7];
-  }
-
-  let { day, log: sourceLog } = nextState;
-
-  const { reported, dead, recovered } = nextState;
-
-  const date = offsetStartDate(day);
-
-  const log = [...sourceLog];
-
-  if (action) {
-    ////console.log({ action });
-
-    action.effect(nextState);
-
-    log.push({
-      date,
-      title: action.logEntry,
-    });
-
-    if (action.event) {
-      nextState.events = [...(nextState.events || []), events[action.event]];
+      //console.log({ eventsUpdated: "e0" });
+      nextState.events = [
+        ...(nextState.events || []),
+        events.e0,
+        ...(debug
+          ? [events.e1, events.e2, events.e3, events.e4, events.e5, events.e6]
+          : []),
+      ];
     }
-  }
 
-  {
-    let {
-      budget,
-      economy,
-      social,
-      healthcare,
-      people,
-      politics,
-      deathrattle,
-      penalty,
-      policeAuthority,
-    } = nextState;
+    if (nextState.dead > 0 && latestState.dead === 0) {
+      nextState.events = [...(nextState.events || []), events.e7];
+    }
 
-    // max of 5 per turn
-    penalty = Math.min(penalty, PENALTY_THRESHOLD * 5);
+    const { day, log: sourceLog } = nextState;
 
-    // penalty = 0;
+    const { reported, dead, recovered } = nextState;
 
-    while (penalty >= PENALTY_THRESHOLD) {
-      //console.error({ penalty });
+    const date = offsetStartDate(day);
 
-      const mode = Math.floor(Math.random() * 4);
+    const log = [...sourceLog];
 
-      if (mode === 0) {
-        people--;
-        nextState.people = people;
-        //console.error({ people });
-      } else if (mode === 1) {
-        politics--;
-        nextState.politics = politics;
-        //console.error({ politics });
-      } else if (mode === 2) {
-        healthcare--;
-        nextState.healthcare = healthcare;
-        //console.error({ healthcare });
-      } else {
-        economy--;
-        nextState.economy = economy;
-        //console.error({ economy });
+    if (action) {
+      ////console.log({ action });
+
+      // ActionTarget adds two misspelled fields that some effects write to (see
+      // types.ts); they are not part of the state, so this is the one cast.
+      action.effect(nextState as ActionTarget);
+
+      log.push({
+        date,
+        title: action.logEntry,
+      });
+
+      if (action.event) {
+        nextState.events = [...(nextState.events || []), events[action.event]];
       }
-
-      penalty -= PENALTY_THRESHOLD;
     }
 
-    if (economy <= 0) {
-      //console.log("ECONOMY DOWN");
-      //console.log("SOCIAL BEFORE " + social);
-      social -= 1;
-      nextState.social = social;
-      //console.log("SOCIAL AFTER " + social);
-      //console.log("NEXT SOCIAL STATE " + nextState.social);
-    }
+    {
+      let {
+        budget,
+        economy,
+        social,
+        healthcare,
+        people,
+        politics,
+        deathrattle,
+        penalty,
+        policeAuthority,
+      } = nextState;
 
-    if (social <= 0) {
-      //console.log("SOCIAL DOWN");
-      //console.log("BUDGET BEFORE " + budget);
-      budget -= 1;
-      nextState.budget = budget;
-      //console.log("BUDGET AFTER " + budget);
-      //console.log("NEXT BUDGET STATE " + nextState.budget);
-    }
+      // max of 5 per turn
+      penalty = Math.min(penalty, PENALTY_THRESHOLD * 5);
 
-    if (social >= 10) {
-      //console.log("SOCIAL PROSPERITY");
-      //console.log("economy BEFORE " + economy);
-      economy -= 1;
-      nextState.economy = economy;
-      politics += 1;
-      nextState.politics = politics;
-      //console.log("economy AFTER " + economy);
-      //console.log("NEXT economy STATE " + nextState.economy);
-    }
+      // penalty = 0;
 
-    if (economy >= 10) {
-      //console.log("ECONOMY PROSPERITY");
-      //console.log("budget BEFORE " + budget);
-      budget += 1;
-      nextState.budget = budget;
-      //console.log("budget AFTER " + budget);
-      //console.log("NEXT budget STATE " + nextState.budget);
-    }
+      while (penalty >= PENALTY_THRESHOLD) {
+        //console.error({ penalty });
 
-    if (people >= 10) {
-      //console.log("PEOPLE PROSPERITY");
-      //console.log("politics BEFORE " + politics);
-      politics += 1;
-      nextState.politics = politics;
-      //console.log("politics AFTER " + politics);
-      //console.log("NEXT politics STATE " + nextState.politics);
-    }
+        const mode = Math.floor(Math.random() * 4);
 
-    if (budget <= 0) {
-      //console.log("BUDGET DOWN");
-      //console.log("POLITICS BEFORE " + politics);
-      politics -= 1;
-      nextState.politics = politics;
-      //console.log("POLITICS AFTER " + politics);
-      //console.log("NEXT POLITICS STATE " + nextState.politics);
-    }
-
-    if (people <= 0) {
-      //console.log("PEOPLE DOWN");
-      //console.log("POLITICS BEFORE " + politics);
-      politics -= 1;
-      nextState.politics = politics;
-      //console.log("POLITICS AFTER " + politics);
-      //console.log("NEXT POLITICS STATE " + nextState.politics);
-    }
-
-    if (politics <= 0) {
-      //console.log("POLITICS DOWN");
-      //console.log("deathrattle BEFORE " + deathrattle);
-      deathrattle += 1;
-      nextState.deathrattle = deathrattle;
-      //console.log("deathrattle AFTER " + deathrattle);
-      //console.log("NEXT deathrattle STATE " + nextState.deathrattle);
-    }
-
-    // ENDGAME!!!!
-    if (!nextState.gameOver && deathrattle >= DEATHRATTLE_LIMIT) {
-      nextState.events = [...(nextState.events || []), events.e8];
-      nextState.events = [...(nextState.events || []), events.e14];
-      nextState.events = [...(nextState.events || []), events.e18];
-
-      if (SHOW_LEADERBOARD) {
-        nextState.events = [...(nextState.events || []), events.e19];
-      }
-
-      nextState.gameOver = true;
-      nextState.win = false;
-      stopGameplayTimeTracking = true;
-
-      analytics("lost");
-      analytics(`lost_day_${day}`);
-      analytics(`lost_reported_${reported}`);
-      analytics(`lost_dead_${dead}`);
-      analytics(`lost_recovered_${recovered}`);
-
-      updateProgress(({ lost = 0, games = 0, ...rest }) => ({
-        ...rest,
-        lost: lost + 1,
-        games: games + 1,
-      }));
-    }
-
-    const underControl =
-      latestState.reported === nextState.reported &&
-      secondToLatestState &&
-      latestState.reported === secondToLatestState.reported &&
-      thirdToLatestState &&
-      secondToLatestState.reported === thirdToLatestState.reported;
-    nextState.underControl = underControl;
-
-    if (!nextState.gameOver) {
-      if (underControl) {
-        nextState.daysToWin -= 1;
-
-        if (nextState.daysToWin <= 0) {
-          nextState.events = [...(nextState.events || []), events.e9];
-          nextState.events = [...(nextState.events || []), events.e14];
-          nextState.events = [...(nextState.events || []), events.e18];
-
-          if (SHOW_LEADERBOARD) {
-            nextState.events = [...(nextState.events || []), events.e19];
-          }
-
-          nextState.gameOver = true;
-          nextState.win = true;
-          stopGameplayTimeTracking = true;
-
-          set("finished")("true");
-
-          analytics("won");
-          analytics(`won_day_${day}`);
-          analytics(`won_reported_${reported}`);
-          analytics(`won_dead_${dead}`);
-          analytics(`won_recovered_${recovered}`);
-
-          updateProgress(({ won = 0, games = 0, ...rest }) => ({
-            ...rest,
-            won: won + 1,
-            games: games + 1,
-          }));
+        if (mode === 0) {
+          people--;
+          nextState.people = people;
+          //console.error({ people });
+        } else if (mode === 1) {
+          politics--;
+          nextState.politics = politics;
+          //console.error({ politics });
+        } else if (mode === 2) {
+          healthcare--;
+          nextState.healthcare = healthcare;
+          //console.error({ healthcare });
+        } else {
+          economy--;
+          nextState.economy = economy;
+          //console.error({ economy });
         }
-      } else {
-        nextState.daysToWin = 30;
-      }
 
-      if (budget <= 0) {
-        nextState.budget = 0;
-
-        if (latestState.budget > 0 && nextState.budget <= 0) {
-          log.push({
-            date,
-            title: "Dziura w budżecie nie pozwala na dalszą walkę z COVID-19!",
-          });
-
-          nextState.events = [...(nextState.events || []), events.e1];
-        }
+        penalty -= PENALTY_THRESHOLD;
       }
 
       if (economy <= 0) {
-        nextState.economy = 0;
-
-        if (latestState.economy > 0 && nextState.economy <= 0) {
-          log.push({
-            date,
-            title: "Gospodarka w stanie agonii!",
-          });
-
-          nextState.events = [...(nextState.events || []), events.e2];
-        }
+        //console.log("ECONOMY DOWN");
+        //console.log("SOCIAL BEFORE " + social);
+        social -= 1;
+        nextState.social = social;
+        //console.log("SOCIAL AFTER " + social);
+        //console.log("NEXT SOCIAL STATE " + nextState.social);
       }
 
       if (social <= 0) {
-        nextState.social = 0;
-
-        if (latestState.social > 0 && nextState.social <= 0) {
-          log.push({
-            date,
-            title: "Ludzie przywiązani do pomocy państwa nie wiedzą co robić.",
-          });
-
-          nextState.events = [...(nextState.events || []), events.e3];
-        }
+        //console.log("SOCIAL DOWN");
+        //console.log("BUDGET BEFORE " + budget);
+        budget -= 1;
+        nextState.budget = budget;
+        //console.log("BUDGET AFTER " + budget);
+        //console.log("NEXT BUDGET STATE " + nextState.budget);
       }
 
-      if (healthcare <= 0) {
-        nextState.healthcare = 0;
+      if (social >= 10) {
+        //console.log("SOCIAL PROSPERITY");
+        //console.log("economy BEFORE " + economy);
+        economy -= 1;
+        nextState.economy = economy;
+        politics += 1;
+        nextState.politics = politics;
+        //console.log("economy AFTER " + economy);
+        //console.log("NEXT economy STATE " + nextState.economy);
+      }
 
-        if (latestState.healthcare > 0 && nextState.healthcare <= 0) {
-          log.push({
-            date,
-            title: "Służba zdrowia umarła. Nie ma kto i jak leczyć chorych!",
-          });
+      if (economy >= 10) {
+        //console.log("ECONOMY PROSPERITY");
+        //console.log("budget BEFORE " + budget);
+        budget += 1;
+        nextState.budget = budget;
+        //console.log("budget AFTER " + budget);
+        //console.log("NEXT budget STATE " + nextState.budget);
+      }
 
-          nextState.events = [...(nextState.events || []), events.e4];
-        }
+      if (people >= 10) {
+        //console.log("PEOPLE PROSPERITY");
+        //console.log("politics BEFORE " + politics);
+        politics += 1;
+        nextState.politics = politics;
+        //console.log("politics AFTER " + politics);
+        //console.log("NEXT politics STATE " + nextState.politics);
+      }
+
+      if (budget <= 0) {
+        //console.log("BUDGET DOWN");
+        //console.log("POLITICS BEFORE " + politics);
+        politics -= 1;
+        nextState.politics = politics;
+        //console.log("POLITICS AFTER " + politics);
+        //console.log("NEXT POLITICS STATE " + nextState.politics);
       }
 
       if (people <= 0) {
-        nextState.people = 0;
-
-        if (latestState.people > 0 && nextState.people <= 0) {
-          log.push({
-            date,
-            title:
-              "Rozwścieczeni ludzie wyszli na ulice. Zamieszki w całej Polsce!",
-          });
-
-          nextState.events = [...(nextState.events || []), events.e5];
-        }
+        //console.log("PEOPLE DOWN");
+        //console.log("POLITICS BEFORE " + politics);
+        politics -= 1;
+        nextState.politics = politics;
+        //console.log("POLITICS AFTER " + politics);
+        //console.log("NEXT POLITICS STATE " + nextState.politics);
       }
 
       if (politics <= 0) {
-        nextState.politics = 0;
+        //console.log("POLITICS DOWN");
+        //console.log("deathrattle BEFORE " + deathrattle);
+        deathrattle += 1;
+        nextState.deathrattle = deathrattle;
+        //console.log("deathrattle AFTER " + deathrattle);
+        //console.log("NEXT deathrattle STATE " + nextState.deathrattle);
+      }
 
-        if (latestState.politics > 0 && nextState.politics <= 0) {
-          log.push({
-            date,
-            title: "PiS utracił poparcie najtwardszego elektoratu.",
-          });
+      // ENDGAME!!!!
+      if (!nextState.gameOver && deathrattle >= DEATHRATTLE_LIMIT) {
+        nextState.events = [...(nextState.events || []), events.e8];
+        nextState.events = [...(nextState.events || []), events.e14];
+        nextState.events = [...(nextState.events || []), events.e18];
 
-          nextState.events = [...(nextState.events || []), events.e6];
+        if (SHOW_LEADERBOARD) {
+          nextState.events = [...(nextState.events || []), events.e19];
+        }
+
+        nextState.gameOver = true;
+        nextState.win = false;
+        stopGameplayTimeTracking = true;
+
+        analytics("lost");
+        analytics(`lost_day_${day}`);
+        analytics(`lost_reported_${reported}`);
+        analytics(`lost_dead_${dead}`);
+        analytics(`lost_recovered_${recovered}`);
+
+        updateProgress(({ lost = 0, games = 0, ...rest }) => ({
+          ...rest,
+          lost: lost + 1,
+          games: games + 1,
+        }));
+      }
+
+      const underControl =
+        latestState.reported === nextState.reported &&
+        secondToLatestState &&
+        latestState.reported === secondToLatestState.reported &&
+        thirdToLatestState &&
+        secondToLatestState.reported === thirdToLatestState.reported;
+      nextState.underControl = underControl;
+
+      if (!nextState.gameOver) {
+        if (underControl) {
+          nextState.daysToWin -= 1;
+
+          if (nextState.daysToWin <= 0) {
+            nextState.events = [...(nextState.events || []), events.e9];
+            nextState.events = [...(nextState.events || []), events.e14];
+            nextState.events = [...(nextState.events || []), events.e18];
+
+            if (SHOW_LEADERBOARD) {
+              nextState.events = [...(nextState.events || []), events.e19];
+            }
+
+            nextState.gameOver = true;
+            nextState.win = true;
+            stopGameplayTimeTracking = true;
+
+            set("finished")("true");
+
+            analytics("won");
+            analytics(`won_day_${day}`);
+            analytics(`won_reported_${reported}`);
+            analytics(`won_dead_${dead}`);
+            analytics(`won_recovered_${recovered}`);
+
+            updateProgress(({ won = 0, games = 0, ...rest }) => ({
+              ...rest,
+              won: won + 1,
+              games: games + 1,
+            }));
+          }
+        } else {
+          nextState.daysToWin = 30;
+        }
+
+        if (budget <= 0) {
+          nextState.budget = 0;
+
+          if (latestState.budget > 0 && nextState.budget <= 0) {
+            log.push({
+              date,
+              title:
+                "Dziura w budżecie nie pozwala na dalszą walkę z COVID-19!",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e1];
+          }
+        }
+
+        if (economy <= 0) {
+          nextState.economy = 0;
+
+          if (latestState.economy > 0 && nextState.economy <= 0) {
+            log.push({
+              date,
+              title: "Gospodarka w stanie agonii!",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e2];
+          }
+        }
+
+        if (social <= 0) {
+          nextState.social = 0;
+
+          if (latestState.social > 0 && nextState.social <= 0) {
+            log.push({
+              date,
+              title:
+                "Ludzie przywiązani do pomocy państwa nie wiedzą co robić.",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e3];
+          }
+        }
+
+        if (healthcare <= 0) {
+          nextState.healthcare = 0;
+
+          if (latestState.healthcare > 0 && nextState.healthcare <= 0) {
+            log.push({
+              date,
+              title: "Służba zdrowia umarła. Nie ma kto i jak leczyć chorych!",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e4];
+          }
+        }
+
+        if (people <= 0) {
+          nextState.people = 0;
+
+          if (latestState.people > 0 && nextState.people <= 0) {
+            log.push({
+              date,
+              title:
+                "Rozwścieczeni ludzie wyszli na ulice. Zamieszki w całej Polsce!",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e5];
+          }
+        }
+
+        if (politics <= 0) {
+          nextState.politics = 0;
+
+          if (latestState.politics > 0 && nextState.politics <= 0) {
+            log.push({
+              date,
+              title: "PiS utracił poparcie najtwardszego elektoratu.",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e6];
+          }
+        }
+
+        if (policeAuthority <= 0) {
+          nextState.policeAuthority = 0;
+
+          if (
+            latestState.policeAuthority > 0 &&
+            nextState.policeAuthority <= 0
+          ) {
+            log.push({
+              date,
+              title: "Od dziś milicja oficjalną formacją mundurową!",
+            });
+
+            nextState.events = [...(nextState.events || []), events.e13];
+          }
         }
       }
 
-      if (policeAuthority <= 0) {
-        nextState.policeAuthority = 0;
+      nextState.budget = clampStat(nextState.budget);
+      nextState.economy = clampStat(nextState.economy);
+      nextState.social = clampStat(nextState.social);
+      nextState.healthcare = clampStat(nextState.healthcare);
+      nextState.people = clampStat(nextState.people);
+      nextState.politics = clampStat(nextState.politics);
+      nextState.deathrattle = clamp(
+        0,
+        DEATHRATTLE_LIMIT
+      )(nextState.deathrattle);
+      nextState.policeAuthority = clampStat(nextState.policeAuthority);
+      nextState.penalty = penalty;
 
-        if (latestState.policeAuthority > 0 && nextState.policeAuthority <= 0) {
-          log.push({
-            date,
-            title: "Od dziś milicja oficjalną formacją mundurową!",
+      latestState.action = action;
+
+      const actions = latestState.secondWave
+        ? allActions
+        : Object.fromEntries(
+            Object.entries(allActions).filter(([, value]) => !value.secondWave)
+          );
+      const maybeActionKeyValue = Object.entries(actions).find(
+        ([, value]) => value === action
+      );
+
+      const actionKey = maybeActionKeyValue?.[0];
+
+      const desiredStripe =
+        actionKey === undefined ? undefined : stripeImages[actionKey];
+
+      const randomStripeIndex = Math.floor(
+        Math.random() * Object.keys(randomStripes).length
+      );
+
+      const propagandaImage = desiredStripe
+        ? desiredStripe
+        : Object.values(randomStripes)[randomStripeIndex];
+
+      const stripeKey =
+        desiredStripe && actionKey !== undefined
+          ? actionKey
+          : Object.keys(randomStripes)[randomStripeIndex];
+
+      if (userIntent) {
+        if (action && actionKey !== undefined) {
+          updateProgress(({ unlockedActions = [], ...rest }) => {
+            const nextUnlockedActions = [
+              ...new Set([...unlockedActions, actionKey]),
+            ];
+
+            return {
+              ...rest,
+              unlockedActions: nextUnlockedActions,
+            };
           });
-
-          nextState.events = [...(nextState.events || []), events.e13];
         }
-      }
-    }
 
-    nextState.budget = clampStat(nextState.budget);
-    nextState.economy = clampStat(nextState.economy);
-    nextState.social = clampStat(nextState.social);
-    nextState.healthcare = clampStat(nextState.healthcare);
-    nextState.people = clampStat(nextState.people);
-    nextState.politics = clampStat(nextState.politics);
-    nextState.deathrattle = clamp(0, DEATHRATTLE_LIMIT)(nextState.deathrattle);
-    nextState.policeAuthority = clampStat(nextState.policeAuthority);
-    nextState.penalty = penalty;
-
-    latestState.action = action;
-
-    const actions = latestState.secondWave
-      ? allActions
-      : Object.fromEntries(
-          Object.entries(allActions).filter(([, value]) => !value.secondWave)
-        );
-    const maybeActionKeyValue = Object.entries(actions).find(
-      ([, value]) => value === action
-    );
-
-    const desiredStripe =
-      maybeActionKeyValue && stripes[maybeActionKeyValue[0]];
-
-    const randomStripeIndex = Math.floor(
-      Math.random() * Object.keys(randomStripes).length
-    );
-
-    const propagandaImage = desiredStripe
-      ? desiredStripe
-      : Object.values(randomStripes)[randomStripeIndex];
-
-    const stripeKey = desiredStripe
-      ? maybeActionKeyValue[0]
-      : Object.keys(randomStripes)[randomStripeIndex];
-
-    if (userIntent) {
-      if (action) {
-        const actionKey = maybeActionKeyValue[0];
-
-        updateProgress(({ unlockedActions = [], ...rest }) => {
-          const nextUnlockedActions = [
-            ...new Set([...unlockedActions, actionKey]),
-          ];
-
-          return {
-            ...rest,
-            unlockedActions: nextUnlockedActions,
-          };
-        });
+        updateProgress(({ unlockedStripes = [], ...rest }) => ({
+          ...rest,
+          unlockedStripes: [...new Set([...unlockedStripes, stripeKey])],
+        }));
       }
 
-      updateProgress(({ unlockedStripes = [], ...rest }) => ({
-        ...rest,
-        unlockedStripes: [...new Set([...unlockedStripes, stripeKey])],
-      }));
+      nextState.propagandaImage = propagandaImage;
+
+      nextState.message =
+        "▪ " +
+        take(10)(shuffle(randomPropaganda))
+          .map((x) => x.toUpperCase())
+          .join(" ▪ ");
     }
 
-    nextState.propagandaImage = propagandaImage;
+    nextState.log = log;
 
-    nextState.message =
-      "▪ " +
-      take(10)(shuffle(randomPropaganda))
-        .map((x) => x.toUpperCase())
-        .join(" ▪ ");
-  }
+    return [...state, nextState];
+  };
 
-  nextState.log = log;
-
-  return [...state, nextState];
-};
-
-let mediaTimeout;
+let mediaTimeout: ReturnType<typeof setTimeout> | undefined;
 
 const getStartState = () => [getInitialState(false)];
 
 let stopFlag = false;
 
-const reset = async (updateProgress, custom = false, secondWave = false) => {
+const reset = async (
+  updateProgress: UpdateProgress,
+  custom = false,
+  secondWave = false
+): Promise<GameState[]> => {
   stopFlag = false;
   stopGameplayTimeTracking = false;
 
@@ -1027,7 +1061,7 @@ const reset = async (updateProgress, custom = false, secondWave = false) => {
     const { agents, agentCount, agentsAge, sickDelays } =
       startState[startState.length - 1];
 
-    let {
+    const {
       recovered: initialRecovered,
       dead: initialDead,
       reported: initialReported,
@@ -1048,7 +1082,7 @@ const reset = async (updateProgress, custom = false, secondWave = false) => {
 
       const latestState = state[state.length - 1];
 
-      const nextState = {
+      const nextState: GameState = {
         ...latestState,
         agents,
         agentCount,
@@ -1100,29 +1134,30 @@ export default function App() {
   const [media, setMedia] = useState(false);
   const [mediaCover, setMediaCover] = useState(false);
   const [state, setState] = useState(getStartState);
-  const musicPlayer = useRef();
-  const videoPlayer = useRef();
-  const [event, changeEvent] = useState(undefined);
-  const [actions, setActions] = useState([]);
+  const musicPlayer = useRef<HTMLAudioElement>(null);
+  const videoPlayer = useRef<HTMLVideoElement>(null);
+  const [event, changeEvent] = useState<GameEvent | undefined>(undefined);
+  const [actions, setActions] = useState<GameAction[]>([]);
   const [showChart, setShowChart] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
-  const [queuedState, queueState] = useState(undefined);
+  const [queuedState, queueState] = useState<GameState[] | undefined>(
+    undefined
+  );
   const [audio, internalSetAudio] = useState(() => get("music") !== "off");
   const [daily, setDaily] = useState(true);
   const [stop, setStop] = useState(false);
   const [width, height] = useWindowSize();
-  const [progress, setProgress] = useState(() => {
-    const loaded = get("progress");
-    return loaded ? JSON.parse(loaded) : {};
-  });
+  const [progress, setProgress] = useState<Progress>(() =>
+    parseProgress(get("progress"))
+  );
 
-  const onMenuSetActive = (value) => {
+  const onMenuSetActive = (value: boolean) => {
     setMenuActive(value);
 
     if (audio) {
       try {
-        musicPlayer.current.play();
+        musicPlayer.current?.play();
       } catch {}
     }
   };
@@ -1133,14 +1168,14 @@ export default function App() {
     setMenuActive(true);
   };
 
-  const onDailyClick = (event) => {
+  const onDailyClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setDaily(true);
   };
 
-  const onTotalClick = (event) => {
+  const onTotalClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -1149,13 +1184,13 @@ export default function App() {
 
   const onShowLogsClick = () => setShowLogs(true);
 
-  const setAudio = (value) => {
+  const setAudio = (value: boolean) => {
     internalSetAudio(value);
 
     set("music")(value ? "on" : "off");
   };
 
-  const setTvpis = (value) => {
+  const setTvpis = (value: boolean) => {
     internalSetTvpis(value);
 
     set("tvpis")(value ? "on" : "off");
@@ -1163,7 +1198,7 @@ export default function App() {
 
   let progressCache = progress;
 
-  const updateProgress = (f) => {
+  const updateProgress: UpdateProgress = (f) => {
     const next = f(progressCache);
 
     progressCache = next;
@@ -1173,7 +1208,7 @@ export default function App() {
     set("progress")(JSON.stringify(next));
   };
 
-  const setEvent = (event) => {
+  const setEvent = (event: GameEvent | undefined) => {
     if (event) {
       const maybeKeyValue = Object.entries(events).find(
         ([, value]) => value === event
@@ -1244,7 +1279,7 @@ export default function App() {
   const skipVideo = () => {
     analytics("video-skip");
 
-    videoPlayer.current.pause();
+    videoPlayer.current?.pause();
 
     if (mediaTimeout) {
       clearTimeout(mediaTimeout);
@@ -1268,7 +1303,7 @@ export default function App() {
     showMedia();
   };
 
-  const performAction = async (action) => {
+  const performAction = async (action: GameAction) => {
     if (action) {
       const maybeActionKeyValue = Object.entries(allActions).find(
         ([, value]) => value === action
@@ -1298,7 +1333,7 @@ export default function App() {
 
   const onShowActionClick = () => showAction();
 
-  const playDelayed = async (action) => {
+  const playDelayed = async (action?: GameAction) => {
     setBusy(true);
     await delay(100);
     const nextState = await playState(action)(state, updateProgress, true);
@@ -1474,24 +1509,30 @@ export default function App() {
     [dataSource]
   );
 
-  const toggleMusic = (event) => {
+  const toggleMusic = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (musicPlayer.current.paused) {
+    const player = musicPlayer.current;
+
+    if (!player) {
+      return;
+    }
+
+    if (player.paused) {
       setAudio(true);
-      musicPlayer.current.play();
+      player.play();
 
       analytics("music-enable");
     } else {
       setAudio(false);
-      musicPlayer.current.pause();
+      player.pause();
 
       analytics("music-disable");
     }
   };
 
-  const toggleTvpis = (event) => {
+  const toggleTvpis = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 

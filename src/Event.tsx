@@ -1,6 +1,12 @@
 import React, { memo } from "react";
+import type { GameEvent } from "./types.ts";
 
-const Event = ({ event, skipEvent }) => (
+interface EventProps {
+  event: GameEvent;
+  skipEvent: () => void;
+}
+
+const Event = ({ event, skipEvent }: EventProps) => (
   <div className="modal-container" key={event.title}>
     <div className="event">
       <div className="event-title">{event.title}</div>
@@ -22,7 +28,6 @@ const Event = ({ event, skipEvent }) => (
             autoPlay
             className="video-player layer"
             height={event.imageHeight ?? 720}
-            loading="eager"
             playsInline
             preload="auto"
             src={event.video}

@@ -1,6 +1,7 @@
 import React, { memo } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
-const CloseIcon = (props) => (
+const CloseIcon = (props: ComponentPropsWithoutRef<"svg">) => (
   <svg
     width={24}
     height={24}

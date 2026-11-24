@@ -1,6 +1,19 @@
 import React, { memo } from "react";
+import type { GameAction } from "./types.ts";
 
-const Action = ({ actionLogo, actions, performAction, skipAction }) => (
+interface ActionProps {
+  actionLogo: string;
+  actions: GameAction[];
+  performAction: (action: GameAction) => void;
+  skipAction: () => void;
+}
+
+const Action = ({
+  actionLogo,
+  actions,
+  performAction,
+  skipAction,
+}: ActionProps) => (
   <div className="modal-container">
     <div className="action">
       <div className="well">

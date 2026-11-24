@@ -1,6 +1,6 @@
 import startDate from "./startDate.ts";
 
-const addDays = (days) => (date) => {
+const addDays = (days: number) => (date: Date) => {
   const result = new Date(date);
 
   result.setDate(result.getDate() + days);
@@ -8,10 +8,10 @@ const addDays = (days) => (date) => {
   return result;
 };
 
-let cache = {};
+const cache = new Map<number, Date>();
 
-const offsetStartDate = (offset) => {
-  const cached = cache[offset];
+const offsetStartDate = (offset: number): Date => {
+  const cached = cache.get(offset);
 
   if (cached) {
     return cached;
@@ -19,7 +19,7 @@ const offsetStartDate = (offset) => {
 
   const result = addDays(offset)(startDate);
 
-  cache[offset] = result;
+  cache.set(offset, result);
 
   return result;
 };

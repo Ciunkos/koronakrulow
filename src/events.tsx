@@ -25,15 +25,28 @@ import e21Video from "./events/e21.mp4";
 import e22Video from "./events/e22.mp4";
 import e23Video from "./events/e23.mp4";
 import { submitLeaderboards } from "./leaderboards.ts";
+import type { EventOptions, GameEvent, GameState } from "./types.ts";
 
-const createEvent = (title, logEntry, effect, options) => ({
+type Effect = (state: GameState) => void;
+
+const createEvent = (
+  title: string,
+  logEntry: string,
+  effect: Effect,
+  options?: EventOptions
+): GameEvent => ({
   title,
   logEntry,
   effect,
   ...options,
 });
 
-const createSecondWaveEvent = (title, logEntry, effect, options) => ({
+const createSecondWaveEvent = (
+  title: string,
+  logEntry: string,
+  effect: Effect,
+  options?: EventOptions
+): GameEvent => ({
   title,
   logEntry,
   effect,
@@ -204,7 +217,7 @@ export const e18 = createEvent(
   }
 );
 
-const onInputFocus = (event) => {
+const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
   try {
     event.target.select();
   } catch (error) {
@@ -230,6 +243,10 @@ export const e19 = createEvent(
 
       try {
         const nameElement = document.getElementById("leaderboards-name");
+
+        if (!(nameElement instanceof HTMLInputElement)) {
+          throw new Error("The leaderboard name field is missing.");
+        }
 
         name = nameElement.value;
       } catch (error) {

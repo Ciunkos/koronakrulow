@@ -515,6 +515,6 @@ const randomPropaganda = [
   "Prezes Kaczyński był na otwarciu. Czego?",
   "Trwa walka z ostrym cieniem mgły",
   "Kaczyński sam wyzwolił Polskę od komuny",
-];
+] satisfies string[];
 
 export default randomPropaganda;

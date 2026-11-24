@@ -4,8 +4,15 @@ import React, { memo } from "react";
 
 import CloseIcon from "./CloseIcon.tsx";
 import Log from "./Log.tsx";
+import type { LogEntry } from "./types.ts";
 
-const Logs = ({ closeLogs, log, showLogs }) => (
+interface LogsProps {
+  closeLogs: () => void;
+  log: LogEntry[];
+  showLogs: boolean;
+}
+
+const Logs = ({ closeLogs, log, showLogs }: LogsProps) => (
   <div className={classNames("container logs", { active: showLogs })}>
     <div className="container-header">
       <CloseIcon onClick={closeLogs} />

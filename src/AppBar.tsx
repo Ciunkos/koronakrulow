@@ -2,15 +2,21 @@ import React, { memo } from "react";
 
 import onActivate from "./onActivate.ts";
 
+interface AppBarProps {
+  logEnabled: boolean;
+  onShowChartClick: () => void;
+  onShowLogsClick: () => void;
+  onShowStatsClick: () => void;
+}
+
 const AppBar = ({
   logEnabled,
   onShowChartClick,
   onShowLogsClick,
   onShowStatsClick,
-}) => (
+}: AppBarProps) => (
   <div className="app-bar">
     <div
-      disabled={logEnabled}
       onClick={onShowLogsClick}
       onKeyDown={onActivate(onShowLogsClick)}
       role="button"

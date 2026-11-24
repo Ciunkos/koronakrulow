@@ -2,6 +2,24 @@ import { classNames } from "@sandstreamdev/std/web/index.js";
 import React, { memo } from "react";
 
 import LeaderboardEntries from "./LeaderboardEntries.tsx";
+import type { MouseEvent } from "react";
+import type { LeaderboardEntry as LeaderboardEntryData } from "./types.ts";
+
+interface LeaderboardProps {
+  daily: boolean;
+  hasMoreLost: boolean;
+  hasMoreWon: boolean;
+  leaderboardsLostSource: (LeaderboardEntryData | undefined)[];
+  leaderboardsWonSource: (LeaderboardEntryData | undefined)[];
+  onDailyClick: (event: MouseEvent) => void;
+  onFirstWaveClick: (event: MouseEvent) => void;
+  onSecondWaveClick: (event: MouseEvent) => void;
+  onTotalClick: (event: MouseEvent) => void;
+  secondWave: boolean;
+  secondWaveEnabled: boolean;
+  showMoreLost: (event: MouseEvent) => void;
+  showMoreWon: (event: MouseEvent) => void;
+}
 
 const Leaderboard = ({
   daily,
@@ -17,7 +35,7 @@ const Leaderboard = ({
   secondWaveEnabled,
   showMoreLost,
   showMoreWon,
-}) => (
+}: LeaderboardProps) => (
   <section>
     <h3>Ranking</h3>
     {secondWaveEnabled && (

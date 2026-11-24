@@ -1,12 +1,18 @@
 import React, { memo } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import Symbol from "./Symbol.tsx";
+
+interface TransitiveNumberProps extends ComponentPropsWithoutRef<"span"> {
+  children: number | string;
+  enableInitialAnimation?: boolean;
+}
 
 const TransitiveNumber = ({
   children,
   enableInitialAnimation = false,
   ...rest
-}) => {
+}: TransitiveNumberProps) => {
   const value = children.toString();
 
   // Invert animation direction when negative number is supplied.

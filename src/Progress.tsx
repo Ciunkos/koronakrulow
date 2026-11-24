@@ -1,5 +1,17 @@
 import React, { memo } from "react";
 
+interface ProgressProps {
+  actions: Record<string, unknown>;
+  events: Record<string, unknown>;
+  games: number;
+  lost: number;
+  randomPropaganda: Record<string, unknown>;
+  unlockedActions: string[];
+  unlockedEvents: string[];
+  unlockedStripes: string[];
+  won: number;
+}
+
 const Progress = ({
   actions,
   events,
@@ -10,7 +22,7 @@ const Progress = ({
   unlockedEvents,
   unlockedStripes,
   won,
-}) => (
+}: ProgressProps) => (
   <section>
     <h3>Twój postęp</h3>
     <div className="progress-list">

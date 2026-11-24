@@ -1,17 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
-const translateY = (isUp) => {
+const translateY = (isUp: boolean) => {
   return "translateY(" + (isUp ? "-" : "") + "60%) translateZ(0)";
 };
 
-const Transition = ({ animateEntrance, goingUp, out, value }) => {
-  const ref = useRef();
+interface TransitionProps {
+  animateEntrance?: boolean;
+  goingUp: boolean;
+  out?: boolean;
+  value: string;
+}
+
+const Transition = ({
+  animateEntrance,
+  goingUp,
+  out,
+  value,
+}: TransitionProps) => {
+  const ref = useRef<HTMLSpanElement>(null);
   const [_in, setIn] = useState(() => (out ? true : !animateEntrance));
 
   const animate = () => {
     // Force element reflow to ensure correct animation in FF.
-    // eslint-disable-next-line no-unused-expressions
-    ref.current.offsetWidth;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    ref.current?.offsetWidth;
 
     setIn(true);
   };
@@ -37,7 +50,7 @@ const Transition = ({ animateEntrance, goingUp, out, value }) => {
 
   const isHidden = () => out || !_in;
 
-  const getStyle = () => {
+  const getStyle = (): CSSProperties => {
     const transform = getTransform();
 
     return {

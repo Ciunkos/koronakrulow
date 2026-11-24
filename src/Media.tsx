@@ -4,6 +4,20 @@ import React, { memo } from "react";
 import headlineImage from "./headline.jpg";
 import headlineVideo from "./headline.mp4";
 import formatNumber from "./formatNumber.ts";
+import type { RefObject } from "react";
+import type { GameState } from "./types.ts";
+
+interface MediaProps {
+  latestQueuedState: GameState;
+  mediaCover: boolean;
+  newCases: number;
+  newDeaths: number;
+  newRecovered: number;
+  skipMedia: () => void;
+  skipVideo: () => void;
+  tvpis: boolean;
+  videoPlayer: RefObject<HTMLVideoElement | null>;
+}
 
 const Media = ({
   latestQueuedState,
@@ -15,7 +29,7 @@ const Media = ({
   skipVideo,
   tvpis,
   videoPlayer,
-}) => (
+}: MediaProps) => (
   <div className="modal-container">
     <div className="media">
       <div className="media-cover">

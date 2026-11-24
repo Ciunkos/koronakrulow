@@ -1,12 +1,28 @@
 import { serialize } from "@sandstreamdev/std/query/index.js";
 import { useCallback, useEffect, useState } from "react";
+import type { z } from "zod/mini";
 
 const randomSeed = () => Math.random();
 
-const useApi = (endpoint, query, options) => {
+type Query = Parameters<typeof serialize>[0];
+
+// Fetches JSON and validates it with the schema; a response that does not
+// match becomes an error instead of data.
+interface ApiState {
+  busy: boolean;
+  error: unknown;
+  refetch: () => void;
+}
+
+const useApi = <T>(
+  endpoint: string,
+  schema: z.ZodMiniType<T>,
+  query?: Query,
+  options?: RequestInit
+): [T | undefined, ApiState] => {
   const [busy, setBusy] = useState(true);
-  const [data, setData] = useState(undefined);
-  const [error, setError] = useState(undefined);
+  const [data, setData] = useState<T | undefined>(undefined);
+  const [error, setError] = useState<unknown>(undefined);
   const [seed, setSeed] = useState(randomSeed);
 
   useEffect(() => {
@@ -21,7 +37,7 @@ const useApi = (endpoint, query, options) => {
       try {
         const response = await fetch(url, options);
 
-        const data = await response.json();
+        const data = schema.parse(await response.json());
 
         if (!canceled) {
           setData(data);
@@ -42,7 +58,7 @@ const useApi = (endpoint, query, options) => {
     return () => {
       canceled = true;
     };
-  }, [endpoint, query, seed, options]);
+  }, [endpoint, schema, query, seed, options]);
 
   const refetch = useCallback(() => {
     setSeed(randomSeed());

@@ -1,3 +1,5 @@
+import { z } from "zod/mini";
+
 export const SHOW_LEADERBOARD = false;
 
 export const LEADERBOARDS_ENDPOINT = "https://koronakrulow.pl/leaderboards/";
@@ -7,11 +9,53 @@ const KEY = "8955de21141f62d71ec533f864f23262192fb277bdf21e1d928bd519d79f5b05";
 const SIGNATURE_ALGORITHM = "SHA-256";
 const NONCE_BYTES = 16;
 
-const hexString = (xs) =>
-  xs.map((x) => ("00" + x.toString(16)).slice(-2)).join("");
+// The leaderboard server response (leaderboards/index.js GET /).
+const LeaderboardEntrySchema = z.object({
+  name: z.string(),
+  day: z.number(),
+  dead: z.number(),
+  recovered: z.number(),
+  reported: z.number(),
+});
 
-const signatureHex = async (text) => {
-  const bytes = new TextEncoder("utf-8").encode(text);
+const LeaderboardRankingSchema = z.object({
+  won: z.array(LeaderboardEntrySchema),
+  lost: z.array(LeaderboardEntrySchema),
+});
+
+export const LeaderboardsSchema = z.object({
+  daily: LeaderboardRankingSchema,
+  allTime: LeaderboardRankingSchema,
+});
+
+export type LeaderboardEntry = z.infer<typeof LeaderboardEntrySchema>;
+
+/** A ranking padded with empty slots (undefined) for display. */
+export interface LeaderboardRanking {
+  won: (LeaderboardEntry | undefined)[];
+  lost: (LeaderboardEntry | undefined)[];
+}
+
+export interface Leaderboards {
+  daily: LeaderboardRanking;
+  allTime: LeaderboardRanking;
+}
+
+export interface LeaderboardSubmission {
+  custom: boolean;
+  day: number;
+  dead: number;
+  name: string;
+  recovered: number;
+  reported: number;
+  won: boolean;
+}
+
+const hexString = (xs: Uint8Array) =>
+  Array.from(xs, (x) => ("00" + x.toString(16)).slice(-2)).join("");
+
+const signatureHex = async (text: string) => {
+  const bytes = new TextEncoder().encode(text);
   const digest = await crypto.subtle.digest(SIGNATURE_ALGORITHM, bytes);
 
   const hexDigest = hexString(new Uint8Array(digest));
@@ -19,7 +63,7 @@ const signatureHex = async (text) => {
   return hexDigest;
 };
 
-const randomBytesHex = async (n) => {
+const randomBytesHex = async (n: number) => {
   const buffer = new Uint8Array(n);
 
   crypto.getRandomValues(buffer);
@@ -35,7 +79,7 @@ export const submitLeaderboards = async ({
   recovered,
   reported,
   won,
-}) => {
+}: LeaderboardSubmission) => {
   try {
     const nonce = await randomBytesHex(NONCE_BYTES);
 

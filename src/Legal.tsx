@@ -1,6 +1,12 @@
 import React, { memo } from "react";
+import type { MouseEvent } from "react";
 
-const Legal = ({ details, toggleDetails }) => (
+interface LegalProps {
+  details: boolean;
+  toggleDetails: (event: MouseEvent) => void;
+}
+
+const Legal = ({ details, toggleDetails }: LegalProps) => (
   <div className="legal">
     <p>
       Gra zawiera elementy mogące podlegagać prawom autorskim. Użycie na

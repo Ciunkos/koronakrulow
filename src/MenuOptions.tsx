@@ -1,12 +1,20 @@
 import React, { memo } from "react";
 
+interface MenuOptionsProps {
+  custom: boolean;
+  onCustomPlayClick: () => void;
+  onPlayClick: () => void;
+  onSecondWavePlayClick: () => void;
+  secondWaveEnabled: boolean;
+}
+
 const MenuOptions = ({
   custom,
   onCustomPlayClick,
   onPlayClick,
   onSecondWavePlayClick,
   secondWaveEnabled,
-}) => (
+}: MenuOptionsProps) => (
   <div className="options">
     {secondWaveEnabled && (
       <div>

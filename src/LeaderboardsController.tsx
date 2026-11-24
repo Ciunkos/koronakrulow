@@ -1,52 +1,67 @@
 import { exact } from "@sandstreamdev/std/array/index.js";
 import { clamp } from "@sandstreamdev/std/math/index.js";
 import React, { useEffect, useMemo, useState } from "react";
+import type { MouseEvent } from "react";
 
 import useApi from "./useApi.ts";
-import { LEADERBOARDS_ENDPOINT } from "./leaderboards.ts";
+import { LEADERBOARDS_ENDPOINT, LeaderboardsSchema } from "./leaderboards.ts";
+import type { Leaderboards } from "./leaderboards.ts";
 import Leaderboard from "./Leaderboard.tsx";
 import { enabled as secondWaveEnabled } from "./secondWave.ts";
 
 const LEADERBOARD_RANGE = 5;
 
-const padded = [undefined, undefined, undefined, undefined, undefined];
+const padded: undefined[] = [
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
+];
 
-const LeaderboardsController = ({ active }) => {
+interface LeaderboardsControllerProps {
+  active: boolean;
+}
+
+const LeaderboardsController = ({ active }: LeaderboardsControllerProps) => {
   const [wonTake, setWonTake] = useState(LEADERBOARD_RANGE);
   const [lostTake, setLostTake] = useState(LEADERBOARD_RANGE);
   const [daily, setDaily] = useState(true);
 
   const [secondWave, setSecondWave] = useState(secondWaveEnabled);
 
-  const onFirstWaveClick = (event) => {
+  const onFirstWaveClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setSecondWave(false);
   };
 
-  const onSecondWaveClick = (event) => {
+  const onSecondWaveClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setSecondWave(true);
   };
 
-  const onDailyClick = (event) => {
+  const onDailyClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setDaily(true);
   };
 
-  const onTotalClick = (event) => {
+  const onTotalClick = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setDaily(false);
   };
 
-  const [leaderboardsSource, { busy, refetch }] = useApi(LEADERBOARDS_ENDPOINT);
+  const [leaderboardsSource, { busy, refetch }] = useApi(
+    LEADERBOARDS_ENDPOINT,
+    LeaderboardsSchema
+  );
 
   useEffect(() => {
     console.log({ active, busy });
@@ -59,7 +74,7 @@ const LeaderboardsController = ({ active }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
-  const leaderboards = leaderboardsSource ?? {
+  const leaderboards: Leaderboards = leaderboardsSource ?? {
     daily: { won: padded, lost: padded },
     allTime: { won: padded, lost: padded },
   };
@@ -69,14 +84,14 @@ const LeaderboardsController = ({ active }) => {
   const hasMoreWon = rankingSource.won.length > wonTake;
   const hasMoreLost = rankingSource.lost.length > lostTake;
 
-  const showMoreLost = (event) => {
+  const showMoreLost = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
     setLostTake(lostTake + 5 * LEADERBOARD_RANGE);
   };
 
-  const showMoreWon = (event) => {
+  const showMoreWon = (event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
 

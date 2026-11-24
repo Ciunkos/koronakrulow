@@ -6,7 +6,13 @@ import Infected from "./Infected.tsx";
 import Dead from "./Dead.tsx";
 import Recovered from "./Recovered.tsx";
 
-const StatusBar = ({ reported, dead, recovered }) => (
+interface StatusBarProps {
+  reported: number;
+  dead: number;
+  recovered: number;
+}
+
+const StatusBar = ({ reported, dead, recovered }: StatusBarProps) => (
   <div className="status-bar">
     <div className="status-row infected">
       <div className="status-row-label">Currently infected</div>

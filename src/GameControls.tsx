@@ -4,6 +4,17 @@ import TransitiveNumber from "./TransitiveNumber.tsx";
 import formatNumber from "./formatNumber.ts";
 import AlertIcon from "./AlertIcon.tsx";
 
+interface GameControlsProps {
+  busy: boolean;
+  daysToWin: number;
+  deathrattleLeft: number;
+  onShowActionClick: () => void;
+  politics: number;
+  stop: boolean;
+  togglePlay: () => void;
+  underControl: boolean;
+}
+
 const GameControls = ({
   busy,
   daysToWin,
@@ -13,7 +24,7 @@ const GameControls = ({
   stop,
   togglePlay,
   underControl,
-}) => (
+}: GameControlsProps) => (
   <>
     <div className="action-buttons">
       <button disabled={busy} onClick={onShowActionClick}>

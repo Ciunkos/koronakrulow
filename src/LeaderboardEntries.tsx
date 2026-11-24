@@ -1,8 +1,13 @@
 import React, { memo } from "react";
 
 import LeaderboardEntry from "./LeaderboardEntry.tsx";
+import type { LeaderboardEntry as LeaderboardEntryData } from "./types.ts";
 
-const LeaderboardEntries = ({ children }) => (
+interface LeaderboardEntriesProps {
+  children: (LeaderboardEntryData | undefined)[];
+}
+
+const LeaderboardEntries = ({ children }: LeaderboardEntriesProps) => (
   <div className="leaderboard-entries layer">
     {children.map((entry, index) => {
       if (entry) {

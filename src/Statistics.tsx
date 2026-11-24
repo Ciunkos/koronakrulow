@@ -4,6 +4,24 @@ import React, { memo } from "react";
 import CloseIcon from "./CloseIcon.tsx";
 import StatsRow from "./StatsRow.tsx";
 
+interface StatisticsProps {
+  budget: number;
+  budgetDiff: number;
+  closeStats: () => void;
+  day: number;
+  economy: number;
+  economyDiff: number;
+  healthcare: number;
+  healthcareDiff: number;
+  people: number;
+  peopleDiff: number;
+  politics: number;
+  politicsDiff: number;
+  showStats: boolean;
+  social: number;
+  socialDiff: number;
+}
+
 const Statistics = ({
   budget,
   budgetDiff,
@@ -20,7 +38,7 @@ const Statistics = ({
   showStats,
   social,
   socialDiff,
-}) => (
+}: StatisticsProps) => (
   <div className={classNames("container statistics", { active: showStats })}>
     <div className="container-header">
       <CloseIcon onClick={closeStats} />

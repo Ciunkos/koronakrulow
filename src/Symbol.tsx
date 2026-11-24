@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
 import Transition from "./Transition.tsx";
 
-const isDecrementing = (a, b) => {
+const isDecrementing = (a: string | undefined, b: string) => {
   const numberA = Number(a);
   const numberB = Number(b);
 
@@ -14,8 +15,8 @@ const isDecrementing = (a, b) => {
   }
 };
 
-const usePrevious = (value) => {
-  const ref = useRef();
+const usePrevious = <T,>(value: T): T | undefined => {
+  const ref = useRef<T | undefined>(undefined);
 
   useEffect(() => {
     ref.current = value;
@@ -24,10 +25,16 @@ const usePrevious = (value) => {
   return ref.current;
 };
 
-const Symbol = ({ enableInitialAnimation, inverted, symbol }) => {
-  const ref = useRef();
+interface SymbolProps {
+  enableInitialAnimation: boolean;
+  inverted: boolean;
+  symbol: string;
+}
 
-  const [previous, setPrevious] = useState(null);
+const Symbol = ({ enableInitialAnimation, inverted, symbol }: SymbolProps) => {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  const [previous, setPrevious] = useState<string | null>(null);
   const [decrementing, setDecrementing] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
 
@@ -37,6 +44,10 @@ const Symbol = ({ enableInitialAnimation, inverted, symbol }) => {
 
   useEffect(() => {
     const target = ref.current;
+
+    if (!target) {
+      return;
+    }
 
     target.addEventListener("transitionend", removePrevious);
 
@@ -50,7 +61,7 @@ const Symbol = ({ enableInitialAnimation, inverted, symbol }) => {
     if (previousSymbol !== symbol) {
       const decrementing = isDecrementing(previousSymbol, symbol);
 
-      setPrevious(previousSymbol);
+      setPrevious(previousSymbol ?? null);
       setDecrementing(previousInverted ? !decrementing : decrementing);
 
       if (initialRender) {
@@ -59,7 +70,7 @@ const Symbol = ({ enableInitialAnimation, inverted, symbol }) => {
     }
   }, [previousSymbol, symbol, initialRender, previousInverted]);
 
-  const style = {
+  const style: CSSProperties = {
     position: "relative",
     display: "inline-block",
   };
@@ -79,9 +90,10 @@ const Symbol = ({ enableInitialAnimation, inverted, symbol }) => {
         animateEntrance={initialRender ? enableInitialAnimation : true}
         key={symbol}
       />
+      {/* Disabled: the outgoing symbol is not animated. */}
       {false && previous !== null && (
         <Transition
-          value={previous}
+          value={previous ?? ""}
           goingUp={decrementing}
           out
           key={previous}
