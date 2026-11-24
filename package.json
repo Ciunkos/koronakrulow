@@ -45,7 +45,7 @@
   "homepage": ".",
   "devDependencies": {
     "@svgr/plugin-svgo": "file:stubs/svgr-plugin-svgo",
-    "glob": "^8.0.3",
+    "glob": "^14.0.6",
     "jimp": "^1.6.1",
     "node-fetch": "^3.3.2",
     "prettier": "^2.6.2",

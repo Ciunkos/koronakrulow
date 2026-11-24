@@ -1,5 +1,5 @@
 import { promises } from "fs";
-import glob from "glob";
+import { glob } from "glob";
 import fs from "fs";
 import sharp from "sharp";
 
@@ -40,45 +40,40 @@ const optimize = (file) => {
     : image.png(options.png).toBuffer();
 };
 
-const main = () => {
-  glob("build/static/media/*.{png,jpg}", {}, async (error, files) => {
-    console.log(files);
+const main = async () => {
+  // glob 9+ returns files in no particular order; sort for stable output.
+  const files = (await glob("build/static/media/*.{png,jpg}")).sort();
+  console.log(files);
 
-    if (error) {
+  let i = 1;
+
+  for (const file of files) {
+    const j = i;
+
+    console.log(`Optimizing [${j}/${files.length}]: ${file}...`);
+
+    const before = getFileSizeInBytes(file);
+
+    const data = await optimize(file);
+
+    const after = data.byteLength;
+
+    // eslint-disable-next-line no-console
+    console.log(`${after}/${before} = ${Math.round((after / before) * 100)}%`);
+
+    if (after < before) {
+      await writeFile(file, data);
+    } else {
       // eslint-disable-next-line no-console
-      console.error(error);
-      process.exit(1);
-      return;
+      console.log("Skipped due to overgrowth.");
     }
 
-    let i = 1;
-
-    for (const file of files) {
-      const j = i;
-
-      console.log(`Optimizing [${j}/${files.length}]: ${file}...`);
-
-      const before = getFileSizeInBytes(file);
-
-      const data = await optimize(file);
-
-      const after = data.byteLength;
-
-      // eslint-disable-next-line no-console
-      console.log(
-        `${after}/${before} = ${Math.round((after / before) * 100)}%`
-      );
-
-      if (after < before) {
-        await writeFile(file, data);
-      } else {
-        // eslint-disable-next-line no-console
-        console.log("Skipped due to overgrowth.");
-      }
-
-      i++;
-    }
-  });
+    i++;
+  }
 };
 
-main();
+main().catch((error) => {
+  // eslint-disable-next-line no-console
+  console.error(error);
+  process.exit(1);
+});
