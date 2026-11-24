@@ -1666,13 +1666,7 @@ export default function App() {
           videoPlayer={videoPlayer}
         />
       )}
-      <audio
-        autoPlay={audio}
-        loop
-        ref={musicPlayer}
-        src={music}
-        volume={volume}
-      />
+      <audio autoPlay={audio} loop ref={musicPlayer} src={music} />
       <Menu
         active={menuActive}
         resetState={resetState}

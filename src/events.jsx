@@ -255,6 +255,8 @@ export const e19 = createEvent(
         <label>
           Wpisz imię lub ksywkę:
           <input
+            // The dialog exists to type a name, so focus the field.
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             defaultValue="Anonim"
             id="leaderboards-name"

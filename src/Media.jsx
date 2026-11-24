@@ -63,13 +63,15 @@ const Media = ({
           className={classNames("cover-image layer", { active: mediaCover })}
           height={573}
           onClick={skipVideo}
+          role="presentation"
           src={latestQueuedState.propagandaImage}
           title="Pomiń"
           width={1020}
           loading="eager"
         />
         {mediaCover && (
-          <div className="actions" onClick={skipMedia}>
+          // The whole bar skips on click; keyboard users have the button.
+          <div className="actions" onClick={skipMedia} role="presentation">
             <button onClick={skipMedia}>Dalej</button>
           </div>
         )}

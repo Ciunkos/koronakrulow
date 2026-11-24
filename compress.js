@@ -58,13 +58,11 @@ const main = async () => {
 
     const after = data.byteLength;
 
-    // eslint-disable-next-line no-console
     console.log(`${after}/${before} = ${Math.round((after / before) * 100)}%`);
 
     if (after < before) {
       await writeFile(file, data);
     } else {
-      // eslint-disable-next-line no-console
       console.log("Skipped due to overgrowth.");
     }
 
@@ -73,7 +71,6 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   process.exit(1);
 });
