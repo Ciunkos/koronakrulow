@@ -24,7 +24,7 @@ Potem aby uruchomić grę w trybie deweloperskim (http://localhost:3000):
 npm start
 ```
 
-Sprawdzenie typów (TypeScript), testy (Vitest) i lint (ESLint), osobno lub razem:
+Sprawdzenie typów (TypeScript 7, natywny `tsc`), testy (Vitest) i lint ([oxlint](https://oxc.rs/docs/guide/usage/linter), konfiguracja w `.oxlintrc.json`), osobno lub razem:
 
 ```sh
 npm run typecheck
@@ -32,6 +32,8 @@ npm test
 npm run lint
 npm run check
 ```
+
+`npm run lint` uruchamia `oxlint --deny-warnings` na `src` i skryptach `*.ts` w katalogu głównym; ostrzeżenia też przerywają sprawdzanie. Reguły dla Reacta (w tym `rules-of-hooks` i `exhaustive-deps`), `jsx-a11y`, TypeScriptu, importów i testów Vitest są wbudowane w oxlint, więc nie ma osobnych pluginów. Reguły wyłącza się komentarzem `// oxlint-disable-next-line <reguła>` z uzasadnieniem w linii wyżej.
 
 Skrypty `paski.ts`, `random.ts`, `compress.ts` i `map.ts` uruchamia bezpośrednio Node.js 26 (wbudowane usuwanie typów, bez kompilacji), np. `node map.ts <katalog z plikami .geojson>`.
 
