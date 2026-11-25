@@ -665,6 +665,8 @@ const playState =
       });
 
       if (action.event) {
+        // action.event is an EventKey, a key of this module, checked by tsc.
+        // oxlint-disable-next-line import/namespace
         nextState.events = [...(nextState.events || []), events[action.event]];
       }
     }
@@ -1471,7 +1473,7 @@ export default function App() {
     setEvent(firstEvent);
     // setEvent is recreated on every render; the event should change only
     // when the turn brings new events.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [latestState.events]);
 
   //console.log({
@@ -1598,7 +1600,7 @@ export default function App() {
     setActions(actions);
     // Draw new actions once per turn (latestState). custom comes from
     // latestState, and data is derived from the same state.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [latestState]);
 
   const today = offsetStartDate(latestState.day);

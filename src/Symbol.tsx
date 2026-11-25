@@ -91,6 +91,7 @@ const Symbol = ({ enableInitialAnimation, inverted, symbol }: SymbolProps) => {
         key={symbol}
       />
       {/* Disabled: the outgoing symbol is not animated. */}
+      {/* oxlint-disable-next-line no-constant-binary-expression -- kept switched off on purpose */}
       {false && previous !== null && (
         <Transition
           value={previous ?? ""}

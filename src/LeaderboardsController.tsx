@@ -71,7 +71,7 @@ const LeaderboardsController = ({ active }: LeaderboardsControllerProps) => {
     }
     // Refetch only when the menu opens. Depending on busy would refetch again
     // every time a request finishes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [active]);
 
   const leaderboards: Leaderboards = leaderboardsSource ?? {

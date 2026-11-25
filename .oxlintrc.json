@@ -1,0 +1,108 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "jsx-a11y", "import"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "settings": {
+    "react": {
+      "version": "19.3.1"
+    }
+  },
+  "ignorePatterns": ["build/**", "leaderboards/**"],
+  "rules": {
+    "no-var": "error",
+    "prefer-const": ["error", { "destructuring": "all" }],
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "no-array-constructor": "error",
+    // Same settings as eslint-config-react-app had for unused code.
+    "no-unused-vars": ["warn", { "args": "none", "ignoreRestSiblings": true }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true,
+        "allowTaggedTemplates": true
+      }
+    ],
+
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-function-type": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "env": { "browser": true },
+      "rules": {
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
+        // React Compiler rules. The ESLint setup enabled only rules-of-hooks
+        // and exhaustive-deps; Symbol's usePrevious and its transition state
+        // predate these and work as written.
+        "react/refs": "off",
+        "react/set-state-in-effect": "off",
+        "react/display-name": "error",
+        "react/jsx-no-comment-textnodes": "error",
+        "react/jsx-no-target-blank": "error",
+        "react/no-unescaped-entities": "error",
+        "react/no-unknown-property": "error",
+        "react/require-render-return": "error",
+
+        "jsx-a11y/alt-text": "error",
+        "jsx-a11y/anchor-has-content": "error",
+        "jsx-a11y/anchor-is-valid": "error",
+        "jsx-a11y/aria-activedescendant-has-tabindex": "error",
+        "jsx-a11y/aria-props": "error",
+        "jsx-a11y/aria-proptypes": "error",
+        "jsx-a11y/aria-role": "error",
+        "jsx-a11y/aria-unsupported-elements": "error",
+        "jsx-a11y/autocomplete-valid": "error",
+        "jsx-a11y/click-events-have-key-events": "error",
+        "jsx-a11y/heading-has-content": "error",
+        "jsx-a11y/html-has-lang": "error",
+        "jsx-a11y/iframe-has-title": "error",
+        "jsx-a11y/img-redundant-alt": "error",
+        "jsx-a11y/interactive-supports-focus": "error",
+        "jsx-a11y/label-has-associated-control": "error",
+        "jsx-a11y/mouse-events-have-key-events": "error",
+        "jsx-a11y/no-access-key": "error",
+        "jsx-a11y/no-autofocus": "error",
+        "jsx-a11y/no-distracting-elements": "error",
+        "jsx-a11y/no-interactive-element-to-noninteractive-role": "error",
+        "jsx-a11y/no-noninteractive-element-interactions": "error",
+        "jsx-a11y/no-noninteractive-element-to-interactive-role": "error",
+        "jsx-a11y/no-noninteractive-tabindex": "error",
+        "jsx-a11y/no-redundant-roles": "error",
+        "jsx-a11y/no-static-element-interactions": "error",
+        "jsx-a11y/role-has-required-aria-props": "error",
+        "jsx-a11y/role-supports-aria-props": "error",
+        "jsx-a11y/scope": "error",
+        "jsx-a11y/tabindex-no-positive": "error",
+        // Not in jsx-a11y recommended. The app bar items are focusable divs
+        // with role="button" and key handlers; native buttons would need a
+        // style reset.
+        "jsx-a11y/prefer-tag-over-role": "off",
+        // The TV clips and the music have no caption files to attach.
+        "jsx-a11y/media-has-caption": "off"
+      }
+    },
+    {
+      "files": ["src/**/*.test.{ts,tsx}", "src/setupTests.ts"],
+      "plugins": ["vitest"],
+      "env": { "browser": true, "vitest": true }
+    },
+    {
+      "files": ["*.ts"],
+      "env": { "node": true }
+    }
+  ]
+}

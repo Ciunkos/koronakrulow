@@ -23,7 +23,7 @@ const Transition = ({
 
   const animate = () => {
     // Force element reflow to ensure correct animation in FF.
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    // oxlint-disable-next-line no-unused-expressions
     ref.current?.offsetWidth;
 
     setIn(true);
